@@ -133,7 +133,11 @@ class handler(BaseHTTPRequestHandler):
         global DATA
         length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(length).decode("utf-8") if length else "{}"
-        recebido = json.loads(body or "{}")
+        try:
+            recebido = json.loads(body or "{}")
+        except json.JSONDecodeError:
+            self._send({"error": "Invalid JSON"}, status=400)
+            return
 
         if "moedaCodigo" in recebido:
             recebido["moeda"] = MOEDAS.get(recebido["moedaCodigo"], MOEDAS["EUR"])
