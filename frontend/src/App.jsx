@@ -1,17 +1,7 @@
 import "./App.css"
 import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
+  BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts"
 
 const COLORS = ["#2563eb", "#22c55e", "#f97316", "#8b5cf6", "#06b6d4"]
@@ -80,126 +70,86 @@ const dividas = [
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#edf4ff] text-slate-900 p-5">
-      <div className="grid grid-cols-[240px_1fr_300px] gap-4">
-        <aside className="min-h-[calc(100vh-40px)] rounded-[32px] bg-gradient-to-b from-[#041c43] to-[#03142f] text-white p-6 shadow-2xl border border-blue-900/30">
-          <div className="text-center mb-6">
-            <div className="text-5xl mb-3">📈€</div>
-            <h1 className="text-2xl font-black leading-tight">
-              Planeamento Financeiro
-            </h1>
-            <p className="text-xs text-blue-200 mt-2">
-              Controlo Financeiro Familiar
-            </p>
-          </div>
+    <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
+      <aside className="fixed left-0 top-0 z-20 w-[240px] min-h-screen bg-gradient-to-b from-[#041c43] to-[#03142f] text-white p-6 shadow-2xl border-r border-blue-900/30 rounded-r-[32px]">
+        <div className="text-center mb-6">
+          <div className="text-5xl mb-3">📈€</div>
+          <h1 className="text-2xl font-black leading-tight">Planeamento Financeiro</h1>
+          <p className="text-xs text-blue-200 mt-2">Controlo Financeiro Familiar</p>
+        </div>
 
-          <button className="w-full bg-[#0d3268] border border-blue-400/30 rounded-xl py-3 mb-5 font-bold">
-            📅 Maio 2024
-          </button>
+        <button className="w-full bg-[#0d3268] border border-blue-400/30 rounded-xl py-3 mb-5 font-bold">
+          📅 Maio 2024
+        </button>
 
-          <nav className="space-y-2">
-            {[
-              "Resumo",
-              "Rendimentos",
-              "Despesas",
-              "Dívidas",
-              "Objetivos",
-              "Calendário",
-              "Pagamentos",
-              "Simulador",
-              "Relatórios",
-              "Definições",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className={`px-4 py-3 rounded-xl text-sm font-semibold ${
-                  index === 0
-                    ? "bg-blue-600 shadow-lg"
-                    : "bg-white/5 hover:bg-white/10"
-                }`}
-              >
-                {item}
-              </div>
-            ))}
-          </nav>
-
-          <div className="mt-8 rounded-2xl bg-white/10 p-4">
-            <p className="text-sm text-blue-200 mb-3">Saúde Financeira</p>
-            <div className="mx-auto w-28 h-28 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-              <div className="w-20 h-20 rounded-full bg-[#061b3a] flex items-center justify-center text-3xl font-black">
-                85
-              </div>
+        <nav className="space-y-2">
+          {["Resumo", "Rendimentos", "Despesas", "Dívidas", "Objetivos", "Calendário", "Pagamentos", "Simulador", "Relatórios", "Definições"].map((item, index) => (
+            <div
+              key={item}
+              className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 cursor-pointer ${
+                index === 0 ? "bg-blue-600 shadow-lg" : "bg-[#0b255f] hover:bg-[#2563eb]"
+              }`}
+            >
+              {item}
             </div>
-            <p className="text-center mt-3 bg-green-500 rounded-full py-1 text-sm font-bold">
-              Excelente
-            </p>
-          </div>
-        </aside>
+          ))}
+        </nav>
 
-        <main className="space-y-4">
-          <section className="grid grid-cols-6 gap-3">
+        <div className="mt-8 rounded-2xl bg-white/10 p-4">
+          <p className="text-sm text-blue-200 mb-3">Saúde Financeira</p>
+          <div className="mx-auto w-28 h-28 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full bg-[#061b3a] flex items-center justify-center text-3xl font-black">
+              85
+            </div>
+          </div>
+          <p className="text-center mt-3 bg-green-500 rounded-full py-1 text-sm font-bold">Excelente</p>
+        </div>
+      </aside>
+
+      <div className="ml-[260px] p-5 grid grid-cols-[1fr_300px] gap-5">
+        <main className="space-y-5">
+          <section className="grid grid-cols-6 gap-4">
             {kpis.map(([title, value, subtitle, icon]) => (
               <div
                 key={title}
                 className="rounded-[24px] bg-white p-5 shadow-xl border border-slate-100 hover:scale-[1.02] transition-all duration-300"
               >
                 <div className="text-3xl mb-2">{icon}</div>
-                <p className="text-[11px] font-black uppercase text-slate-500">
-                  {title}
-                </p>
-                <h2 className="text-xl font-black mt-2 text-slate-900">
-                  {value}
-                </h2>
+                <p className="text-[11px] font-black uppercase text-slate-500">{title}</p>
+                <h2 className="text-xl font-black mt-2 text-slate-900">{value}</h2>
                 <p className="text-xs text-slate-500 mt-1">{subtitle}</p>
               </div>
             ))}
           </section>
 
-          <section className="grid grid-cols-3 gap-4">
-            <div className="col-span-1 rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
-              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
-                Orçamentado vs Realizado
-              </h3>
-              <ResponsiveContainer width="100%" height={220}>
+          <section className="grid grid-cols-3 gap-5">
+            <Card title="Orçamentado vs Realizado">
+              <ResponsiveContainer width="100%" height={230}>
                 <BarChart data={despesas} layout="vertical">
                   <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" width={90} />
+                  <YAxis dataKey="name" type="category" width={95} />
                   <Tooltip />
                   <Bar dataKey="orcamentado" fill="#2563eb" radius={6} />
                   <Bar dataKey="realizado" fill="#22c55e" radius={6} />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
 
-            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
-              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
-                Distribuição das Despesas
-              </h3>
-              <ResponsiveContainer width="100%" height={220}>
+            <Card title="Distribuição das Despesas">
+              <ResponsiveContainer width="100%" height={230}>
                 <PieChart>
-                  <Pie
-                    data={distribuicao}
-                    dataKey="value"
-                    innerRadius={55}
-                    outerRadius={85}
-                  >
+                  <Pie data={distribuicao} dataKey="value" innerRadius={58} outerRadius={88}>
                     {distribuicao.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={COLORS[index % COLORS.length]}
-                      />
+                      <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
 
-            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
-              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
-                Distribuição da Renda
-              </h3>
-              <ResponsiveContainer width="100%" height={220}>
+            <Card title="Distribuição da Renda">
+              <ResponsiveContainer width="100%" height={230}>
                 <PieChart>
                   <Pie
                     data={[
@@ -209,8 +159,8 @@ export default function App() {
                       { name: "Reserva", value: 10 },
                     ]}
                     dataKey="value"
-                    innerRadius={55}
-                    outerRadius={85}
+                    innerRadius={58}
+                    outerRadius={88}
                   >
                     {COLORS.map((color, index) => (
                       <Cell key={index} fill={color} />
@@ -219,63 +169,46 @@ export default function App() {
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
           </section>
 
-          <section className="grid grid-cols-3 gap-4">
-            <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
-              <Header title="Despesas Mensais" color="bg-blue-700" />
-              <table className="w-full text-xs">
-                <tbody>
-                  {despesas.map((item) => (
-                    <tr key={item.name} className="border-b">
-                      <td className="p-3 font-semibold">{item.name}</td>
-                      <td className="p-3">€ {item.realizado}</td>
-                      <td className="p-3 text-green-600">OK</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <section className="grid grid-cols-3 gap-5">
+            <TableCard title="Despesas Mensais" color="bg-blue-700">
+              {despesas.map((item) => (
+                <tr key={item.name} className="border-b border-slate-100">
+                  <td className="p-3 font-semibold">{item.name}</td>
+                  <td className="p-3">€ {item.realizado}</td>
+                  <td className="p-3 text-green-600 font-bold">OK</td>
+                </tr>
+              ))}
+            </TableCard>
 
-            <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
-              <Header title="Dívidas" color="bg-purple-700" />
-              <table className="w-full text-xs">
-                <tbody>
-                  {dividas.map(([nome, valor, progresso, prioridade]) => (
-                    <tr key={nome} className="border-b">
-                      <td className="p-3 font-semibold">{nome}</td>
-                      <td className="p-3">{valor}</td>
-                      <td className="p-3">{progresso}</td>
-                      <td className="p-3 text-red-500">{prioridade}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <TableCard title="Dívidas" color="bg-purple-700">
+              {dividas.map(([nome, valor, progresso, prioridade]) => (
+                <tr key={nome} className="border-b border-slate-100">
+                  <td className="p-3 font-semibold">{nome}</td>
+                  <td className="p-3">{valor}</td>
+                  <td className="p-3">{progresso}</td>
+                  <td className="p-3 text-red-500 font-bold">{prioridade}</td>
+                </tr>
+              ))}
+            </TableCard>
 
-            <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
-              <Header title="Pagamento Ideal" color="bg-green-700" />
-              <table className="w-full text-xs">
-                <tbody>
-                  {dividas.map(([nome], index) => (
-                    <tr key={nome} className="border-b">
-                      <td className="p-3 font-semibold">{nome}</td>
-                      <td className="p-3">€ {[500, 450, 300, 20][index]}</td>
-                      <td className="p-3">{[12, 24, 25, 11][index]} meses</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <TableCard title="Pagamento Ideal" color="bg-green-700">
+              {dividas.map(([nome], index) => (
+                <tr key={nome} className="border-b border-slate-100">
+                  <td className="p-3 font-semibold">{nome}</td>
+                  <td className="p-3">€ {[500, 450, 300, 20][index]}</td>
+                  <td className="p-3">{[12, 24, 25, 11][index]} meses</td>
+                </tr>
+              ))}
+            </TableCard>
           </section>
 
-          <section className="grid grid-cols-[340px_1fr] gap-4">
+          <section className="grid grid-cols-[340px_1fr] gap-5">
             <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
               <h3 className="font-black text-blue-900 mb-4">Simulador</h3>
-              <p className="text-sm text-slate-500">
-                Tempo estimado para ficar sem dívidas
-              </p>
+              <p className="text-sm text-slate-500">Tempo estimado para ficar sem dívidas</p>
               <div className="text-6xl font-black text-blue-700 mt-4">23</div>
               <p className="font-bold">meses</p>
               <div className="mt-5 bg-green-100 text-green-800 rounded-xl p-3 text-sm font-bold">
@@ -283,10 +216,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
-              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
-                Evolução da Dívida ao Longo dos Meses
-              </h3>
+            <Card title="Evolução da Dívida ao Longo dos Meses">
               <ResponsiveContainer width="100%" height={260}>
                 <AreaChart data={evolucao}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -303,11 +233,11 @@ export default function App() {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
           </section>
         </main>
 
-        <aside className="space-y-4">
+        <aside className="space-y-5">
           <Panel title="Objetivos Financeiros">
             {objetivos.map(([nome, valor, progresso]) => (
               <div key={nome} className="mb-4">
@@ -316,43 +246,26 @@ export default function App() {
                   <span>{valor}</span>
                 </div>
                 <div className="h-2 bg-slate-200 rounded-full">
-                  <div
-                    className="h-2 bg-green-500 rounded-full"
-                    style={{ width: `${progresso}%` }}
-                  />
+                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${progresso}%` }} />
                 </div>
-                <p className="text-right text-xs text-green-600 font-bold">
-                  {progresso}%
-                </p>
+                <p className="text-right text-xs text-green-600 font-bold">{progresso}%</p>
               </div>
             ))}
           </Panel>
 
           <Panel title="Próximos Pagamentos">
             {pagamentos.map(([nome, valor, dias]) => (
-              <div
-                key={nome}
-                className="flex justify-between items-center text-sm border-b py-2"
-              >
+              <div key={nome} className="flex justify-between items-center text-sm border-b border-slate-100 py-2">
                 <span>{nome}</span>
                 <span className="font-bold">{valor}</span>
-                <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs">
-                  {dias}
-                </span>
+                <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs">{dias}</span>
               </div>
             ))}
           </Panel>
 
           <Panel title="Alertas e Conselhos">
-            {[
-              "Muito bem! Mantém a disciplina.",
-              "Lazer está 10% acima do recomendado.",
-              "Aumentar €150/mês reduz 9 meses.",
-            ].map((item) => (
-              <div
-                key={item}
-                className="bg-orange-50 text-orange-800 rounded-xl p-3 text-sm mb-3"
-              >
+            {["Muito bem! Mantém a disciplina.", "Lazer está 10% acima do recomendado.", "Aumentar €150/mês reduz 9 meses."].map((item) => (
+              <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-sm mb-3">
                 {item}
               </div>
             ))}
@@ -363,10 +276,22 @@ export default function App() {
   )
 }
 
-function Header({ title, color }) {
+function Card({ title, children }) {
   return (
-    <div className={`${color} text-white text-center py-3 font-black text-sm`}>
-      {title}
+    <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
+      <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">{title}</h3>
+      {children}
+    </div>
+  )
+}
+
+function TableCard({ title, color, children }) {
+  return (
+    <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
+      <div className={`${color} text-white text-center py-3 font-black text-sm`}>{title}</div>
+      <table className="w-full text-xs">
+        <tbody>{children}</tbody>
+      </table>
     </div>
   )
 }
