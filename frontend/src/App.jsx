@@ -80,11 +80,9 @@ const dividas = [
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#eaf2ff] text-slate-900 p-4">
+    <div className="min-h-screen bg-[#edf4ff] text-slate-900 p-5">
       <div className="grid grid-cols-[240px_1fr_300px] gap-4">
-
-        {/* SIDEBAR */}
-        <aside className="min-h-[calc(100vh-32px)] rounded-3xl bg-[#061b3a] text-white p-5 shadow-2xl">
+        <aside className="min-h-[calc(100vh-40px)] rounded-[32px] bg-gradient-to-b from-[#041c43] to-[#03142f] text-white p-6 shadow-2xl border border-blue-900/30">
           <div className="text-center mb-6">
             <div className="text-5xl mb-3">📈€</div>
             <h1 className="text-2xl font-black leading-tight">
@@ -138,15 +136,12 @@ export default function App() {
           </div>
         </aside>
 
-        {/* CENTRO */}
         <main className="space-y-4">
-
-          {/* KPIS */}
           <section className="grid grid-cols-6 gap-3">
             {kpis.map(([title, value, subtitle, icon]) => (
               <div
                 key={title}
-                className="rounded-2xl bg-white p-4 shadow-lg border border-slate-100"
+                className="rounded-[24px] bg-white p-5 shadow-xl border border-slate-100 hover:scale-[1.02] transition-all duration-300"
               >
                 <div className="text-3xl mb-2">{icon}</div>
                 <p className="text-[11px] font-black uppercase text-slate-500">
@@ -160,10 +155,9 @@ export default function App() {
             ))}
           </section>
 
-          {/* GRÁFICOS */}
           <section className="grid grid-cols-3 gap-4">
-            <div className="col-span-1 rounded-2xl bg-white p-5 shadow-lg">
-              <h3 className="font-black text-sm mb-4">
+            <div className="col-span-1 rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
+              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
                 Orçamentado vs Realizado
               </h3>
               <ResponsiveContainer width="100%" height={220}>
@@ -177,8 +171,8 @@ export default function App() {
               </ResponsiveContainer>
             </div>
 
-            <div className="rounded-2xl bg-white p-5 shadow-lg">
-              <h3 className="font-black text-sm mb-4">
+            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
+              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
                 Distribuição das Despesas
               </h3>
               <ResponsiveContainer width="100%" height={220}>
@@ -190,7 +184,10 @@ export default function App() {
                     outerRadius={85}
                   >
                     {distribuicao.map((entry, index) => (
-                      <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={entry.name}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -198,8 +195,8 @@ export default function App() {
               </ResponsiveContainer>
             </div>
 
-            <div className="rounded-2xl bg-white p-5 shadow-lg">
-              <h3 className="font-black text-sm mb-4">
+            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
+              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
                 Distribuição da Renda
               </h3>
               <ResponsiveContainer width="100%" height={220}>
@@ -225,9 +222,8 @@ export default function App() {
             </div>
           </section>
 
-          {/* TABELAS */}
           <section className="grid grid-cols-3 gap-4">
-            <div className="rounded-2xl bg-white shadow-lg overflow-hidden">
+            <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
               <Header title="Despesas Mensais" color="bg-blue-700" />
               <table className="w-full text-xs">
                 <tbody>
@@ -242,7 +238,7 @@ export default function App() {
               </table>
             </div>
 
-            <div className="rounded-2xl bg-white shadow-lg overflow-hidden">
+            <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
               <Header title="Dívidas" color="bg-purple-700" />
               <table className="w-full text-xs">
                 <tbody>
@@ -258,7 +254,7 @@ export default function App() {
               </table>
             </div>
 
-            <div className="rounded-2xl bg-white shadow-lg overflow-hidden">
+            <div className="rounded-[28px] bg-white shadow-xl overflow-hidden border border-slate-100">
               <Header title="Pagamento Ideal" color="bg-green-700" />
               <table className="w-full text-xs">
                 <tbody>
@@ -274,26 +270,21 @@ export default function App() {
             </div>
           </section>
 
-          {/* INFERIOR */}
           <section className="grid grid-cols-[340px_1fr] gap-4">
-            <div className="rounded-2xl bg-white p-5 shadow-lg">
-              <h3 className="font-black text-blue-900 mb-4">
-                Simulador
-              </h3>
+            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
+              <h3 className="font-black text-blue-900 mb-4">Simulador</h3>
               <p className="text-sm text-slate-500">
                 Tempo estimado para ficar sem dívidas
               </p>
-              <div className="text-6xl font-black text-blue-700 mt-4">
-                23
-              </div>
+              <div className="text-6xl font-black text-blue-700 mt-4">23</div>
               <p className="font-bold">meses</p>
               <div className="mt-5 bg-green-100 text-green-800 rounded-xl p-3 text-sm font-bold">
                 Estratégia recomendada: Avalanche
               </div>
             </div>
 
-            <div className="rounded-2xl bg-white p-5 shadow-lg">
-              <h3 className="font-black text-sm mb-4">
+            <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
+              <h3 className="font-extrabold text-[15px] mb-5 text-slate-800">
                 Evolução da Dívida ao Longo dos Meses
               </h3>
               <ResponsiveContainer width="100%" height={260}>
@@ -305,9 +296,10 @@ export default function App() {
                   <Area
                     type="monotone"
                     dataKey="divida"
-                    stroke="#6d28d9"
+                    stroke="#5b21b6"
                     fill="#c4b5fd"
-                    strokeWidth={3}
+                    fillOpacity={0.7}
+                    strokeWidth={4}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -315,7 +307,6 @@ export default function App() {
           </section>
         </main>
 
-        {/* PAINEL DIREITO */}
         <aside className="space-y-4">
           <Panel title="Objetivos Financeiros">
             {objetivos.map(([nome, valor, progresso]) => (
@@ -382,7 +373,7 @@ function Header({ title, color }) {
 
 function Panel({ title, children }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-lg">
+    <div className="rounded-[28px] bg-white p-6 shadow-xl border border-slate-100">
       <h3 className="font-black text-orange-700 mb-4">{title}</h3>
       {children}
     </div>
