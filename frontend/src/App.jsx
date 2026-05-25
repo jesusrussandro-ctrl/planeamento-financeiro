@@ -181,82 +181,115 @@ export default function App() {
             <TableCard title="Rendimentos" color="bg-emerald-700">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="p-2 text-left">Fonte</th>
-                  <th className="p-2">Orçamentado</th>
-                  <th className="p-2">Recebido</th>
+                  <th className="p-1.5 text-left">Fonte</th>
+                  <th className="p-1.5">Orçamentado</th>
+                  <th className="p-1.5">Recebido</th>
                 </tr>
               </thead>
               <tbody>
                 {rendimentos.map(([fonte, orc, rec]) => (
                   <tr key={fonte} className="border-b border-slate-100">
-                    <td className="p-2 font-semibold">{fonte}</td>
-                    <td className="p-2 text-center">{orc}</td>
-                    <td className="p-2 text-center">{rec}</td>
+                    <td className="p-1.5 font-semibold">{fonte}</td>
+                    <td className="p-1.5 text-center">{orc}</td>
+                    <td className="p-1.5 text-center">{rec}</td>
                   </tr>
                 ))}
+                <tr className="bg-emerald-50 font-black">
+                  <td className="p-1.5">TOTAL</td>
+                  <td className="p-1.5 text-center">€ 5.000,00</td>
+                  <td className="p-1.5 text-center">€ 5.000,00</td>
+                </tr>
               </tbody>
             </TableCard>
 
             <TableCard title="Despesas Mensais" color="bg-blue-700">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="p-2 text-left">Categoria</th>
-                  <th className="p-2">Orçamentado</th>
-                  <th className="p-2">Realizado</th>
-                  <th className="p-2">%</th>
+                  <th className="p-1.5 text-left">Categoria</th>
+                  <th className="p-1.5">Orçamentado</th>
+                  <th className="p-1.5">Realizado</th>
+                  <th className="p-1.5">%</th>
                 </tr>
               </thead>
               <tbody>
                 {despesas.map((item) => (
                   <tr key={item.name} className="border-b border-slate-100">
-                    <td className="p-2 font-semibold">{item.name}</td>
-                    <td className="p-2 text-center">€ {item.orcamentado}</td>
-                    <td className="p-2 text-center">€ {item.realizado}</td>
-                    <td className="p-2 text-center text-blue-700 font-bold">{item.percentagem}</td>
+                    <td className="p-1.5 font-semibold">{item.name}</td>
+                    <td className="p-1.5 text-center">€ {item.orcamentado}</td>
+                    <td className="p-1.5 text-center">€ {item.realizado}</td>
+                    <td className="p-1.5 text-center text-blue-700 font-bold">{item.percentagem}</td>
                   </tr>
                 ))}
+                <tr className="bg-blue-50 font-black">
+                  <td className="p-1.5">TOTAL</td>
+                  <td className="p-1.5 text-center">€ 3.850,00</td>
+                  <td className="p-1.5 text-center">€ 3.800,00</td>
+                  <td className="p-1.5 text-center">76,0%</td>
+                </tr>
               </tbody>
             </TableCard>
 
             <TableCard title="Dívidas" color="bg-purple-700">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="p-2 text-left">Credor</th>
-                  <th className="p-2">Saldo Total</th>
-                  <th className="p-2">Progresso</th>
-                  <th className="p-2">Juros</th>
-                  <th className="p-2">Prioridade</th>
+                  <th className="p-1 text-left">Credor</th>
+                  <th className="p-1">Saldo</th>
+                  <th className="p-1">Prog.</th>
+                  <th className="p-1">Juros</th>
+                  <th className="p-1">Prior.</th>
                 </tr>
               </thead>
               <tbody>
                 {dividas.map(([nome, valor, progresso, juros, prioridade]) => (
-                  <tr key={nome} className="border-b border-slate-100">
-                    <td className="p-2 font-semibold">{nome}</td>
-                    <td className="p-2 text-center">{valor}</td>
-                    <td className="p-2 text-center">{progresso}</td>
-                    <td className="p-2 text-center">{juros}</td>
-                    <td className="p-2 text-center text-red-500 font-bold">{prioridade}</td>
+                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
+                    <td className="p-1 font-semibold">{nome}</td>
+                    <td className="p-1 text-center">{valor}</td>
+                    <td className="p-1 text-center">{progresso}</td>
+                    <td className="p-1 text-center">{juros}</td>
+                    <td className="p-1 text-center text-red-500 font-bold">{prioridade}</td>
                   </tr>
                 ))}
+                <tr className="bg-purple-100 font-black text-[10px]">
+                  <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
+                  <td className="p-1.5 text-center" colSpan="4">€ 28.450,00</td>
+                </tr>
+                <tr className="bg-purple-50 font-black text-[10px]">
+                  <td className="p-1.5">TOTAL MÍNIMO (mês)</td>
+                  <td className="p-1.5 text-center" colSpan="4">€ 950,00</td>
+                </tr>
               </tbody>
             </TableCard>
 
             <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="p-2 text-left">Credor</th>
-                  <th className="p-2">Pagamento Ideal</th>
-                  <th className="p-2">Tempo Estimado</th>
+                  <th className="p-1 text-left">Credor</th>
+                  <th className="p-1">Pagamento</th>
+                  <th className="p-1">% Disp.</th>
+                  <th className="p-1">Tempo</th>
                 </tr>
               </thead>
               <tbody>
                 {dividas.map(([nome], index) => (
-                  <tr key={nome} className="border-b border-slate-100">
-                    <td className="p-2 font-semibold">{nome}</td>
-                    <td className="p-2 text-center">€ {[500, 450, 300, 20][index]}</td>
-                    <td className="p-2 text-center">{[12, 24, 25, 11][index]} meses</td>
+                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
+                    <td className="p-1 font-semibold">{nome}</td>
+                    <td className="p-1 text-center">€ {[500, 450, 300, 20][index]}</td>
+                    <td className="p-1 text-center">{["37,0%", "33,3%", "22,2%", "1,5%"][index]}</td>
+                    <td className="p-1 text-center">{[12, 24, 25, 11][index]} meses</td>
                   </tr>
                 ))}
+                <tr className="bg-green-100 font-black text-[10px]">
+                  <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
+                  <td className="p-1.5 text-center">€ 1.350,00</td>
+                  <td className="p-1.5 text-center">100%</td>
+                  <td className="p-1.5"></td>
+                </tr>
+                <tr className="bg-green-50 font-black text-[10px]">
+                  <td className="p-1.5">SOBRA / FOLGA</td>
+                  <td className="p-1.5 text-center">€ 0,00</td>
+                  <td className="p-1.5"></td>
+                  <td className="p-1.5"></td>
+                </tr>
               </tbody>
             </TableCard>
           </section>
@@ -351,7 +384,7 @@ function TableCard({ title, color, children }) {
   return (
     <div className="rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100">
       <div className={`${color} text-white text-center py-2.5 font-black text-xs uppercase`}>{title}</div>
-      <table className="w-full text-[11px]">{children}</table>
+      <table className="w-full text-[10px] leading-tight">{children}</table>
     </div>
   )
 }
