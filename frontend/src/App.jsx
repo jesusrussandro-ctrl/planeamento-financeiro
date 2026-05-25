@@ -77,38 +77,7 @@ const dividas = [
 export default function App() {
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
-      <aside className="fixed left-0 top-0 z-20 w-[226px] min-h-screen bg-gradient-to-b from-[#041c43] to-[#03142f] text-white p-5 shadow-2xl border-r border-blue-900/30 rounded-r-[30px]">
-        <div className="text-center mb-5">
-          <div className="text-5xl mb-2">📈€</div>
-          <h1 className="text-[25px] font-black leading-tight">Planeamento Financeiro</h1>
-          <p className="text-xs text-blue-200 mt-2">Controlo Financeiro Familiar</p>
-        </div>
-
-        <button className="w-full bg-[#0d3268] border border-blue-400/30 rounded-xl py-2.5 mb-4 font-bold text-sm">
-          📅 Maio 2024
-        </button>
-
-        <nav className="space-y-2">
-          {["Resumo", "Rendimentos", "Despesas", "Dívidas", "Objetivos", "Calendário", "Pagamentos", "Simulador", "Relatórios", "Definições"].map((item, index) => (
-            <div
-              key={item}
-              className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer ${
-                index === 0 ? "bg-blue-600 shadow-lg" : "bg-[#0b255f] hover:bg-[#2563eb]"
-              }`}
-            >
-              {item}
-            </div>
-          ))}
-        </nav>
-
-        <div className="mt-6 rounded-2xl bg-white/10 p-4">
-          <p className="text-sm text-blue-200 mb-3">Saúde Financeira</p>
-          <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-[#061b3a] flex items-center justify-center text-3xl font-black">85</div>
-          </div>
-          <p className="text-center mt-3 bg-green-500 rounded-full py-1 text-sm font-bold">Excelente</p>
-        </div>
-      </aside>
+      <Sidebar />
 
       <div className="ml-[242px] p-4 grid grid-cols-[1fr_286px] gap-4">
         <main className="space-y-4">
@@ -596,5 +565,128 @@ function Panel({ title, children }) {
       <h3 className="font-black text-orange-700 mb-4">{title}</h3>
       {children}
     </div>
+  )
+}
+
+function Sidebar() {
+  const menuItems = [
+    ["🏠", "Resumo"],
+    ["⚖️", "Rendimentos"],
+    ["💸", "Despesas"],
+    ["🪙", "Dívidas"],
+    ["🎯", "Objetivos"],
+    ["🗓️", "Calendário"],
+    ["💳", "Pagamentos"],
+    ["📋", "Simulador"],
+    ["📊", "Relatórios"],
+    ["⚙️", "Definições"],
+  ]
+
+  const scores = [
+    ["💵", "Orçamento", "80/100"],
+    ["💰", "Poupança", "90/100"],
+    ["🪙", "Dívidas", "70/100"],
+    ["✅", "Fundo Emergência", "100/100"],
+    ["🛡️", "Compromisso Renda", "85/100"],
+  ]
+
+  return (
+    <aside className="fixed left-0 top-0 z-20 w-[226px] min-h-screen p-[6px]">
+      <div className="min-h-[calc(100vh-12px)] rounded-[22px] bg-gradient-to-b from-[#061b3f] via-[#03152f] to-[#020d22] text-white shadow-2xl border border-white/20 overflow-hidden">
+        <div className="px-4 pt-4 pb-3 text-center">
+          <div className="mx-auto mb-2 flex h-[70px] w-[92px] items-center justify-center text-[56px] leading-none text-[#ffb000]">
+            📊€
+          </div>
+
+          <h1 className="text-[25px] font-black leading-[1.05] tracking-tight">
+            Planeamento
+            <br />
+            Financeiro
+          </h1>
+
+          <p className="mt-2 text-[12px] font-semibold text-white/90">
+            Controlo Financeiro Familiar
+          </p>
+        </div>
+
+        <div className="mx-3 mb-3 grid grid-cols-[1fr_36px] overflow-hidden rounded-[12px] border border-cyan-400/40 bg-[#062a57] shadow-inner">
+          <button className="flex items-center justify-center gap-2 py-2 text-[12px] font-black text-yellow-300">
+            <span>🗓️</span>
+            Maio 2024
+          </button>
+          <button className="border-l border-cyan-400/30 text-yellow-300">⌄</button>
+        </div>
+
+        <nav className="px-3 space-y-[5px]">
+          {menuItems.map(([icon, label], index) => (
+            <div
+              key={label}
+              className={`flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all ${
+                index === 0
+                  ? "bg-gradient-to-r from-[#0b7cff] to-[#1d4ed8] shadow-[0_0_18px_rgba(59,130,246,0.65)]"
+                  : "hover:bg-white/10"
+              }`}
+            >
+              <span className="w-4 text-center text-[15px]">{icon}</span>
+              <span>{label}</span>
+            </div>
+          ))}
+        </nav>
+
+        <div className="mx-3 mt-4 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
+          <div className="mb-2 text-center text-[9px] font-black uppercase text-white/80">
+            Moeda
+          </div>
+
+          <div className="grid grid-cols-[1fr_32px] overflow-hidden rounded-[9px] border border-cyan-400/30 bg-[#062a57]">
+            <div className="flex items-center justify-center gap-2 py-2 text-[11px] font-black">
+              <span className="rounded bg-blue-700 px-1">🇪🇺</span>
+              EUR - Euro (€)
+            </div>
+            <div className="flex items-center justify-center border-l border-cyan-400/30 text-cyan-300">
+              ⌄
+            </div>
+          </div>
+
+          <div className="mt-3 text-center">
+            <p className="text-[8px] font-black uppercase text-white/70">Atualizado em</p>
+            <p className="text-[11px] font-black">01/05/2024 12:30</p>
+          </div>
+        </div>
+
+        <div className="mx-3 mt-3 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
+          <h3 className="mb-2 text-center text-[12px] font-black uppercase">Saúde Financeira</h3>
+
+          <div
+            className="mx-auto flex h-[92px] w-[92px] items-center justify-center rounded-full"
+            style={{
+              background:
+                "conic-gradient(#84cc16 0 18%, #22c55e 18% 44%, #14b8a6 44% 76%, #0ea5e9 76% 85%, rgba(255,255,255,0.12) 85% 100%)",
+            }}
+          >
+            <div className="flex h-[64px] w-[64px] flex-col items-center justify-center rounded-full bg-[#071b3a] font-black shadow-inner">
+              <span className="text-[30px] leading-none">85</span>
+              <span className="text-[10px]">/100</span>
+            </div>
+          </div>
+
+          <div className="mx-auto mt-2 w-[112px] rounded-full bg-gradient-to-r from-[#16a34a] to-[#059669] py-1 text-center text-[11px] font-black shadow-lg">
+            Excelente
+          </div>
+
+          <div className="mt-3 space-y-[6px]">
+            {scores.map(([icon, label, value]) => (
+              <div key={label} className="flex items-center justify-between text-[10px] font-bold">
+                <span className="flex items-center gap-2">
+                  <span>{icon}</span>
+                  {label}
+                </span>
+                <span>{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
   )
 }
