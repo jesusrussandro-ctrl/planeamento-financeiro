@@ -4,82 +4,44 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts"
 
-const COLORS = ["#2563eb", "#22c55e", "#f97316", "#8b5cf6", "#06b6d4", "#facc15"]
-
-const rendimentos = [
-  ["Salário Principal", "€ 5.000,00", "€ 5.000,00"],
-  ["Trabalho Extra / Freelance", "€ -", "€ -"],
-  ["Investimentos", "€ -", "€ -"],
-  ["Outros Rendimentos", "€ -", "€ -"],
-]
+const COLORS = ["#0e7490", "#0891b2", "#84cc16", "#7c3aed", "#2563eb", "#f59e0b"]
 
 const despesas = [
-  { name: "Habitação", orcamentado: 950, realizado: 950, percentagem: "19,0%" },
-  { name: "Transportes", orcamentado: 400, realizado: 400, percentagem: "8,0%" },
-  { name: "Alimentação", orcamentado: 600, realizado: 600, percentagem: "12,0%" },
-  { name: "Saúde", orcamentado: 200, realizado: 200, percentagem: "4,0%" },
-  { name: "Lazer", orcamentado: 200, realizado: 200, percentagem: "4,0%" },
-  { name: "Outros", orcamentado: 350, realizado: 330, percentagem: "6,6%" },
+  { name: "Habitação", orcamentado: 950, realizado: 950 },
+  { name: "Transportes", orcamentado: 400, realizado: 400 },
+  { name: "Alimentação", orcamentado: 600, realizado: 600 },
+  { name: "Saúde", orcamentado: 200, realizado: 200 },
+  { name: "Lazer", orcamentado: 200, realizado: 200 },
+  { name: "Outros", orcamentado: 350, realizado: 330 },
 ]
 
 const distribuicao = [
-  { name: "Habitação", value: 950 },
-  { name: "Alimentação", value: 600 },
-  { name: "Transportes", value: 400 },
-  { name: "Saúde", value: 200 },
-  { name: "Lazer", value: 200 },
-  { name: "Outros", value: 300 },
+  { name: "Habitação", value: 950, percent: "35,8%" },
+  { name: "Alimentação", value: 600, percent: "22,6%" },
+  { name: "Saúde", value: 420, percent: "15,9%" },
+  { name: "Transportes", value: 370, percent: "13,9%" },
+  { name: "Lazer", value: 200, percent: "7,5%" },
+  { name: "Outros", value: 115, percent: "4,3%" },
 ]
 
-const evolucao = [
-  { mes: "Mês 1", divida: 28450 },
-  { mes: "Mês 3", divida: 25000 },
-  { mes: "Mês 5", divida: 22000 },
-  { mes: "Mês 7", divida: 19000 },
-  { mes: "Mês 9", divida: 16000 },
-  { mes: "Mês 11", divida: 13000 },
-  { mes: "Mês 13", divida: 10000 },
-  { mes: "Mês 15", divida: 7500 },
-  { mes: "Mês 17", divida: 5000 },
-  { mes: "Mês 19", divida: 3000 },
-  { mes: "Mês 21", divida: 1500 },
-  { mes: "Mês 23", divida: 0 },
-]
-
-const kpis = [
-  ["Índice de Saúde Financeira", "85", "/100", "Excelente", "🟢"],
-  ["Salário Líquido", "€ 5.000,00", "", "Mensal", "💼"],
-  ["Total Despesas", "€ 2.650,00", "", "53,0% do salário", "🧾"],
-  ["Disponível p/ Dívidas", "€ 1.350,00", "", "27,0% do salário", "💰"],
-  ["Total Dívidas", "€ 28.450,00", "", "Min. mensal: € 950,00", "🏦"],
-  ["Dias Restantes", "17", "", "até 31/05/2024", "📅"],
+const renda = [
+  { name: "Despesas", value: 53, color: "#f97316" },
+  { name: "Dívidas", value: 27, color: "#15803d" },
+  { name: "Livre", value: 10, color: "#2563eb" },
+  { name: "Reserva", value: 10, color: "#0e7490" },
 ]
 
 const objetivos = [
-  ["Fundo de Emergência", "Objetivo: € 3.000,00", "€ 2.100,00", 70],
-  ["Quitar Cartão de Crédito", "Objetivo: € 5.000,00", "€ 1.000,00", 20],
-  ["Entrada para Casa", "Objetivo: € 15.000,00", "€ 3.750,00", 25],
-  ["Nova Viatura", "Objetivo: € 20.000,00", "€ 6.000,00", 30],
-]
-
-const pagamentos = [
-  ["01/06", "Habitação", "€ 700,00", "2 dias"],
-  ["05/06", "Cartão de Crédito", "€ 500,00", "5 dias"],
-  ["07/06", "Luz", "€ 85,00", "7 dias"],
-  ["12/06", "Internet", "€ 35,00", "12 dias"],
-]
-
-const dividas = [
-  ["Cartão de Crédito", "€ 5.000,00", "80%", "8,00%", "Alta"],
-  ["Empréstimo Pessoal", "€ 10.000,00", "65%", "3,50%", "Alta"],
-  ["Financiamento Auto", "€ 8.000,00", "40%", "1,50%", "Média"],
-  ["Crédito Loja", "€ 1.450,00", "15%", "2,90%", "Baixa"],
+  ["💵", "Fundo de Emergência", "Objetivo: € 3.000,00", "€ 2.100,00", 70, "bg-green-500"],
+  ["💳", "Quitar Cartão de Crédito", "Objetivo: € 5.000,00", "€ 1.000,00", 20, "bg-orange-500"],
+  ["🏠", "Entrada para Casa", "Objetivo: € 15.000,00", "€ 3.750,00", 25, "bg-blue-500"],
+  ["🚗", "Nova Viatura", "Objetivo: € 20.000,00", "€ 6.000,00", 30, "bg-purple-500"],
 ]
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
-      <aside className="fixed left-0 top-0 z-20 w-[226px] min-h-screen bg-gradient-to-b from-[#041c43] to-[#03142f] text-white p-5 shadow-2xl border-r border-blue-900/30 rounded-r-[30px]">
+    <div className="min-h-screen bg-[#edf4ff] text-[#061633]">
+      <aside className="fixed left-0 top-0 z-20 w-[226px] min-h-screen bg-gradient-to-b from-[#041c43] to-[#03142f] text-white p-5 shadow-2xl rounded-r-[30px]">
         <div className="text-center mb-5">
           <div className="text-5xl mb-2">📈€</div>
           <h1 className="text-[25px] font-black leading-tight">Planeamento Financeiro</h1>
@@ -94,7 +56,7 @@ export default function App() {
           {["Resumo", "Rendimentos", "Despesas", "Dívidas", "Objetivos", "Calendário", "Pagamentos", "Simulador", "Relatórios", "Definições"].map((item, index) => (
             <div
               key={item}
-              className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer ${
+              className={`px-4 py-2.5 rounded-xl text-sm font-bold transition cursor-pointer ${
                 index === 0 ? "bg-blue-600 shadow-lg" : "bg-[#0b255f] hover:bg-[#2563eb]"
               }`}
             >
@@ -102,298 +64,203 @@ export default function App() {
             </div>
           ))}
         </nav>
-
-        <div className="mt-6 rounded-2xl bg-white/10 p-4">
-          <p className="text-sm text-blue-200 mb-3">Saúde Financeira</p>
-          <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-[#061b3a] flex items-center justify-center text-3xl font-black">85</div>
-          </div>
-          <p className="text-center mt-3 bg-green-500 rounded-full py-1 text-sm font-bold">Excelente</p>
-        </div>
       </aside>
 
-      <div className="ml-[242px] p-4 grid grid-cols-[1fr_286px] gap-4">
-        <main className="space-y-4">
-          <section className="grid grid-cols-6 gap-3">
-            {kpis.map(([title, value, small, subtitle, icon]) => (
-              <div key={title} className="rounded-[22px] bg-white p-4 shadow-lg border border-slate-100 min-h-[116px]">
-                <div className="text-2xl mb-1">{icon}</div>
-                <p className="text-[10px] font-black uppercase text-slate-500 leading-tight">{title}</p>
-                <h2 className="text-[22px] font-black mt-1 text-slate-900">
-                  {value} <span className="text-xs">{small}</span>
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">{subtitle}</p>
-              </div>
-            ))}
+      <div className="ml-[242px] p-3 grid grid-cols-[1fr_290px] gap-3">
+        <main className="space-y-3">
+          <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
+            <HealthCard />
+            <KpiCard icon="💼" title="Salário Líquido" value="€ 5.000,00" accent="blue" showBar />
+            <KpiCard icon="🧾" title="Total Despesas" value="€ 2.650,00" subtitle="53,0% do salário" accent="red" />
+            <KpiCard icon="💸" title="Disponível p/ Dívidas" value="€ 1.350,00" subtitle="27,0% do salário" accent="green" green />
+            <KpiCard icon="🏦" title="Total Dívidas" value="€ 28.450,00" subtitle="Min. mensal: € 950,00" accent="purple" />
+            <KpiCard icon="🗓️" title="Dias Restantes" value="17" subtitle="até 31/05/2024" accent="orange" />
           </section>
 
-          <section className="grid grid-cols-3 gap-4">
-            <Card title="Orçamentado vs Realizado">
-              <ResponsiveContainer width="100%" height={190}>
-                <BarChart data={despesas} layout="vertical">
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" width={86} />
+          <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-3">
+            <ChartBox title="Orçamentado vs Realizado (Despesas)">
+              <div className="flex justify-center gap-5 text-[10px] font-bold mb-1">
+                <span className="text-blue-700">■ Orçamentado</span>
+                <span className="text-green-600">■ Realizado</span>
+              </div>
+              <ResponsiveContainer width="100%" height={205}>
+                <BarChart data={despesas} layout="vertical" barGap={2}>
+                  <XAxis type="number" tick={{ fontSize: 10 }} />
+                  <YAxis dataKey="name" type="category" width={86} tick={{ fontSize: 11, fontWeight: 700 }} />
                   <Tooltip />
-                  <Bar dataKey="orcamentado" fill="#2563eb" radius={6} />
-                  <Bar dataKey="realizado" fill="#22c55e" radius={6} />
+                  <Bar dataKey="orcamentado" fill="#2563eb" radius={5} barSize={9} />
+                  <Bar dataKey="realizado" fill="#22c55e" radius={5} barSize={9} />
                 </BarChart>
               </ResponsiveContainer>
-            </Card>
+            </ChartBox>
 
-            <Card title="Distribuição das Despesas">
-              <ResponsiveContainer width="100%" height={190}>
-                <PieChart>
-                  <Pie data={distribuicao} dataKey="value" innerRadius={50} outerRadius={75}>
-                    {distribuicao.map((entry, index) => (
-                      <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </Card>
-
-            <Card title="Distribuição da Renda">
-              <ResponsiveContainer width="100%" height={190}>
-                <PieChart>
-                  <Pie
-                    data={[
-                      { name: "Despesas", value: 53 },
-                      { name: "Dívidas", value: 27 },
-                      { name: "Livre", value: 10 },
-                      { name: "Reserva", value: 10 },
-                    ]}
-                    dataKey="value"
-                    innerRadius={50}
-                    outerRadius={75}
-                  >
-                    {COLORS.map((color, index) => (
-                      <Cell key={index} fill={color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </Card>
-          </section>
-
-          <section className="grid grid-cols-4 gap-4">
-            <TableCard title="Rendimentos" color="bg-emerald-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1.5 text-left">Fonte</th>
-                  <th className="p-1.5">Orçamentado</th>
-                  <th className="p-1.5">Recebido</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rendimentos.map(([fonte, orc, rec]) => (
-                  <tr key={fonte} className="border-b border-slate-100">
-                    <td className="p-1.5 font-semibold">{fonte}</td>
-                    <td className="p-1.5 text-center">{orc}</td>
-                    <td className="p-1.5 text-center">{rec}</td>
-                  </tr>
-                ))}
-                <tr className="bg-emerald-50 font-black">
-                  <td className="p-1.5">TOTAL</td>
-                  <td className="p-1.5 text-center">€ 5.000,00</td>
-                  <td className="p-1.5 text-center">€ 5.000,00</td>
-                </tr>
-              </tbody>
-            </TableCard>
-
-            <TableCard title="Despesas Mensais" color="bg-blue-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1.5 text-left">Categoria</th>
-                  <th className="p-1.5">Orçamentado</th>
-                  <th className="p-1.5">Realizado</th>
-                  <th className="p-1.5">%</th>
-                </tr>
-              </thead>
-              <tbody>
-                {despesas.map((item) => (
-                  <tr key={item.name} className="border-b border-slate-100">
-                    <td className="p-1.5 font-semibold">{item.name}</td>
-                    <td className="p-1.5 text-center">€ {item.orcamentado}</td>
-                    <td className="p-1.5 text-center">€ {item.realizado}</td>
-                    <td className="p-1.5 text-center text-blue-700 font-bold">{item.percentagem}</td>
-                  </tr>
-                ))}
-                <tr className="bg-blue-50 font-black">
-                  <td className="p-1.5">TOTAL</td>
-                  <td className="p-1.5 text-center">€ 3.850,00</td>
-                  <td className="p-1.5 text-center">€ 3.800,00</td>
-                  <td className="p-1.5 text-center">76,0%</td>
-                </tr>
-              </tbody>
-            </TableCard>
-
-            <TableCard title="Dívidas" color="bg-purple-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1 text-left">Credor</th>
-                  <th className="p-1">Saldo</th>
-                  <th className="p-1">Prog.</th>
-                  <th className="p-1">Juros</th>
-                  <th className="p-1">Prior.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dividas.map(([nome, valor, progresso, juros, prioridade]) => (
-                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
-                    <td className="p-1 font-semibold">{nome}</td>
-                    <td className="p-1 text-center">{valor}</td>
-                    <td className="p-1 text-center">{progresso}</td>
-                    <td className="p-1 text-center">{juros}</td>
-                    <td className="p-1 text-center text-red-500 font-bold">{prioridade}</td>
-                  </tr>
-                ))}
-                <tr className="bg-purple-100 font-black text-[10px]">
-                  <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
-                  <td className="p-1.5 text-center" colSpan="4">€ 28.450,00</td>
-                </tr>
-                <tr className="bg-purple-50 font-black text-[10px]">
-                  <td className="p-1.5">TOTAL MÍNIMO (mês)</td>
-                  <td className="p-1.5 text-center" colSpan="4">€ 950,00</td>
-                </tr>
-              </tbody>
-            </TableCard>
-
-            <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1 text-left">Credor</th>
-                  <th className="p-1">Pagamento</th>
-                  <th className="p-1">% Disp.</th>
-                  <th className="p-1">Tempo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dividas.map(([nome], index) => (
-                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
-                    <td className="p-1 font-semibold">{nome}</td>
-                    <td className="p-1 text-center">€ {[500, 450, 300, 20][index]}</td>
-                    <td className="p-1 text-center">{["37,0%", "33,3%", "22,2%", "1,5%"][index]}</td>
-                    <td className="p-1 text-center">{[12, 24, 25, 11][index]} meses</td>
-                  </tr>
-                ))}
-                <tr className="bg-green-100 font-black text-[10px]">
-                  <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
-                  <td className="p-1.5 text-center">€ 1.350,00</td>
-                  <td className="p-1.5 text-center">100%</td>
-                  <td className="p-1.5"></td>
-                </tr>
-                <tr className="bg-green-50 font-black text-[10px]">
-                  <td className="p-1.5">SOBRA / FOLGA</td>
-                  <td className="p-1.5 text-center">€ 0,00</td>
-                  <td className="p-1.5"></td>
-                  <td className="p-1.5"></td>
-                </tr>
-              </tbody>
-            </TableCard>
-          </section>
-
-          <section className="grid grid-cols-[300px_1fr] gap-4">
-            <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-              <h3 className="font-black text-blue-900 mb-3">Simulador: quanto tempo para ficar sem dívidas?</h3>
-              <p className="text-sm text-slate-500">Valor disponível mensal para dívidas</p>
-              <div className="text-5xl font-black text-blue-700 mt-3">23</div>
-              <p className="font-bold">meses</p>
-              <div className="mt-4 bg-green-100 text-green-800 rounded-xl p-3 text-xs font-bold">
-                Estratégia recomendada: Avalanche
+            <ChartBox title="Distribuição das Despesas">
+              <div className="grid grid-cols-[1fr_120px] items-center">
+                <div className="relative h-[210px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={distribuicao} dataKey="value" innerRadius={56} outerRadius={86}>
+                        {distribuicao.map((entry, index) => (
+                          <Cell key={entry.name} fill={COLORS[index]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex items-center justify-center text-center pointer-events-none">
+                    <div className="font-black text-blue-950">
+                      € 2.650
+                      <div className="text-[10px]">Total</div>
+                    </div>
+                  </div>
+                </div>
+                <LegendList items={distribuicao} colors={COLORS} />
               </div>
-            </div>
+            </ChartBox>
 
-            <Card title="Evolução da Dívida ao Longo dos Meses">
-              <ResponsiveContainer width="100%" height={230}>
-                <AreaChart data={evolucao}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="mes" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="divida"
-                    stroke="#5b21b6"
-                    fill="#c4b5fd"
-                    fillOpacity={0.7}
-                    strokeWidth={4}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </Card>
+            <ChartBox title="Distribuição da Renda">
+              <div className="grid grid-cols-[1fr_120px] items-center">
+                <div className="relative h-[210px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={renda} dataKey="value" innerRadius={56} outerRadius={86}>
+                        {renda.map((entry) => (
+                          <Cell key={entry.name} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex items-center justify-center text-4xl pointer-events-none">
+                    💼
+                  </div>
+                </div>
+                <LegendList items={renda.map(i => ({ ...i, percent: `${i.value},0%` }))} colors={renda.map(i => i.color)} />
+              </div>
+            </ChartBox>
           </section>
         </main>
 
-        <aside className="space-y-4">
-          <Panel title="Objetivos Financeiros">
-            {objetivos.map(([nome, objetivo, valor, progresso]) => (
-              <div key={nome} className="mb-4">
-                <div className="flex justify-between text-xs font-bold mb-1">
-                  <span>{nome}</span>
-                  <span>{valor}</span>
-                </div>
-                <p className="text-[11px] text-slate-500 mb-1">{objetivo}</p>
-                <div className="h-2 bg-slate-200 rounded-full">
-                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${progresso}%` }} />
-                </div>
-                <p className="text-right text-xs text-green-600 font-bold">{progresso}%</p>
-              </div>
-            ))}
-          </Panel>
-
-          <Panel title="Próximos Pagamentos">
-            {pagamentos.map(([data, nome, valor, dias]) => (
-              <div key={nome} className="grid grid-cols-[44px_1fr_64px_54px] items-center text-xs border-b border-slate-100 py-2 gap-1">
-                <span className="font-bold">{data}</span>
-                <span>{nome}</span>
-                <span className="font-bold">{valor}</span>
-                <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-[10px] text-center">{dias}</span>
-              </div>
-            ))}
-          </Panel>
-
-          <Panel title="Alertas e Conselhos">
-            {[
-              "Muito bem! Está a manter a disciplina nos pagamentos das dívidas.",
-              "As despesas de lazer estão 10% acima do recomendado.",
-              "Se aumentar €150/mês na dívida, termina 9 meses mais cedo.",
-            ].map((item) => (
-              <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-xs mb-3">
-                {item}
-              </div>
-            ))}
-          </Panel>
+        <aside>
+          <GoalsPanel />
         </aside>
       </div>
     </div>
   )
 }
 
-function Card({ title, children }) {
+function HealthCard() {
   return (
-    <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-      <h3 className="font-extrabold text-[14px] mb-4 text-slate-800">{title}</h3>
+    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-3 flex gap-3 items-center">
+      <div>
+        <h3 className="text-[12px] uppercase font-black text-blue-950 mb-2">Índice de Saúde Financeira</h3>
+        <div
+          className="relative w-[92px] h-[92px] rounded-full flex items-center justify-center"
+          style={{ background: "conic-gradient(#29c443 0 85%, #e5eef8 85% 100%)" }}
+        >
+          <div className="w-[66px] h-[66px] bg-white rounded-full flex flex-col items-center justify-center font-black">
+            <span className="text-[28px] leading-none">85</span>
+            <span className="text-[10px]">/100</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-6">
+        <div className="text-green-600 text-xl">↗</div>
+        <p className="font-black text-[15px]">Excelente</p>
+        <p className="text-[10px] font-bold text-slate-700 mt-2 leading-snug">
+          A sua situação financeira está muito saudável!
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function KpiCard({ icon, title, value, subtitle, accent, showBar, green }) {
+  const colors = {
+    blue: "bg-blue-100",
+    red: "bg-red-100",
+    green: "bg-green-100",
+    purple: "bg-purple-100",
+    orange: "bg-orange-100",
+  }
+
+  return (
+    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-4 flex items-center gap-4">
+      <div className={`w-14 h-14 rounded-full ${colors[accent]} flex items-center justify-center text-3xl`}>
+        {icon}
+      </div>
+      <div className="flex-1">
+        <h3 className="text-[12px] uppercase font-black text-blue-950">{title}</h3>
+        <p className={`text-[24px] font-black mt-2 ${green ? "text-green-800" : "text-black"}`}>
+          {value}
+        </p>
+        {showBar && (
+          <div className="w-[90px] h-2 rounded-full bg-blue-100 mt-3">
+            <div className="w-[55px] h-2 rounded-full bg-blue-500" />
+          </div>
+        )}
+        {subtitle && <p className="text-[11px] font-bold text-blue-950 mt-2">{subtitle}</p>}
+      </div>
+    </div>
+  )
+}
+
+function ChartBox({ title, children }) {
+  return (
+    <div className="rounded-[14px] bg-white p-4 shadow-lg border border-slate-100 min-h-[245px]">
+      <h3 className="text-center font-black text-[13px] uppercase text-blue-950 mb-2">{title}</h3>
       {children}
     </div>
   )
 }
 
-function TableCard({ title, color, children }) {
+function LegendList({ items, colors }) {
   return (
-    <div className="rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100">
-      <div className={`${color} text-white text-center py-2.5 font-black text-xs uppercase`}>{title}</div>
-      <table className="w-full text-[10px] leading-tight">{children}</table>
+    <div className="space-y-3 text-[11px] font-bold">
+      {items.map((item, index) => (
+        <div key={item.name} className="grid grid-cols-[14px_1fr_40px] gap-2 items-center">
+          <span className="w-3 h-3 rounded-full" style={{ background: colors[index] }} />
+          <span>{item.name}</span>
+          <span>{item.percent}</span>
+        </div>
+      ))}
     </div>
   )
 }
 
-function Panel({ title, children }) {
+function GoalsPanel() {
   return (
-    <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-      <h3 className="font-black text-orange-700 mb-4">{title}</h3>
-      {children}
+    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden">
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-black text-[14px] uppercase">🎯 Objetivos Financeiros</h3>
+          <button className="bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full">+ Novo</button>
+        </div>
+
+        {objetivos.map(([icon, nome, objetivo, valor, progresso, color]) => (
+          <div key={nome} className="grid grid-cols-[38px_1fr] gap-3 mb-4">
+            <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center text-xl">{icon}</div>
+            <div>
+              <div className="flex justify-between text-[11px] font-black">
+                <span>{nome}</span>
+                <span>{valor}</span>
+              </div>
+              <p className="text-[10px] text-slate-600 font-bold mb-1">{objetivo}</p>
+              <div className="flex items-center gap-2">
+                <div className="h-2 flex-1 bg-slate-200 rounded-full">
+                  <div className={`h-2 rounded-full ${color}`} style={{ width: `${progresso}%` }} />
+                </div>
+                <span className="text-[11px] font-black text-green-600">{progresso}%</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-orange-50 text-center py-3 text-[12px] font-black">
+        Ver todos os objetivos →
+      </div>
     </div>
   )
 }
