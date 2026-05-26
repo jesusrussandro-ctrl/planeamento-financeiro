@@ -89,7 +89,6 @@ const dividas = [
 ]
 
 export default function App() {
-
   React.useEffect(() => {
     fetch("/api/dashboard")
       .then((res) => res.json())
@@ -122,7 +121,6 @@ export default function App() {
                 <span className="text-blue-700">■ Orçamentado</span>
                 <span className="text-green-600">■ Realizado</span>
               </div>
-
               <ResponsiveContainer width="100%" height={205}>
                 <BarChart data={despesas} layout="vertical" barGap={2}>
                   <XAxis type="number" tick={{ fontSize: 10 }} />
@@ -147,7 +145,6 @@ export default function App() {
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
-
                   <div className="absolute inset-0 flex items-center justify-center text-center pointer-events-none">
                     <div className="font-black text-blue-950">
                       € 2.650
@@ -155,7 +152,6 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-
                 <LegendList items={distribuicao} colors={COLORS} />
               </div>
             </ChartBox>
@@ -173,17 +169,164 @@ export default function App() {
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
-
                   <div className="absolute inset-0 flex items-center justify-center text-4xl pointer-events-none">
                     💼
                   </div>
                 </div>
-
-                <LegendList items={renda} colors={renda.map(i => i.color)} />
+                <LegendList items={renda} colors={renda.map((i) => i.color)} />
               </div>
             </ChartBox>
           </section>
+
+          <section className="grid grid-cols-4 gap-4">
+            <TableCard title="Rendimentos" color="bg-emerald-700">
+              <thead className="bg-slate-50 text-slate-500">
+                <tr>
+                  <th className="p-1.5 text-left">Fonte</th>
+                  <th className="p-1.5">Orçamentado</th>
+                  <th className="p-1.5">Recebido</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rendimentos.map(([fonte, orc, rec]) => (
+                  <tr key={fonte} className="border-b border-slate-100">
+                    <td className="p-1.5 font-semibold">{fonte}</td>
+                    <td className="p-1.5 text-center">{orc}</td>
+                    <td className="p-1.5 text-center">{rec}</td>
+                  </tr>
+                ))}
+                <tr className="bg-emerald-50 font-black">
+                  <td className="p-1.5">TOTAL</td>
+                  <td className="p-1.5 text-center">€ 5.000,00</td>
+                  <td className="p-1.5 text-center">€ 5.000,00</td>
+                </tr>
+              </tbody>
+            </TableCard>
+
+            <TableCard title="Despesas Mensais" color="bg-blue-700">
+              <thead className="bg-slate-50 text-slate-500">
+                <tr>
+                  <th className="p-1.5 text-left">Categoria</th>
+                  <th className="p-1.5">Orçamentado</th>
+                  <th className="p-1.5">Realizado</th>
+                  <th className="p-1.5">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                {despesas.map((item) => (
+                  <tr key={item.name} className="border-b border-slate-100">
+                    <td className="p-1.5 font-semibold">{item.name}</td>
+                    <td className="p-1.5 text-center">€ {item.orcamentado}</td>
+                    <td className="p-1.5 text-center">€ {item.realizado}</td>
+                    <td className="p-1.5 text-center text-blue-700 font-bold">{item.percentagem}</td>
+                  </tr>
+                ))}
+                <tr className="bg-blue-50 font-black">
+                  <td className="p-1.5">TOTAL</td>
+                  <td className="p-1.5 text-center">€ 3.850,00</td>
+                  <td className="p-1.5 text-center">€ 3.800,00</td>
+                  <td className="p-1.5 text-center">76,0%</td>
+                </tr>
+              </tbody>
+            </TableCard>
+
+            <TableCard title="Dívidas" color="bg-purple-700">
+              <thead className="bg-slate-50 text-slate-500">
+                <tr>
+                  <th className="p-1 text-left">Credor</th>
+                  <th className="p-1">Saldo</th>
+                  <th className="p-1">Prog.</th>
+                  <th className="p-1">Juros</th>
+                  <th className="p-1">Prior.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dividas.map(([nome, valor, progresso, juros, prioridade]) => (
+                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
+                    <td className="p-1 font-semibold">{nome}</td>
+                    <td className="p-1 text-center">{valor}</td>
+                    <td className="p-1 text-center">{progresso}</td>
+                    <td className="p-1 text-center">{juros}</td>
+                    <td className="p-1 text-center text-red-500 font-bold">{prioridade}</td>
+                  </tr>
+                ))}
+                <tr className="bg-purple-100 font-black text-[10px]">
+                  <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
+                  <td className="p-1.5 text-center" colSpan="4">€ 28.450,00</td>
+                </tr>
+                <tr className="bg-purple-50 font-black text-[10px]">
+                  <td className="p-1.5">TOTAL MÍNIMO (mês)</td>
+                  <td className="p-1.5 text-center" colSpan="4">€ 950,00</td>
+                </tr>
+              </tbody>
+            </TableCard>
+
+            <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
+              <thead className="bg-slate-50 text-slate-500">
+                <tr>
+                  <th className="p-1 text-left">Credor</th>
+                  <th className="p-1">Pagamento</th>
+                  <th className="p-1">% Disp.</th>
+                  <th className="p-1">Tempo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dividas.map(([nome], index) => (
+                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
+                    <td className="p-1 font-semibold">{nome}</td>
+                    <td className="p-1 text-center">€ {[500, 450, 300, 20][index]}</td>
+                    <td className="p-1 text-center">{["37,0%", "33,3%", "22,2%", "1,5%"][index]}</td>
+                    <td className="p-1 text-center">{[12, 24, 25, 11][index]} meses</td>
+                  </tr>
+                ))}
+                <tr className="bg-green-100 font-black text-[10px]">
+                  <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
+                  <td className="p-1.5 text-center">€ 1.350,00</td>
+                  <td className="p-1.5 text-center">100%</td>
+                  <td className="p-1.5"></td>
+                </tr>
+                <tr className="bg-green-50 font-black text-[10px]">
+                  <td className="p-1.5">SOBRA / FOLGA</td>
+                  <td className="p-1.5 text-center">€ 0,00</td>
+                  <td className="p-1.5"></td>
+                  <td className="p-1.5"></td>
+                </tr>
+              </tbody>
+            </TableCard>
+          </section>
+
+          <section className="grid grid-cols-[330px_1fr] gap-3">
+            <SimulatorCard />
+            <DebtEvolutionCard />
+          </section>
         </main>
+
+        <aside className="space-y-4">
+          <GoalsPanel />
+
+          <Panel title="Próximos Pagamentos">
+            {pagamentos.map(([data, nome, valor, dias]) => (
+              <div key={nome} className="grid grid-cols-[44px_1fr_64px_54px] items-center text-xs border-b border-slate-100 py-2 gap-1">
+                <span className="font-bold">{data}</span>
+                <span>{nome}</span>
+                <span className="font-bold">{valor}</span>
+                <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-[10px] text-center">{dias}</span>
+              </div>
+            ))}
+          </Panel>
+
+          <Panel title="Alertas e Conselhos">
+            {[
+              "Muito bem! Está a manter a disciplina nos pagamentos das dívidas.",
+              "As despesas de lazer estão 10% acima do recomendado.",
+              "Se aumentar €150/mês na dívida, termina 9 meses mais cedo.",
+            ].map((item) => (
+              <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-xs mb-3">
+                {item}
+              </div>
+            ))}
+          </Panel>
+        </aside>
       </div>
     </div>
   )
