@@ -112,14 +112,7 @@ export default function App() {
 }, [])
 
   function limparEuro(valor) {
-    return (
-      Number(
-        String(valor)
-          .replace("€", "")
-          .replace(",", ".")
-          .trim()
-      ) || 0
-    )
+    return Number(valor || 0)
   }
 
   function adicionarRendimentoNaTabela(novo) {
@@ -128,8 +121,8 @@ export default function App() {
       {
         id: novo.id,
         fonte: novo.fonte,
-        orc: `€ ${novo.orcamentado}`,
-        rec: `€ ${novo.recebido}`,
+        orcamentado: novo.orcamentado,
+        recebido: novo.recebido,
       },
     ])
   }
@@ -151,32 +144,6 @@ export default function App() {
       })
   }
 
-  function adicionarRendimentoNaTabela(novo) {
-    setRendimentosApi((listaAtual) => [
-      ...listaAtual,
-      [
-        novo.fonte,
-        `€ ${novo.orcamentado}`,
-        `€ ${novo.recebido}`,
-      ],
-    ])
-  }
-  function apagarRendimento(id) {
-    fetch(`/api/rendimentos?id=${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Rendimento apagado:", data)
-
-        setRendimentosApi((listaAtual) =>
-          listaAtual.filter((item) => item.id !== id)
-        )
-      })
-      .catch((err) => {
-        console.error("Erro ao apagar:", err)
-      })
-  }
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
       <Sidebar />
@@ -263,6 +230,7 @@ export default function App() {
                     <th className="p-1.5 text-left">Fonte</th>
                     <th className="p-1.5">Orçamentado</th>
                     <th className="p-1.5">Recebido</th>
+                    <th className="p-1.5">Ação</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -290,13 +258,13 @@ export default function App() {
   <tr className="bg-emerald-50 font-black">
     <td className="p-1.5">TOTAL</td>
     <td className="p-1.5 text-center">
-      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orc), 0).toLocaleString("pt-PT", {
+      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orcamentado), 0).toLocaleString("pt-PT", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })}
     </td>
     <td className="p-1.5 text-center">
-      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.rec), 0).toLocaleString("pt-PT", {
+      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.recebido), 0).toLocaleString("pt-PT", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })}
