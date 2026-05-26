@@ -179,29 +179,33 @@ export default function App() {
           </section>
 
           <section className="grid grid-cols-4 gap-4">
-            <TableCard title="Rendimentos" color="bg-emerald-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1.5 text-left">Fonte</th>
-                  <th className="p-1.5">Orçamentado</th>
-                  <th className="p-1.5">Recebido</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rendimentos.map(([fonte, orc, rec]) => (
-                  <tr key={fonte} className="border-b border-slate-100">
-                    <td className="p-1.5 font-semibold">{fonte}</td>
-                    <td className="p-1.5 text-center">{orc}</td>
-                    <td className="p-1.5 text-center">{rec}</td>
+            <div>
+              <TableCard title="Rendimentos" color="bg-emerald-700">
+                <thead className="bg-slate-50 text-slate-500">
+                  <tr>
+                    <th className="p-1.5 text-left">Fonte</th>
+                    <th className="p-1.5">Orçamentado</th>
+                    <th className="p-1.5">Recebido</th>
                   </tr>
-                ))}
-                <tr className="bg-emerald-50 font-black">
-                  <td className="p-1.5">TOTAL</td>
-                  <td className="p-1.5 text-center">€ 5.000,00</td>
-                  <td className="p-1.5 text-center">€ 5.000,00</td>
-                </tr>
-              </tbody>
-            </TableCard>
+                </thead>
+                <tbody>
+                  {rendimentos.map(([fonte, orc, rec]) => (
+                    <tr key={fonte} className="border-b border-slate-100">
+                      <td className="p-1.5 font-semibold">{fonte}</td>
+                      <td className="p-1.5 text-center">{orc}</td>
+                      <td className="p-1.5 text-center">{rec}</td>
+                    </tr>
+                  ))}
+                  <tr className="bg-emerald-50 font-black">
+                    <td className="p-1.5">TOTAL</td>
+                    <td className="p-1.5 text-center">€ 5.000,00</td>
+                    <td className="p-1.5 text-center">€ 5.000,00</td>
+                  </tr>
+                </tbody>
+              </TableCard>
+
+              <AddRendimentoForm />
+            </div>
 
             <TableCard title="Despesas Mensais" color="bg-blue-700">
               <thead className="bg-slate-50 text-slate-500">
@@ -331,7 +335,6 @@ export default function App() {
     </div>
   )
 }
-
 function SimulatorCard() {
   return (
     <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden min-h-[205px]">
@@ -590,6 +593,68 @@ function Panel({ title, children }) {
       <h3 className="font-black text-orange-700 mb-4">{title}</h3>
       {children}
     </div>
+  )
+}
+function AddRendimentoForm() {
+  const [fonte, setFonte] = React.useState("")
+  const [orcamentado, setOrcamentado] = React.useState("")
+  const [recebido, setRecebido] = React.useState("")
+
+  function adicionarRendimento(e) {
+    e.preventDefault()
+
+    fetch("/api/rendimentos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fonte,
+        orcamentado: Number(orcamentado),
+        recebido: Number(recebido),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Rendimento adicionado:", data)
+        setFonte("")
+        setOrcamentado("")
+        setRecebido("")
+      })
+      .catch((err) => console.error("Erro ao adicionar rendimento:", err))
+  }
+
+  return (
+    <form onSubmit={adicionarRendimento} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-emerald-700 mb-3">Adicionar Rendimento</h3>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Fonte"
+        value={fonte}
+        onChange={(e) => setFonte(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Orçamentado"
+        type="number"
+        value={orcamentado}
+        onChange={(e) => setOrcamentado(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        placeholder="Recebido"
+        type="number"
+        value={recebido}
+        onChange={(e) => setRecebido(e.target.value)}
+      />
+
+      <button className="w-full rounded-lg bg-emerald-600 py-2 text-white font-bold">
+        Adicionar
+      </button>
+    </form>
   )
 }
 
