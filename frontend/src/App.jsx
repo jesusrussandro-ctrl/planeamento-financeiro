@@ -92,6 +92,9 @@ export default function App() {
   const [rendimentosApi, setRendimentosApi] = React.useState([])
   const [rendimentoEditando, setRendimentoEditando] = React.useState(null)
 
+  const [despesasApi, setDespesasApi] = React.useState([])
+  const [despesaEditando, setDespesaEditando] = React.useState(null)
+
   React.useEffect(() => {
     fetch("/api/rendimentos")
       .then((res) => res.json())
@@ -112,11 +115,39 @@ export default function App() {
       })
   }, [])
 
+  React.useEffect(() => {
+    fetch("/api/despesas")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Despesas backend:", data)
+
+        setDespesasApi(
+          data.data.map((item) => ({
+            id: item.id,
+            categoria: item.categoria,
+            orcamentado: Number(item.orcamentado || 0),
+            realizado: Number(item.realizado || 0),
+            percentagem: item.percentagem || "0%",
+          }))
+        )
+      })
+      .catch((err) => {
+        console.error("Erro despesas:", err)
+      })
+  }, [])
+
   function formatarEuro(valor) {
     return `€ ${Number(valor || 0).toLocaleString("pt-PT", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`
+  }
+
+  function formatarPercentagem(valor) {
+    return `${Number(valor || 0).toLocaleString("pt-PT", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    })}%`
   }
 
   const totalOrcamentado = rendimentosApi.reduce(
@@ -128,6 +159,38 @@ export default function App() {
     (total, item) => total + Number(item.recebido || 0),
     0
   )
+
+  const totalDespesasOrcamentado = despesasApi.reduce(
+    (total, item) => total + Number(item.orcamentado || 0),
+    0
+  )
+
+  const totalDespesasRealizado = despesasApi.reduce(
+    (total, item) => total + Number(item.realizado || 0),
+    0
+  )
+
+  const percentagemDespesasSalario = totalRecebido > 0
+    ? (totalDespesasRealizado / totalRecebido) * 100
+    : 0
+
+  const disponivelParaDividas = totalRecebido - totalDespesasRealizado
+
+  const despesasGrafico = despesasApi.map((item) => ({
+    id: item.id,
+    name: item.categoria,
+    orcamentado: Number(item.orcamentado || 0),
+    realizado: Number(item.realizado || 0),
+    percentagem: item.percentagem,
+  }))
+
+  const distribuicaoDespesas = despesasApi.map((item) => ({
+    name: item.categoria,
+    value: Number(item.realizado || 0),
+    percent: totalDespesasRealizado > 0
+      ? formatarPercentagem((Number(item.realizado || 0) / totalDespesasRealizado) * 100)
+      : "0,0%",
+  }))
 
   function adicionarRendimentoNaTabela(novo) {
     setRendimentosApi((listaAtual) => [
@@ -185,7 +248,69 @@ export default function App() {
         }
       })
       .catch((err) => {
-        console.error("Erro ao apagar:", err)
+        console.error("Erro ao apagar rendimento:", err)
+      })
+  }
+
+  function adicionarDespesaNaTabela(nova) {
+    setDespesasApi((listaAtual) => [
+      ...listaAtual,
+      {
+        id: nova.id,
+        categoria: nova.categoria,
+        orcamentado: Number(nova.orcamentado || 0),
+        realizado: Number(nova.realizado || 0),
+        percentagem: nova.percentagem || "0%",
+      },
+    ])
+  }
+
+  function iniciarEdicaoDespesa(item) {
+    setDespesaEditando(item)
+  }
+
+  function cancelarEdicaoDespesa() {
+    setDespesaEditando(null)
+  }
+
+  function atualizarDespesaNaTabela(atualizada) {
+    setDespesasApi((listaAtual) =>
+      listaAtual.map((item) =>
+        item.id === atualizada.id
+          ? {
+              id: atualizada.id,
+              categoria: atualizada.categoria,
+              orcamentado: Number(atualizada.orcamentado || 0),
+              realizado: Number(atualizada.realizado || 0),
+              percentagem: atualizada.percentagem || "0%",
+            }
+          : item
+      )
+    )
+
+    setDespesaEditando(null)
+  }
+
+  function apagarDespesa(id) {
+    fetch(`/api/despesas?id=${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Despesa apagada:", data)
+
+        if (data.status === "ok") {
+          setDespesasApi((listaAtual) =>
+            listaAtual.filter((item) => item.id !== id)
+          )
+
+          if (despesaEditando?.id === id) {
+            setDespesaEditando(null)
+          }
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao apagar despesa:", err)
       })
   }
 
@@ -198,8 +323,8 @@ export default function App() {
           <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
             <HealthCard />
             <KpiCard icon="💼" title="Salário Líquido" value={formatarEuro(totalRecebido)} accent="blue" showBar />
-            <KpiCard icon="🧾" title="Total Despesas" value="€ 2.650,00" subtitle="53,0% do salário" accent="red" />
-            <KpiCard icon="💸" title="Disponível p/ Dívidas" value="€ 1.350,00" subtitle="27,0% do salário" accent="green" green />
+            <KpiCard icon="🧾" title="Total Despesas" value={formatarEuro(totalDespesasRealizado)} subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`} accent="red" />
+            <KpiCard icon="💸" title="Disponível p/ Dívidas" value={formatarEuro(disponivelParaDividas)} subtitle={`${formatarPercentagem(totalRecebido > 0 ? (disponivelParaDividas / totalRecebido) * 100 : 0)} do salário`} accent="green" green />
             <KpiCard icon="🏦" title="Total Dívidas" value="€ 28.450,00" subtitle="Min. mensal: € 950,00" accent="purple" />
             <KpiCard icon="🗓️" title="Dias Restantes" value="17" subtitle="até 31/05/2024" accent="orange" />
           </section>
@@ -211,7 +336,7 @@ export default function App() {
                 <span className="text-green-600">■ Realizado</span>
               </div>
               <ResponsiveContainer width="100%" height={205}>
-                <BarChart data={despesas} layout="vertical" barGap={2}>
+                <BarChart data={despesasGrafico} layout="vertical" barGap={2}>
                   <XAxis type="number" tick={{ fontSize: 10 }} />
                   <YAxis dataKey="name" type="category" width={86} tick={{ fontSize: 11, fontWeight: 700 }} />
                   <Tooltip />
@@ -226,8 +351,8 @@ export default function App() {
                 <div className="relative h-[210px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={distribuicao} dataKey="value" innerRadius={56} outerRadius={86}>
-                        {distribuicao.map((entry, index) => (
+                      <Pie data={distribuicaoDespesas} dataKey="value" innerRadius={56} outerRadius={86}>
+                        {distribuicaoDespesas.map((entry, index) => (
                           <Cell key={entry.name} fill={COLORS[index]} />
                         ))}
                       </Pie>
@@ -236,12 +361,12 @@ export default function App() {
                   </ResponsiveContainer>
                   <div className="absolute inset-0 flex items-center justify-center text-center pointer-events-none">
                     <div className="font-black text-blue-950">
-                      € 2.650
+                      {formatarEuro(totalDespesasRealizado)}
                       <div className="text-[10px]">Total</div>
                     </div>
                   </div>
                 </div>
-                <LegendList items={distribuicao} colors={COLORS} />
+                <LegendList items={distribuicaoDespesas} colors={COLORS} />
               </div>
             </ChartBox>
 
@@ -322,32 +447,68 @@ export default function App() {
               />
             </div>
 
-            <TableCard title="Despesas Mensais" color="bg-blue-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1.5 text-left">Categoria</th>
-                  <th className="p-1.5">Orçamentado</th>
-                  <th className="p-1.5">Realizado</th>
-                  <th className="p-1.5">%</th>
-                </tr>
-              </thead>
-              <tbody>
-                {despesas.map((item) => (
-                  <tr key={item.name} className="border-b border-slate-100">
-                    <td className="p-1.5 font-semibold">{item.name}</td>
-                    <td className="p-1.5 text-center">€ {item.orcamentado}</td>
-                    <td className="p-1.5 text-center">€ {item.realizado}</td>
-                    <td className="p-1.5 text-center text-blue-700 font-bold">{item.percentagem}</td>
+            <div>
+              <TableCard title="Despesas Mensais" color="bg-blue-700">
+                <thead className="bg-slate-50 text-slate-500">
+                  <tr>
+                    <th className="p-1.5 text-left">Categoria</th>
+                    <th className="p-1.5">Orçamentado</th>
+                    <th className="p-1.5">Realizado</th>
+                    <th className="p-1.5">%</th>
+                    <th className="p-1.5">Ação</th>
                   </tr>
-                ))}
-                <tr className="bg-blue-50 font-black">
-                  <td className="p-1.5">TOTAL</td>
-                  <td className="p-1.5 text-center">€ 3.850,00</td>
-                  <td className="p-1.5 text-center">€ 3.800,00</td>
-                  <td className="p-1.5 text-center">76,0%</td>
-                </tr>
-              </tbody>
-            </TableCard>
+                </thead>
+
+                <tbody>
+                  {despesasApi.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100">
+                      <td className="p-1.5 font-semibold">{item.categoria}</td>
+                      <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
+                      <td className="p-1.5 text-center">{formatarEuro(item.realizado)}</td>
+                      <td className="p-1.5 text-center text-blue-700 font-bold">
+                        {totalRecebido > 0
+                          ? formatarPercentagem((Number(item.realizado || 0) / totalRecebido) * 100)
+                          : item.percentagem}
+                      </td>
+                      <td className="p-1.5 text-center">
+                        <div className="flex justify-center gap-1">
+                          <button
+                            onClick={() => iniciarEdicaoDespesa(item)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            onClick={() => apagarDespesa(item.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                          >
+                            Apagar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+
+                  <tr className="bg-blue-50 font-black">
+                    <td className="p-1.5">TOTAL</td>
+                    <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
+                    <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
+                    <td className="p-1.5 text-center">
+                      {formatarPercentagem(percentagemDespesasSalario)}
+                    </td>
+                    <td className="p-1.5"></td>
+                  </tr>
+                </tbody>
+              </TableCard>
+
+              <AddDespesaForm
+                onAdicionar={adicionarDespesaNaTabela}
+                despesaEditando={despesaEditando}
+                onAtualizar={atualizarDespesaNaTabela}
+                onCancelarEdicao={cancelarEdicaoDespesa}
+              />
+            </div>
 
             <TableCard title="Dívidas" color="bg-purple-700">
               <thead className="bg-slate-50 text-slate-500">
@@ -820,6 +981,134 @@ function AddRendimentoForm({
       />
 
       <button className="w-full rounded-lg bg-emerald-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button
+          type="button"
+          onClick={cancelarEdicao}
+          className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+        >
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
+
+function AddDespesaForm({
+  onAdicionar,
+  despesaEditando,
+  onAtualizar,
+  onCancelarEdicao,
+}) {
+  const [categoria, setCategoria] = React.useState("")
+  const [orcamentado, setOrcamentado] = React.useState("")
+  const [realizado, setRealizado] = React.useState("")
+
+  const modoEdicao = Boolean(despesaEditando)
+
+  React.useEffect(() => {
+    if (despesaEditando) {
+      setCategoria(despesaEditando.categoria || "")
+      setOrcamentado(String(despesaEditando.orcamentado || 0))
+      setRealizado(String(despesaEditando.realizado || 0))
+    }
+  }, [despesaEditando])
+
+  function limparFormulario() {
+    setCategoria("")
+    setOrcamentado("")
+    setRealizado("")
+  }
+
+  function guardarDespesa(e) {
+    e.preventDefault()
+
+    const dadosDespesa = {
+      categoria,
+      orcamentado: Number(orcamentado),
+      realizado: Number(realizado),
+      percentagem: "0%",
+    }
+
+    const url = modoEdicao
+      ? `/api/despesas?id=${despesaEditando.id}`
+      : "/api/despesas"
+
+    const method = modoEdicao ? "PUT" : "POST"
+
+    fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dadosDespesa),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(
+          modoEdicao ? "Despesa atualizada:" : "Despesa adicionada:",
+          data
+        )
+
+        if (data.status === "ok") {
+          if (modoEdicao && typeof onAtualizar === "function") {
+            onAtualizar(data.data)
+          }
+
+          if (!modoEdicao && typeof onAdicionar === "function") {
+            onAdicionar(data.data)
+          }
+
+          limparFormulario()
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao guardar despesa:", err)
+      })
+  }
+
+  function cancelarEdicao() {
+    limparFormulario()
+
+    if (typeof onCancelarEdicao === "function") {
+      onCancelarEdicao()
+    }
+  }
+
+  return (
+    <form onSubmit={guardarDespesa} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-blue-700 mb-3">
+        {modoEdicao ? "Editar Despesa" : "Adicionar Despesa"}
+      </h3>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Categoria"
+        value={categoria}
+        onChange={(e) => setCategoria(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Orçamentado"
+        type="number"
+        value={orcamentado}
+        onChange={(e) => setOrcamentado(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        placeholder="Realizado"
+        type="number"
+        value={realizado}
+        onChange={(e) => setRealizado(e.target.value)}
+      />
+
+      <button className="w-full rounded-lg bg-blue-600 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
