@@ -33,7 +33,7 @@ const despesas = [
   { name: "Alimentação", orcamentado: 600, realizado: 600, percentagem: "12,0%" },
   { name: "Saúde", orcamentado: 200, realizado: 200, percentagem: "4,0%" },
   { name: "Lazer", orcamentado: 200, realizado: 200, percentagem: "4,0%" },
-  { name: "Outros", orcamentado: 350, realizado: 330, percentagem: "6,6%" },
+  { name: "Outros1", orcamentado: 350, realizado: 330, percentagem: "6,6%" },
 ]
 
 const distribuicao = [
@@ -161,22 +161,22 @@ export default function App() {
       ],
     ])
   }
-function apagarRendimento(id) {
-  fetch(`/api/rendimentos?id=${id}`, {
-    method: "DELETE",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Rendimento apagado:", data)
+  function apagarRendimento(id) {
+    fetch(`/api/rendimentos?id=${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Rendimento apagado:", data)
 
-      setRendimentosApi((listaAtual) =>
-        listaAtual.filter((item) => item.id !== id)
-      )
-    })
-    .catch((err) => {
-      console.error("Erro ao apagar:", err)
-    })
-}
+        setRendimentosApi((listaAtual) =>
+          listaAtual.filter((item) => item.id !== id)
+        )
+      })
+      .catch((err) => {
+        console.error("Erro ao apagar:", err)
+      })
+  }
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
       <Sidebar />
@@ -266,32 +266,32 @@ function apagarRendimento(id) {
                   </tr>
                 </thead>
                 <tbody>
-  {rendimentosApi.map((item) => (
-    <tr key={item.id} className="border-b border-slate-100">
-      ...
-    </tr>
-  ))}
+                  {rendimentosApi.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100">
+                      ...
+                    </tr>
+                  ))}
 
-  <tr className="bg-emerald-50 font-black">
-    <td className="p-1.5">TOTAL</td>
+                  <tr className="bg-emerald-50 font-black">
+                    <td className="p-1.5">TOTAL</td>
 
-    <td className="p-1.5 text-center">
-      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orc), 0).toLocaleString("pt-PT", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </td>
+                    <td className="p-1.5 text-center">
+                      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orc), 0).toLocaleString("pt-PT", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
 
-    <td className="p-1.5 text-center">
-      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.rec), 0).toLocaleString("pt-PT", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </td>
+                    <td className="p-1.5 text-center">
+                      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.rec), 0).toLocaleString("pt-PT", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
 
-    <td className="p-1.5"></td>
-  </tr>
-</tbody>
+                    <td className="p-1.5"></td>
+                  </tr>
+                </tbody>
               </TableCard>
 
               <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} />
@@ -706,14 +706,14 @@ function AddRendimentoForm({ onAdicionar }) {
     })
       .then((res) => res.json())
       .then((data) => {
-  console.log("Rendimento adicionado:", data)
+        console.log("Rendimento adicionado:", data)
 
-  onAdicionar(data.data)
+        onAdicionar(data.data)
 
-  setFonte("")
-  setOrcamentado("")
-  setRecebido("")
-})
+        setFonte("")
+        setOrcamentado("")
+        setRecebido("")
+      })
       .catch((err) => console.error("Erro ao adicionar rendimento:", err))
   }
 
@@ -804,11 +804,10 @@ function Sidebar() {
           {menuItems.map(([icon, label], index) => (
             <div
               key={label}
-              className={`flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all ${
-                index === 0
+              className={`flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all ${index === 0
                   ? "bg-gradient-to-r from-[#0b7cff] to-[#1d4ed8] shadow-[0_0_18px_rgba(59,130,246,0.65)]"
                   : "hover:bg-white/10"
-              }`}
+                }`}
             >
               <span className="w-4 text-center text-[15px]">{icon}</span>
               <span>{label}</span>
