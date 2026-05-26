@@ -110,6 +110,17 @@ export default function App() {
       })
   }, [])
 
+  function adicionarRendimentoNaTabela(novo) {
+    setRendimentosApi((listaAtual) => [
+      ...listaAtual,
+      [
+        novo.fonte,
+        `€ ${novo.orcamentado}`,
+        `€ ${novo.recebido}`,
+      ],
+    ])
+  }
+
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
       <Sidebar />
@@ -214,7 +225,7 @@ export default function App() {
                 </tbody>
               </TableCard>
 
-              <AddRendimentoForm />
+              <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} />
             </div>
 
             <TableCard title="Despesas Mensais" color="bg-blue-700">
@@ -605,7 +616,7 @@ function Panel({ title, children }) {
     </div>
   )
 }
-function AddRendimentoForm() {
+function AddRendimentoForm({ onAdicionar }) {
   const [fonte, setFonte] = React.useState("")
   const [orcamentado, setOrcamentado] = React.useState("")
   const [recebido, setRecebido] = React.useState("")
@@ -626,11 +637,14 @@ function AddRendimentoForm() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Rendimento adicionado:", data)
-        setFonte("")
-        setOrcamentado("")
-        setRecebido("")
-      })
+  console.log("Rendimento adicionado:", data)
+
+  onAdicionar(data.data)
+
+  setFonte("")
+  setOrcamentado("")
+  setRecebido("")
+})
       .catch((err) => console.error("Erro ao adicionar rendimento:", err))
   }
 
