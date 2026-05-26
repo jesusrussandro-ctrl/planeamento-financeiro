@@ -92,24 +92,24 @@ export default function App() {
  const [rendimentosApi, setRendimentosApi] = React.useState([])
 
   React.useEffect(() => {
-    fetch("/api/rendimentos")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Rendimentos backend:", data)
+  fetch("/api/rendimentos")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Rendimentos backend:", data)
 
-        setRendimentosApi(
-          data.data.map((item) => ({
-            id: item.id,
-            fonte: item.fonte,
-            orc: `€ ${item.orcamentado}`,
-            rec: `€ ${item.recebido}`,
-          }))
-        )
-      })
-      .catch((err) => {
-        console.error("Erro rendimentos:", err)
-      })
-  }, [])
+      setRendimentosApi(
+        data.data.map((item) => ({
+          id: item.id,
+          fonte: item.fonte,
+          orcamentado: item.orcamentado,
+          recebido: item.recebido,
+        }))
+      )
+    })
+    .catch((err) => {
+      console.error("Erro rendimentos:", err)
+    })
+}, [])
 
   function limparEuro(valor) {
     return (
@@ -269,8 +269,13 @@ export default function App() {
   {rendimentosApi.map((item) => (
     <tr key={item.id} className="border-b border-slate-100">
       <td className="p-1.5 font-semibold">{item.fonte}</td>
-      <td className="p-1.5 text-center">{item.orc}</td>
-      <td className="p-1.5 text-center">{item.rec}</td>
+      <td className="p-1.5 text-center">
+  € {item.orcamentado}
+</td>
+
+<td className="p-1.5 text-center">
+  € {item.recebido}
+</td>
       <td className="p-1.5 text-center">
         <button
           onClick={() => apagarRendimento(item.id)}
@@ -700,30 +705,36 @@ function AddRendimentoForm({ onAdicionar }) {
   function adicionarRendimento(e) {
     e.preventDefault()
 
+    const novoRendimento = {
+      fonte,
+      orcamentado: Number(orcamentado),
+      recebido: Number(recebido),
+    }
+
     fetch("/api/rendimentos", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        fonte,
-        orcamentado: Number(orcamentado),
-        recebido: Number(recebido),
-      }),
+      body: JSON.stringify(novoRendimento),
     })
       .then((res) => res.json())
       .then((data) => {
-  console.log("Rendimento adicionado:", data)
+        console.log("Rendimento adicionado:", data)
 
-  if (data.status === "ok") {
-    onAdicionar(data.data)
-  }
+        if (data.status === "ok" && typeof onAdicionar === "function") {
+          onAdicionar(data.data)
+        } else {
+          console.warn("onAdicionar não está disponível", onAdicionar)
+        }
 
-  setFonte("")
-  setOrcamentado("")
-  setRecebido("")
-})
-      .catch((err) => console.error("Erro ao adicionar rendimento:", err))
+        setFonte("")
+        setOrcamentado("")
+        setRecebido("")
+      })
+      .catch((err) => {
+        console.error("Erro ao adicionar rendimento:", err)
+      })
   }
 
   return (
