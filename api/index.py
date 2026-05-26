@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler
+import json
 import os
 import sys
 
@@ -37,7 +38,34 @@ class handler(BaseHTTPRequestHandler):
             }, 404)
 
     def do_POST(self):
+    path = self.path.split("?")[0]
+
+    if path == "/api/rendimentos":
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length)
+
+        try:
+            novo_rendimento = json.loads(body)
+
+            novo_rendimento["id"] = len(dashboard_data["rendimentos"]) + 1
+
+            dashboard_data["rendimentos"].append(novo_rendimento)
+
+            send_json(self, {
+                "status": "ok",
+                "message": "Rendimento adicionado com sucesso",
+                "data": novo_rendimento
+            }, 201)
+
+        except Exception as error:
+            send_json(self, {
+                "status": "error",
+                "message": "Erro ao adicionar rendimento",
+                "detail": str(error)
+            }, 400)
+
+    else:
         send_json(self, {
-            "status": "ok",
-            "message": "POST recebido com sucesso"
-        })
+            "status": "error",
+            "message": "Rota POST não encontrada"
+        }, 404)
