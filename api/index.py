@@ -38,34 +38,34 @@ class handler(BaseHTTPRequestHandler):
             }, 404)
 
     def do_POST(self):
-    path = self.path.split("?")[0]
+        path = self.path.split("?")[0]
 
-    if path == "/api/rendimentos":
-        content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
+        if path == "/api/rendimentos":
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length)
 
-        try:
-            novo_rendimento = json.loads(body)
+            try:
+                novo_rendimento = json.loads(body.decode("utf-8"))
 
-            novo_rendimento["id"] = len(dashboard_data["rendimentos"]) + 1
+                novo_rendimento["id"] = len(dashboard_data["rendimentos"]) + 1
 
-            dashboard_data["rendimentos"].append(novo_rendimento)
+                dashboard_data["rendimentos"].append(novo_rendimento)
 
-            send_json(self, {
-                "status": "ok",
-                "message": "Rendimento adicionado com sucesso",
-                "data": novo_rendimento
-            }, 201)
+                send_json(self, {
+                    "status": "ok",
+                    "message": "Rendimento adicionado com sucesso",
+                    "data": novo_rendimento
+                }, 201)
 
-        except Exception as error:
+            except Exception as error:
+                send_json(self, {
+                    "status": "error",
+                    "message": "Erro ao adicionar rendimento",
+                    "detail": str(error)
+                }, 400)
+
+        else:
             send_json(self, {
                 "status": "error",
-                "message": "Erro ao adicionar rendimento",
-                "detail": str(error)
-            }, 400)
-
-    else:
-        send_json(self, {
-            "status": "error",
-            "message": "Rota POST não encontrada"
-        }, 404)
+                "message": "Rota POST não encontrada"
+            }, 404)
