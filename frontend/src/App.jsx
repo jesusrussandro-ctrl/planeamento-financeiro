@@ -98,12 +98,13 @@ export default function App() {
         console.log("Rendimentos backend:", data)
 
         setRendimentosApi(
-          data.data.map((item) => [
-            item.fonte,
-            `€ ${item.orcamentado}`,
-            `€ ${item.recebido}`,
-          ])
-        )
+  data.data.map((item) => ({
+    id: item.id,
+    fonte: item.fonte,
+    orc: `€ ${item.orcamentado}`,
+    rec: `€ ${item.recebido}`,
+  }))
+)
       })
       .catch((err) => {
         console.error("Erro rendimentos:", err)
@@ -120,7 +121,22 @@ export default function App() {
       ],
     ])
   }
+function apagarRendimento(id) {
+  fetch(`/api/rendimentos?id=${id}`, {
+    method: "DELETE",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Rendimento apagado:", data)
 
+      setRendimentosApi((listaAtual) =>
+        listaAtual.filter((item) => item.id !== id)
+      )
+    })
+    .catch((err) => {
+      console.error("Erro ao apagar:", err)
+    })
+}
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
       <Sidebar />
@@ -210,19 +226,29 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rendimentosApi.map(([fonte, orc, rec]) => (
-                    <tr key={fonte} className="border-b border-slate-100">
-                      <td className="p-1.5 font-semibold">{fonte}</td>
-                      <td className="p-1.5 text-center">{orc}</td>
-                      <td className="p-1.5 text-center">{rec}</td>
-                    </tr>
-                  ))}
-                  <tr className="bg-emerald-50 font-black">
-                    <td className="p-1.5">TOTAL</td>
-                    <td className="p-1.5 text-center">€ 5.000,00</td>
-                    <td className="p-1.5 text-center">€ 5.000,00</td>
-                  </tr>
-                </tbody>
+  {rendimentosApi.map((item) => (
+    <tr key={item.id} className="border-b border-slate-100">
+      <td className="p-1.5 font-semibold">{item.fonte}</td>
+
+      <td className="p-1.5 text-center">
+        {item.orc}
+      </td>
+
+      <td className="p-1.5 text-center">
+        {item.rec}
+      </td>
+
+      <td className="p-1.5 text-center">
+        <button
+          onClick={() => apagarRendimento(item.id)}
+          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+        >
+          Apagar
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
               </TableCard>
 
               <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} />
