@@ -713,14 +713,16 @@ function AddRendimentoForm({ onAdicionar }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Rendimento adicionado:", data)
+  console.log("Rendimento adicionado:", data)
 
-        onAdicionar(data.data)
+  if (data.status === "ok") {
+    onAdicionar(data.data)
+  }
 
-        setFonte("")
-        setOrcamentado("")
-        setRecebido("")
-      })
+  setFonte("")
+  setOrcamentado("")
+  setRecebido("")
+})
       .catch((err) => console.error("Erro ao adicionar rendimento:", err))
   }
 
