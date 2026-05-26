@@ -248,6 +248,16 @@ function apagarRendimento(id) {
       </td>
     </tr>
   ))}
+  <tr className="bg-emerald-50 font-black">
+  <td className="p-1.5">TOTAL</td>
+  <td className="p-1.5 text-center">
+    € {rendimentosApi.reduce((total, item) => total + Number(String(item.orc).replace("€", "").trim()), 0)}
+  </td>
+  <td className="p-1.5 text-center">
+    € {rendimentosApi.reduce((total, item) => total + Number(String(item.rec).replace("€", "").trim()), 0)}
+  </td>
+  <td className="p-1.5"></td>
+</tr>
 </tbody>
               </TableCard>
 
