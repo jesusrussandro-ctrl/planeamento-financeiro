@@ -19,16 +19,8 @@
       "dest": "api/index.py"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "frontend/assets/$1"
-    },
-    {
-      "src": "/(.*\\.(ico|svg|png|jpg|jpeg|webp|css|js))",
-      "dest": "frontend/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "frontend/index.html"
+      "dest": "frontend/$1"
     }
   ]
 }
