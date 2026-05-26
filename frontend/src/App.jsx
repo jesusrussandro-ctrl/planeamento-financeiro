@@ -89,14 +89,24 @@ const dividas = [
 ]
 
 export default function App() {
+  const [rendimentosApi, setRendimentosApi] = React.useState(rendimentos)
+
   React.useEffect(() => {
-    fetch("/api/dashboard")
+    fetch("/api/rendimentos")
       .then((res) => res.json())
       .then((data) => {
-        console.log("Backend ligado:", data)
+        console.log("Rendimentos backend:", data)
+
+        setRendimentosApi(
+          data.data.map((item) => [
+            item.fonte,
+            `€ ${item.orcamentado}`,
+            `€ ${item.recebido}`,
+          ])
+        )
       })
       .catch((err) => {
-        console.error("Erro backend:", err)
+        console.error("Erro rendimentos:", err)
       })
   }, [])
 
@@ -189,7 +199,7 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rendimentos.map(([fonte, orc, rec]) => (
+                  {rendimentosApi.map(([fonte, orc, rec]) => (
                     <tr key={fonte} className="border-b border-slate-100">
                       <td className="p-1.5 font-semibold">{fonte}</td>
                       <td className="p-1.5 text-center">{orc}</td>
