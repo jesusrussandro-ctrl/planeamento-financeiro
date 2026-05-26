@@ -46,7 +46,6 @@ class handler(BaseHTTPRequestHandler):
 
             try:
                 novo_rendimento = json.loads(body.decode("utf-8"))
-
                 novo_rendimento["id"] = len(dashboard_data["rendimentos"]) + 1
 
                 dashboard_data["rendimentos"].append(novo_rendimento)
@@ -68,4 +67,53 @@ class handler(BaseHTTPRequestHandler):
             send_json(self, {
                 "status": "error",
                 "message": "Rota POST não encontrada"
+            }, 404)
+
+    def do_DELETE(self):
+        path = self.path.split("?")[0]
+        query = self.path.split("?")[1] if "?" in self.path else ""
+
+        if path == "/api/rendimentos":
+            try:
+                params = dict(
+                    param.split("=")
+                    for param in query.split("&")
+                    if "=" in param
+                )
+
+                rendimento_id = int(params.get("id", 0))
+
+                rendimento_encontrado = None
+
+                for item in dashboard_data["rendimentos"]:
+                    if item["id"] == rendimento_id:
+                        rendimento_encontrado = item
+                        break
+
+                if not rendimento_encontrado:
+                    send_json(self, {
+                        "status": "error",
+                        "message": "Rendimento não encontrado"
+                    }, 404)
+                    return
+
+                dashboard_data["rendimentos"].remove(rendimento_encontrado)
+
+                send_json(self, {
+                    "status": "ok",
+                    "message": "Rendimento apagado com sucesso",
+                    "data": rendimento_encontrado
+                })
+
+            except Exception as error:
+                send_json(self, {
+                    "status": "error",
+                    "message": "Erro ao apagar rendimento",
+                    "detail": str(error)
+                }, 400)
+
+        else:
+            send_json(self, {
+                "status": "error",
+                "message": "Rota DELETE não encontrada"
             }, 404)
