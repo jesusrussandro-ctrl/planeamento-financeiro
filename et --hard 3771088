@@ -1,0 +1,41 @@
+[33m4fe4d63[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Corrigir hooks React
+[33m2be8f7e[m Corrigir imports React
+[33m8ff5848[m Frontend ligado ao backend real
+[33m5ccd7fb[m Adicionar dados reais backend
+[33mae09a15[m Corrigir chaves do dashboard_data
+[33m157af86[m Adicionar rotas modulares do backend
+[33m3771088[m Forcar redeploy frontend estavel
+[33m349e287[m Preparar frontend para backend
+[33mf3ddf67[m Corrigir backend sem Flask
+[33m8122664[m Adicionar dados completos ao backend
+[33m8615d81[m Criar backend inicial
+[33mf2016ea[m Forcar deploy sidebar
+[33m7259013[m Atualizar dashboard premium
+[33m9f6eadf[m Atualizar dashboard premium
+[33m04c80cb[m Forcar redeploy no Vercel
+[33m73cce83[m Melhorar cards superiores e graficos
+[33m82d7161[m Melhorar cards superiores e graficos
+[33m57523b2[m Melhorar visual dos cards superiores
+[33mc79c3ef[m Melhorar visual dos cards superiores
+[33m0679baf[m Adicionar totais visiveis nas tabelas
+[33m2479fb1[m Melhorar layout premium dashboard
+[33mf8b0ad8[m Melhorar layout premium do dashboard
+[33m1e835be[m Melhorar design premium dashboard
+[33m2f03486[m Melhorar layout visual do dashboard
+[33m0183afa[m Corrigir App.jsx completo
+[33m90699dc[m Corrigir build do dashboard
+[33m6688393[m Criar layout premium do dashboard
+[33m256821b[m Corrigir pyproject completo
+[33m22f77f5[m Corrigir pyproject para Vercel
+[33mc66751d[m Adicionar frontend React premium
+[33m4cdaa29[m Dashboard premium React concluido
+[33mc7cebd8[m Update vercel.json
+[33m59a9bbc[m Create pyproject.toml
+[33m60c20a8[m Create index.py
+[33m5a95604[m Delete api/frontend.py
+[33m5e9f207[m Delete api/backend.py
+[33m70b82e1[m Merge pull request #2 from jesusrussandro-ctrl/revert-1-fix/vercel-python-compatibility-1077943714734439226
+[33m2309699[m[33m ([m[1;31morigin/revert-1-fix/vercel-python-compatibility-1077943714734439226[m[33m)[m Revert "Optimize Vercel Python Deployment and Robustness"
+[33mb322006[m Merge pull request #1 from jesusrussandro-ctrl/fix/vercel-python-compatibility-1077943714734439226
+[33mfb7fc80[m Optimize Vercel configuration and improve backend robustness
+[33m2363e88[m Primeira versão do website financeiro
