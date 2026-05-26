@@ -89,31 +89,45 @@ const dividas = [
 ]
 
 export default function App() {
- const [rendimentosApi, setRendimentosApi] = React.useState([])
+  const [rendimentosApi, setRendimentosApi] = React.useState([])
+  const [rendimentoEditando, setRendimentoEditando] = React.useState(null)
 
   React.useEffect(() => {
-  fetch("/api/rendimentos")
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Rendimentos backend:", data)
+    fetch("/api/rendimentos")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Rendimentos backend:", data)
 
-      setRendimentosApi(
-        data.data.map((item) => ({
-          id: item.id,
-          fonte: item.fonte,
-          orcamentado: item.orcamentado,
-          recebido: item.recebido,
-        }))
-      )
-    })
-    .catch((err) => {
-      console.error("Erro rendimentos:", err)
-    })
-}, [])
+        setRendimentosApi(
+          data.data.map((item) => ({
+            id: item.id,
+            fonte: item.fonte,
+            orcamentado: Number(item.orcamentado || 0),
+            recebido: Number(item.recebido || 0),
+          }))
+        )
+      })
+      .catch((err) => {
+        console.error("Erro rendimentos:", err)
+      })
+  }, [])
 
-  function limparEuro(valor) {
-    return Number(valor || 0)
+  function formatarEuro(valor) {
+    return `€ ${Number(valor || 0).toLocaleString("pt-PT", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`
   }
+
+  const totalOrcamentado = rendimentosApi.reduce(
+    (total, item) => total + Number(item.orcamentado || 0),
+    0
+  )
+
+  const totalRecebido = rendimentosApi.reduce(
+    (total, item) => total + Number(item.recebido || 0),
+    0
+  )
 
   function adicionarRendimentoNaTabela(novo) {
     setRendimentosApi((listaAtual) => [
@@ -121,10 +135,35 @@ export default function App() {
       {
         id: novo.id,
         fonte: novo.fonte,
-        orcamentado: novo.orcamentado,
-        recebido: novo.recebido,
+        orcamentado: Number(novo.orcamentado || 0),
+        recebido: Number(novo.recebido || 0),
       },
     ])
+  }
+
+  function iniciarEdicaoRendimento(item) {
+    setRendimentoEditando(item)
+  }
+
+  function cancelarEdicaoRendimento() {
+    setRendimentoEditando(null)
+  }
+
+  function atualizarRendimentoNaTabela(atualizado) {
+    setRendimentosApi((listaAtual) =>
+      listaAtual.map((item) =>
+        item.id === atualizado.id
+          ? {
+              id: atualizado.id,
+              fonte: atualizado.fonte,
+              orcamentado: Number(atualizado.orcamentado || 0),
+              recebido: Number(atualizado.recebido || 0),
+            }
+          : item
+      )
+    )
+
+    setRendimentoEditando(null)
   }
 
   function apagarRendimento(id) {
@@ -135,9 +174,15 @@ export default function App() {
       .then((data) => {
         console.log("Rendimento apagado:", data)
 
-        setRendimentosApi((listaAtual) =>
-          listaAtual.filter((item) => item.id !== id)
-        )
+        if (data.status === "ok") {
+          setRendimentosApi((listaAtual) =>
+            listaAtual.filter((item) => item.id !== id)
+          )
+
+          if (rendimentoEditando?.id === id) {
+            setRendimentoEditando(null)
+          }
+        }
       })
       .catch((err) => {
         console.error("Erro ao apagar:", err)
@@ -152,7 +197,7 @@ export default function App() {
         <main className="space-y-4">
           <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
             <HealthCard />
-            <KpiCard icon="💼" title="Salário Líquido" value="€ 5.000,00" accent="blue" showBar />
+            <KpiCard icon="💼" title="Salário Líquido" value={formatarEuro(totalRecebido)} accent="blue" showBar />
             <KpiCard icon="🧾" title="Total Despesas" value="€ 2.650,00" subtitle="53,0% do salário" accent="red" />
             <KpiCard icon="💸" title="Disponível p/ Dívidas" value="€ 1.350,00" subtitle="27,0% do salário" accent="green" green />
             <KpiCard icon="🏦" title="Total Dívidas" value="€ 28.450,00" subtitle="Min. mensal: € 950,00" accent="purple" />
@@ -233,48 +278,48 @@ export default function App() {
                     <th className="p-1.5">Ação</th>
                   </tr>
                 </thead>
+
                 <tbody>
-  {rendimentosApi.map((item) => (
-    <tr key={item.id} className="border-b border-slate-100">
-      <td className="p-1.5 font-semibold">{item.fonte}</td>
-      <td className="p-1.5 text-center">
-  € {item.orcamentado}
-</td>
+                  {rendimentosApi.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100">
+                      <td className="p-1.5 font-semibold">{item.fonte}</td>
+                      <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
+                      <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
+                      <td className="p-1.5 text-center">
+                        <div className="flex justify-center gap-1">
+                          <button
+                            onClick={() => iniciarEdicaoRendimento(item)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                          >
+                            Editar
+                          </button>
 
-<td className="p-1.5 text-center">
-  € {item.recebido}
-</td>
-      <td className="p-1.5 text-center">
-        <button
-          onClick={() => apagarRendimento(item.id)}
-          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-        >
-          Apagar
-        </button>
-      </td>
-    </tr>
-  ))}
+                          <button
+                            onClick={() => apagarRendimento(item.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                          >
+                            Apagar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
 
-  <tr className="bg-emerald-50 font-black">
-    <td className="p-1.5">TOTAL</td>
-    <td className="p-1.5 text-center">
-      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orcamentado), 0).toLocaleString("pt-PT", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </td>
-    <td className="p-1.5 text-center">
-      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.recebido), 0).toLocaleString("pt-PT", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </td>
-    <td className="p-1.5"></td>
-  </tr>
-</tbody>
+                  <tr className="bg-emerald-50 font-black">
+                    <td className="p-1.5">TOTAL</td>
+                    <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
+                    <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
+                    <td className="p-1.5"></td>
+                  </tr>
+                </tbody>
               </TableCard>
 
-              <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} />
+              <AddRendimentoForm
+                onAdicionar={adicionarRendimentoNaTabela}
+                rendimentoEditando={rendimentoEditando}
+                onAtualizar={atualizarRendimentoNaTabela}
+                onCancelarEdicao={cancelarEdicaoRendimento}
+              />
             </div>
 
             <TableCard title="Despesas Mensais" color="bg-blue-700">
@@ -665,49 +710,91 @@ function Panel({ title, children }) {
     </div>
   )
 }
-function AddRendimentoForm({ onAdicionar }) {
+function AddRendimentoForm({
+  onAdicionar,
+  rendimentoEditando,
+  onAtualizar,
+  onCancelarEdicao,
+}) {
   const [fonte, setFonte] = React.useState("")
   const [orcamentado, setOrcamentado] = React.useState("")
   const [recebido, setRecebido] = React.useState("")
 
-  function adicionarRendimento(e) {
+  const modoEdicao = Boolean(rendimentoEditando)
+
+  React.useEffect(() => {
+    if (rendimentoEditando) {
+      setFonte(rendimentoEditando.fonte || "")
+      setOrcamentado(String(rendimentoEditando.orcamentado || 0))
+      setRecebido(String(rendimentoEditando.recebido || 0))
+    }
+  }, [rendimentoEditando])
+
+  function limparFormulario() {
+    setFonte("")
+    setOrcamentado("")
+    setRecebido("")
+  }
+
+  function guardarRendimento(e) {
     e.preventDefault()
 
-    const novoRendimento = {
+    const dadosRendimento = {
       fonte,
       orcamentado: Number(orcamentado),
       recebido: Number(recebido),
     }
 
-    fetch("/api/rendimentos", {
-      method: "POST",
+    const url = modoEdicao
+      ? `/api/rendimentos?id=${rendimentoEditando.id}`
+      : "/api/rendimentos"
+
+    const method = modoEdicao ? "PUT" : "POST"
+
+    fetch(url, {
+      method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(novoRendimento),
+      body: JSON.stringify(dadosRendimento),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Rendimento adicionado:", data)
+        console.log(
+          modoEdicao ? "Rendimento atualizado:" : "Rendimento adicionado:",
+          data
+        )
 
-        if (data.status === "ok" && typeof onAdicionar === "function") {
-          onAdicionar(data.data)
-        } else {
-          console.warn("onAdicionar não está disponível", onAdicionar)
+        if (data.status === "ok") {
+          if (modoEdicao && typeof onAtualizar === "function") {
+            onAtualizar(data.data)
+          }
+
+          if (!modoEdicao && typeof onAdicionar === "function") {
+            onAdicionar(data.data)
+          }
+
+          limparFormulario()
         }
-
-        setFonte("")
-        setOrcamentado("")
-        setRecebido("")
       })
       .catch((err) => {
-        console.error("Erro ao adicionar rendimento:", err)
+        console.error("Erro ao guardar rendimento:", err)
       })
   }
 
+  function cancelarEdicao() {
+    limparFormulario()
+
+    if (typeof onCancelarEdicao === "function") {
+      onCancelarEdicao()
+    }
+  }
+
   return (
-    <form onSubmit={adicionarRendimento} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
-      <h3 className="font-black text-emerald-700 mb-3">Adicionar Rendimento</h3>
+    <form onSubmit={guardarRendimento} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-emerald-700 mb-3">
+        {modoEdicao ? "Editar Rendimento" : "Adicionar Rendimento"}
+      </h3>
 
       <input
         className="w-full mb-2 rounded-lg border p-2 text-sm"
@@ -733,11 +820,22 @@ function AddRendimentoForm({ onAdicionar }) {
       />
 
       <button className="w-full rounded-lg bg-emerald-600 py-2 text-white font-bold">
-        Adicionar
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
+
+      {modoEdicao && (
+        <button
+          type="button"
+          onClick={cancelarEdicao}
+          className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+        >
+          Cancelar edição
+        </button>
+      )}
     </form>
   )
 }
+
 
 function Sidebar() {
   const menuItems = [
