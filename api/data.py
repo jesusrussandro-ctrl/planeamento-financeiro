@@ -13,10 +13,14 @@ dashboard_data = {
         {"id": 4, "fonte": "Outros Rendimentos", "orcamentado": 0, "recebido": 0},
     ],
 
-   "despesas": [
-    {"id": 1, "categoria": "Habitação", "orcamentado": 950, "realizado": 950, "percentagem": "19%"},
-    {"id": 2, "categoria": "Transportes", "orcamentado": 400, "realizado": 400, "percentagem": "8%"},
-]
+    "despesas": [
+        {"id": 1, "categoria": "Habitação", "orcamentado": 950, "realizado": 950, "percentagem": "19%"},
+        {"id": 2, "categoria": "Transportes", "orcamentado": 400, "realizado": 400, "percentagem": "8%"},
+        {"id": 3, "categoria": "Alimentação", "orcamentado": 600, "realizado": 600, "percentagem": "12%"},
+        {"id": 4, "categoria": "Saúde", "orcamentado": 200, "realizado": 200, "percentagem": "4%"},
+        {"id": 5, "categoria": "Lazer", "orcamentado": 200, "realizado": 200, "percentagem": "4%"},
+        {"id": 6, "categoria": "Outros", "orcamentado": 300, "realizado": 300, "percentagem": "6%"},
+    ],
 
     "dividas": [
         {"id": 1, "credor": "Cartão de Crédito", "saldo": 5000, "progresso": 80, "juros": "8.0%", "prioridade": "Alta"},
