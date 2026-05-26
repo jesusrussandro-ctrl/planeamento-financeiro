@@ -2,11 +2,45 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import sys
+from urllib.parse import parse_qs, urlparse
 
 sys.path.append(os.path.dirname(__file__))
 
 from data import dashboard_data
-from utils import send_json
+from utils import is_authorized, send_error, send_json
+
+
+MAX_BODY_SIZE = 10_000
+
+
+def next_id(items):
+    return max((int(item.get("id", 0)) for item in items), default=0) + 1
+
+
+def validate_rendimento(payload):
+    if not isinstance(payload, dict):
+        raise ValueError("Pedido invalido")
+
+    fonte = str(payload.get("fonte", "")).strip()
+    if not fonte:
+        raise ValueError("Fonte e obrigatoria")
+    if len(fonte) > 100:
+        raise ValueError("Fonte nao pode exceder 100 caracteres")
+
+    try:
+        orcamentado = float(payload.get("orcamentado", 0))
+        recebido = float(payload.get("recebido", 0))
+    except (TypeError, ValueError):
+        raise ValueError("Valores devem ser numericos")
+
+    if orcamentado < 0 or recebido < 0:
+        raise ValueError("Valores nao podem ser negativos")
+
+    return {
+        "fonte": fonte,
+        "orcamentado": round(orcamentado, 2),
+        "recebido": round(recebido, 2),
+    }
 
 
 class handler(BaseHTTPRequestHandler):
@@ -15,7 +49,11 @@ class handler(BaseHTTPRequestHandler):
         send_json(self, {"status": "ok"})
 
     def do_GET(self):
-        path = self.path.split("?")[0]
+        if not is_authorized(self):
+            send_error(self, "Nao autorizado", 401)
+            return
+
+        path = urlparse(self.path).path
 
         routes = {
             "/api/dashboard": dashboard_data,
@@ -32,21 +70,32 @@ class handler(BaseHTTPRequestHandler):
                 "data": routes[path]
             })
         else:
-            send_json(self, {
-                "status": "error",
-                "message": "Rota não encontrada"
-            }, 404)
+            send_error(self, "Rota nao encontrada", 404)
 
     def do_POST(self):
-        path = self.path.split("?")[0]
+        if not is_authorized(self):
+            send_error(self, "Nao autorizado", 401)
+            return
+
+        path = urlparse(self.path).path
 
         if path == "/api/rendimentos":
-            content_length = int(self.headers.get("Content-Length", 0))
+            try:
+                content_length = int(self.headers.get("Content-Length", 0))
+            except ValueError:
+                send_error(self, "Content-Length invalido", 400)
+                return
+
+            if content_length > MAX_BODY_SIZE:
+                send_error(self, "Pedido demasiado grande", 413)
+                return
+
             body = self.rfile.read(content_length)
 
             try:
-                novo_rendimento = json.loads(body.decode("utf-8"))
-                novo_rendimento["id"] = len(dashboard_data["rendimentos"]) + 1
+                payload = json.loads(body.decode("utf-8"))
+                novo_rendimento = validate_rendimento(payload)
+                novo_rendimento["id"] = next_id(dashboard_data["rendimentos"])
 
                 dashboard_data["rendimentos"].append(novo_rendimento)
 
@@ -56,32 +105,24 @@ class handler(BaseHTTPRequestHandler):
                     "data": novo_rendimento
                 }, 201)
 
-            except Exception as error:
-                send_json(self, {
-                    "status": "error",
-                    "message": "Erro ao adicionar rendimento",
-                    "detail": str(error)
-                }, 400)
+            except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+                send_error(self, str(error), 400)
 
         else:
-            send_json(self, {
-                "status": "error",
-                "message": "Rota POST não encontrada"
-            }, 404)
+            send_error(self, "Rota POST nao encontrada", 404)
 
     def do_DELETE(self):
-        path = self.path.split("?")[0]
-        query = self.path.split("?")[1] if "?" in self.path else ""
+        if not is_authorized(self):
+            send_error(self, "Nao autorizado", 401)
+            return
+
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path
 
         if path == "/api/rendimentos":
             try:
-                params = dict(
-                    param.split("=")
-                    for param in query.split("&")
-                    if "=" in param
-                )
-
-                rendimento_id = int(params.get("id", 0))
+                params = parse_qs(parsed_url.query)
+                rendimento_id = int(params.get("id", ["0"])[0])
 
                 rendimento_encontrado = None
 
@@ -91,10 +132,7 @@ class handler(BaseHTTPRequestHandler):
                         break
 
                 if not rendimento_encontrado:
-                    send_json(self, {
-                        "status": "error",
-                        "message": "Rendimento não encontrado"
-                    }, 404)
+                    send_error(self, "Rendimento nao encontrado", 404)
                     return
 
                 dashboard_data["rendimentos"].remove(rendimento_encontrado)
@@ -105,15 +143,8 @@ class handler(BaseHTTPRequestHandler):
                     "data": rendimento_encontrado
                 })
 
-            except Exception as error:
-                send_json(self, {
-                    "status": "error",
-                    "message": "Erro ao apagar rendimento",
-                    "detail": str(error)
-                }, 400)
+            except (TypeError, ValueError):
+                send_error(self, "ID invalido", 400)
 
         else:
-            send_json(self, {
-                "status": "error",
-                "message": "Rota DELETE não encontrada"
-            }, 404)
+            send_error(self, "Rota DELETE nao encontrada", 404)
