@@ -89,7 +89,7 @@ const dividas = [
 ]
 
 export default function App() {
-  const [rendimentosApi, setRendimentosApi] = React.useState(rendimentos)
+ const [rendimentosApi, setRendimentosApi] = React.useState([])
 
   React.useEffect(() => {
     fetch("/api/rendimentos")
@@ -266,32 +266,39 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rendimentosApi.map((item) => (
-                    <tr key={item.id} className="border-b border-slate-100">
-                      ...
-                    </tr>
-                  ))}
+  {rendimentosApi.map((item) => (
+    <tr key={item.id} className="border-b border-slate-100">
+      <td className="p-1.5 font-semibold">{item.fonte}</td>
+      <td className="p-1.5 text-center">{item.orc}</td>
+      <td className="p-1.5 text-center">{item.rec}</td>
+      <td className="p-1.5 text-center">
+        <button
+          onClick={() => apagarRendimento(item.id)}
+          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+        >
+          Apagar
+        </button>
+      </td>
+    </tr>
+  ))}
 
-                  <tr className="bg-emerald-50 font-black">
-                    <td className="p-1.5">TOTAL</td>
-
-                    <td className="p-1.5 text-center">
-                      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orc), 0).toLocaleString("pt-PT", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </td>
-
-                    <td className="p-1.5 text-center">
-                      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.rec), 0).toLocaleString("pt-PT", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </td>
-
-                    <td className="p-1.5"></td>
-                  </tr>
-                </tbody>
+  <tr className="bg-emerald-50 font-black">
+    <td className="p-1.5">TOTAL</td>
+    <td className="p-1.5 text-center">
+      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.orc), 0).toLocaleString("pt-PT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </td>
+    <td className="p-1.5 text-center">
+      € {rendimentosApi.reduce((total, item) => total + limparEuro(item.rec), 0).toLocaleString("pt-PT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </td>
+    <td className="p-1.5"></td>
+  </tr>
+</tbody>
               </TableCard>
 
               <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} />
