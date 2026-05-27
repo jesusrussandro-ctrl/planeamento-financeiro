@@ -95,6 +95,9 @@ export default function App() {
   const [despesasApi, setDespesasApi] = React.useState([])
   const [despesaEditando, setDespesaEditando] = React.useState(null)
 
+  const [dividasApi, setDividasApi] = React.useState([])
+  const [dividaEditando, setDividaEditando] = React.useState(null)
+
   React.useEffect(() => {
     fetch("/api/rendimentos")
       .then((res) => res.json())
@@ -133,6 +136,28 @@ export default function App() {
       })
       .catch((err) => {
         console.error("Erro despesas:", err)
+      })
+  }, [])
+
+  React.useEffect(() => {
+    fetch("/api/dividas")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Dívidas backend:", data)
+
+        setDividasApi(
+          data.data.map((item) => ({
+            id: item.id,
+            credor: item.credor,
+            saldo: Number(item.saldo || 0),
+            progresso: Number(item.progresso || 0),
+            juros: item.juros || "0%",
+            prioridade: item.prioridade || "Baixa",
+          }))
+        )
+      })
+      .catch((err) => {
+        console.error("Erro dívidas:", err)
       })
   }, [])
 
@@ -175,6 +200,37 @@ export default function App() {
     : 0
 
   const disponivelParaDividas = totalRecebido - totalDespesasRealizado
+
+  const totalDividas = dividasApi.reduce(
+    (total, item) => total + Number(item.saldo || 0),
+    0
+  )
+
+  const pagamentoIdealDividas = dividasApi.map((item) => {
+    const peso = totalDividas > 0 ? Number(item.saldo || 0) / totalDividas : 0
+    const pagamento = Math.max(0, disponivelParaDividas) * peso
+    const percentagemDisponivel = Math.max(0, disponivelParaDividas) > 0
+      ? (pagamento / Math.max(0, disponivelParaDividas)) * 100
+      : 0
+    const tempoMeses = pagamento > 0
+      ? Math.ceil(Number(item.saldo || 0) / pagamento)
+      : 0
+
+    return {
+      id: item.id,
+      credor: item.credor,
+      pagamento,
+      percentagemDisponivel,
+      tempoMeses,
+    }
+  })
+
+  const totalPagamentoIdeal = pagamentoIdealDividas.reduce(
+    (total, item) => total + Number(item.pagamento || 0),
+    0
+  )
+
+  const sobraPagamentoIdeal = Math.max(0, disponivelParaDividas) - totalPagamentoIdeal
 
   const despesasGrafico = despesasApi.map((item) => ({
     id: item.id,
@@ -314,6 +370,70 @@ export default function App() {
       })
   }
 
+  function adicionarDividaNaTabela(nova) {
+    setDividasApi((listaAtual) => [
+      ...listaAtual,
+      {
+        id: nova.id,
+        credor: nova.credor,
+        saldo: Number(nova.saldo || 0),
+        progresso: Number(nova.progresso || 0),
+        juros: nova.juros || "0%",
+        prioridade: nova.prioridade || "Baixa",
+      },
+    ])
+  }
+
+  function iniciarEdicaoDivida(item) {
+    setDividaEditando(item)
+  }
+
+  function cancelarEdicaoDivida() {
+    setDividaEditando(null)
+  }
+
+  function atualizarDividaNaTabela(atualizada) {
+    setDividasApi((listaAtual) =>
+      listaAtual.map((item) =>
+        item.id === atualizada.id
+          ? {
+              id: atualizada.id,
+              credor: atualizada.credor,
+              saldo: Number(atualizada.saldo || 0),
+              progresso: Number(atualizada.progresso || 0),
+              juros: atualizada.juros || "0%",
+              prioridade: atualizada.prioridade || "Baixa",
+            }
+          : item
+      )
+    )
+
+    setDividaEditando(null)
+  }
+
+  function apagarDivida(id) {
+    fetch(`/api/dividas?id=${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Dívida apagada:", data)
+
+        if (data.status === "ok") {
+          setDividasApi((listaAtual) =>
+            listaAtual.filter((item) => item.id !== id)
+          )
+
+          if (dividaEditando?.id === id) {
+            setDividaEditando(null)
+          }
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao apagar dívida:", err)
+      })
+  }
+
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
       <Sidebar />
@@ -325,7 +445,7 @@ export default function App() {
             <KpiCard icon="💼" title="Salário Líquido" value={formatarEuro(totalRecebido)} accent="blue" showBar />
             <KpiCard icon="🧾" title="Total Despesas" value={formatarEuro(totalDespesasRealizado)} subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`} accent="red" />
             <KpiCard icon="💸" title="Disponível p/ Dívidas" value={formatarEuro(disponivelParaDividas)} subtitle={`${formatarPercentagem(totalRecebido > 0 ? (disponivelParaDividas / totalRecebido) * 100 : 0)} do salário`} accent="green" green />
-            <KpiCard icon="🏦" title="Total Dívidas" value="€ 28.450,00" subtitle="Min. mensal: € 950,00" accent="purple" />
+            <KpiCard icon="🏦" title="Total Dívidas" value={formatarEuro(totalDividas)} subtitle={`Pagamento ideal: ${formatarEuro(totalPagamentoIdeal)}`} accent="purple" />
             <KpiCard icon="🗓️" title="Dias Restantes" value="17" subtitle="até 31/05/2024" accent="orange" />
           </section>
 
@@ -510,36 +630,61 @@ export default function App() {
               />
             </div>
 
-            <TableCard title="Dívidas" color="bg-purple-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1 text-left">Credor</th>
-                  <th className="p-1">Saldo</th>
-                  <th className="p-1">Prog.</th>
-                  <th className="p-1">Juros</th>
-                  <th className="p-1">Prior.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dividas.map(([nome, valor, progresso, juros, prioridade]) => (
-                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
-                    <td className="p-1 font-semibold">{nome}</td>
-                    <td className="p-1 text-center">{valor}</td>
-                    <td className="p-1 text-center">{progresso}</td>
-                    <td className="p-1 text-center">{juros}</td>
-                    <td className="p-1 text-center text-red-500 font-bold">{prioridade}</td>
+            <div>
+              <TableCard title="Dívidas" color="bg-purple-700">
+                <thead className="bg-slate-50 text-slate-500">
+                  <tr>
+                    <th className="p-1 text-left">Credor</th>
+                    <th className="p-1">Saldo</th>
+                    <th className="p-1">Prog.</th>
+                    <th className="p-1">Juros</th>
+                    <th className="p-1">Prior.</th>
+                    <th className="p-1">Ação</th>
                   </tr>
-                ))}
-                <tr className="bg-purple-100 font-black text-[10px]">
-                  <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
-                  <td className="p-1.5 text-center" colSpan="4">€ 28.450,00</td>
-                </tr>
-                <tr className="bg-purple-50 font-black text-[10px]">
-                  <td className="p-1.5">TOTAL MÍNIMO (mês)</td>
-                  <td className="p-1.5 text-center" colSpan="4">€ 950,00</td>
-                </tr>
-              </tbody>
-            </TableCard>
+                </thead>
+
+                <tbody>
+                  {dividasApi.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+                      <td className="p-1 font-semibold">{item.credor}</td>
+                      <td className="p-1 text-center">{formatarEuro(item.saldo)}</td>
+                      <td className="p-1 text-center">{Number(item.progresso || 0)}%</td>
+                      <td className="p-1 text-center">{item.juros}</td>
+                      <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
+                      <td className="p-1 text-center">
+                        <div className="flex justify-center gap-1">
+                          <button
+                            onClick={() => iniciarEdicaoDivida(item)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            onClick={() => apagarDivida(item.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                          >
+                            Apagar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+
+                  <tr className="bg-purple-100 font-black text-[10px]">
+                    <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
+                    <td className="p-1.5 text-center" colSpan="5">{formatarEuro(totalDividas)}</td>
+                  </tr>
+                </tbody>
+              </TableCard>
+
+              <AddDividaForm
+                onAdicionar={adicionarDividaNaTabela}
+                dividaEditando={dividaEditando}
+                onAtualizar={atualizarDividaNaTabela}
+                onCancelarEdicao={cancelarEdicaoDivida}
+              />
+            </div>
 
             <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
               <thead className="bg-slate-50 text-slate-500">
@@ -551,23 +696,24 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {dividas.map(([nome], index) => (
-                  <tr key={nome} className="border-b border-slate-100 text-[10px]">
-                    <td className="p-1 font-semibold">{nome}</td>
-                    <td className="p-1 text-center">€ {[500, 450, 300, 20][index]}</td>
-                    <td className="p-1 text-center">{["37,0%", "33,3%", "22,2%", "1,5%"][index]}</td>
-                    <td className="p-1 text-center">{[12, 24, 25, 11][index]} meses</td>
+                {pagamentoIdealDividas.map((item) => (
+                  <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+                    <td className="p-1 font-semibold">{item.credor}</td>
+                    <td className="p-1 text-center">{formatarEuro(item.pagamento)}</td>
+                    <td className="p-1 text-center">{formatarPercentagem(item.percentagemDisponivel)}</td>
+                    <td className="p-1 text-center">{item.tempoMeses} meses</td>
                   </tr>
                 ))}
+
                 <tr className="bg-green-100 font-black text-[10px]">
                   <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
-                  <td className="p-1.5 text-center">€ 1.350,00</td>
+                  <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
                   <td className="p-1.5 text-center">100%</td>
                   <td className="p-1.5"></td>
                 </tr>
                 <tr className="bg-green-50 font-black text-[10px]">
                   <td className="p-1.5">SOBRA / FOLGA</td>
-                  <td className="p-1.5 text-center">€ 0,00</td>
+                  <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
                   <td className="p-1.5"></td>
                   <td className="p-1.5"></td>
                 </tr>
@@ -1109,6 +1255,158 @@ function AddDespesaForm({
       />
 
       <button className="w-full rounded-lg bg-blue-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button
+          type="button"
+          onClick={cancelarEdicao}
+          className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+        >
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
+
+function AddDividaForm({
+  onAdicionar,
+  dividaEditando,
+  onAtualizar,
+  onCancelarEdicao,
+}) {
+  const [credor, setCredor] = React.useState("")
+  const [saldo, setSaldo] = React.useState("")
+  const [progresso, setProgresso] = React.useState("")
+  const [juros, setJuros] = React.useState("")
+  const [prioridade, setPrioridade] = React.useState("Baixa")
+
+  const modoEdicao = Boolean(dividaEditando)
+
+  React.useEffect(() => {
+    if (dividaEditando) {
+      setCredor(dividaEditando.credor || "")
+      setSaldo(String(dividaEditando.saldo || 0))
+      setProgresso(String(dividaEditando.progresso || 0))
+      setJuros(dividaEditando.juros || "0%")
+      setPrioridade(dividaEditando.prioridade || "Baixa")
+    }
+  }, [dividaEditando])
+
+  function limparFormulario() {
+    setCredor("")
+    setSaldo("")
+    setProgresso("")
+    setJuros("")
+    setPrioridade("Baixa")
+  }
+
+  function guardarDivida(e) {
+    e.preventDefault()
+
+    const dadosDivida = {
+      credor,
+      saldo: Number(saldo),
+      progresso: Number(progresso),
+      juros,
+      prioridade,
+    }
+
+    const url = modoEdicao
+      ? `/api/dividas?id=${dividaEditando.id}`
+      : "/api/dividas"
+
+    const method = modoEdicao ? "PUT" : "POST"
+
+    fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dadosDivida),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(
+          modoEdicao ? "Dívida atualizada:" : "Dívida adicionada:",
+          data
+        )
+
+        if (data.status === "ok") {
+          if (modoEdicao && typeof onAtualizar === "function") {
+            onAtualizar(data.data)
+          }
+
+          if (!modoEdicao && typeof onAdicionar === "function") {
+            onAdicionar(data.data)
+          }
+
+          limparFormulario()
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao guardar dívida:", err)
+      })
+  }
+
+  function cancelarEdicao() {
+    limparFormulario()
+
+    if (typeof onCancelarEdicao === "function") {
+      onCancelarEdicao()
+    }
+  }
+
+  return (
+    <form onSubmit={guardarDivida} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-purple-700 mb-3">
+        {modoEdicao ? "Editar Dívida" : "Adicionar Dívida"}
+      </h3>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Credor"
+        value={credor}
+        onChange={(e) => setCredor(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Saldo"
+        type="number"
+        value={saldo}
+        onChange={(e) => setSaldo(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Progresso (%)"
+        type="number"
+        value={progresso}
+        onChange={(e) => setProgresso(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Juros"
+        value={juros}
+        onChange={(e) => setJuros(e.target.value)}
+      />
+
+      <select
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        value={prioridade}
+        onChange={(e) => setPrioridade(e.target.value)}
+      >
+        <option value="Alta">Alta</option>
+        <option value="Média">Média</option>
+        <option value="Baixa">Baixa</option>
+      </select>
+
+      <button className="w-full rounded-lg bg-purple-600 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
