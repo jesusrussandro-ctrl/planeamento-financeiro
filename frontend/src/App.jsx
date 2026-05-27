@@ -20,6 +20,60 @@ import {
 
 const COLORS = ["#0e7490", "#0891b2", "#84cc16", "#7c3aed", "#2563eb", "#f59e0b"]
 
+const NOMES_MESES = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+]
+
+function obterMesAtual() {
+  const hoje = new Date()
+  const ano = hoje.getFullYear()
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0")
+  return `${ano}-${mes}`
+}
+
+function gerarMesesFuturos(anosAFuturo = 5) {
+  const hoje = new Date()
+  const anoAtual = hoje.getFullYear()
+  const mesAtualIndex = hoje.getMonth()
+  const anos = []
+
+  for (let ano = anoAtual; ano <= anoAtual + anosAFuturo; ano += 1) {
+    const primeiroMes = ano === anoAtual ? mesAtualIndex : 0
+    const meses = []
+
+    for (let mesIndex = primeiroMes; mesIndex < 12; mesIndex += 1) {
+      const valor = `${ano}-${String(mesIndex + 1).padStart(2, "0")}`
+      meses.push({
+        valor,
+        label: `${NOMES_MESES[mesIndex]} ${ano}`,
+      })
+    }
+
+    anos.push({ ano, meses })
+  }
+
+  return anos
+}
+
+function formatarMesAtivo(mes) {
+  const [ano, mesNumero] = mes.split("-").map(Number)
+  return `${NOMES_MESES[mesNumero - 1]} ${ano}`
+}
+
+const MESES_FUTUROS = gerarMesesFuturos(5)
+
+
 const rendimentos = [
   ["Salário Principal", "€ 5.000,00", "€ 5.000,00"],
   ["Trabalho Extra / Freelance", "€ -", "€ -"],
@@ -98,7 +152,7 @@ export default function App() {
   const [dividasApi, setDividasApi] = React.useState([])
   const [dividaEditando, setDividaEditando] = React.useState(null)
 
-  const [mesAtivo, setMesAtivo] = React.useState("2024-05")
+  const [mesAtivo, setMesAtivo] = React.useState(obterMesAtual())
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -185,6 +239,23 @@ export default function App() {
     return new Date(ano, mesNumero, 0).getDate()
   }
 
+  function calcularDiasRestantes(mes) {
+    const [ano, mesNumero] = mes.split("-").map(Number)
+    const hoje = new Date()
+    const ultimoDia = ultimoDiaDoMes(mes)
+
+    if (ano === hoje.getFullYear() && mesNumero === hoje.getMonth() + 1) {
+      return Math.max(0, ultimoDia - hoje.getDate() + 1)
+    }
+
+    if (ano > hoje.getFullYear() || (ano === hoje.getFullYear() && mesNumero > hoje.getMonth() + 1)) {
+      return ultimoDia
+    }
+
+    return 0
+  }
+
+  const diasRestantesMesAtivo = calcularDiasRestantes(mesAtivo)
   const dataFimMesAtivo = `${ultimoDiaDoMes(mesAtivo)}/${mesAtivo.slice(5, 7)}/${mesAtivo.slice(0, 4)}`
 
   const totalOrcamentado = rendimentosApi.reduce(
@@ -464,7 +535,7 @@ export default function App() {
             <KpiCard icon="🧾" title="Total Despesas" value={formatarEuro(totalDespesasRealizado)} subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`} accent="red" />
             <KpiCard icon="💸" title="Disponível p/ Dívidas" value={formatarEuro(disponivelParaDividas)} subtitle={`${formatarPercentagem(totalRecebido > 0 ? (disponivelParaDividas / totalRecebido) * 100 : 0)} do salário`} accent="green" green />
             <KpiCard icon="🏦" title="Total Dívidas" value={formatarEuro(totalDividas)} subtitle={`Pagamento ideal: ${formatarEuro(totalPagamentoIdeal)}`} accent="purple" />
-            <KpiCard icon="🗓️" title="Dias Restantes" value="17" subtitle={`até ${dataFimMesAtivo}`} accent="orange" />
+            <KpiCard icon="🗓️" title="Dias Restantes" value={String(diasRestantesMesAtivo)} subtitle={`até ${dataFimMesAtivo}`} accent="orange" />
           </section>
 
           <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
@@ -1502,15 +1573,20 @@ function Sidebar({ mesAtivo, setMesAtivo }) {
             onChange={(e) => setMesAtivo(e.target.value)}
             className="w-full rounded-[9px] border border-cyan-400/30 bg-[#061b3f] px-2 py-2 text-center text-[12px] font-black text-yellow-300 outline-none"
           >
-            <option value="2024-05">🗓️ Maio 2024</option>
-            <option value="2024-06">🗓️ Junho 2024</option>
-            <option value="2024-07">🗓️ Julho 2024</option>
-            <option value="2024-08">🗓️ Agosto 2024</option>
-            <option value="2024-09">🗓️ Setembro 2024</option>
-            <option value="2024-10">🗓️ Outubro 2024</option>
-            <option value="2024-11">🗓️ Novembro 2024</option>
-            <option value="2024-12">🗓️ Dezembro 2024</option>
+            {MESES_FUTUROS.map((grupo) => (
+              <optgroup key={grupo.ano} label={String(grupo.ano)}>
+                {grupo.meses.map((mes) => (
+                  <option key={mes.valor} value={mes.valor}>
+                    🗓️ {mes.label}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
           </select>
+
+          <div className="mt-2 rounded-lg bg-cyan-400/10 px-2 py-1 text-center text-[10px] font-bold text-cyan-100">
+            A visualizar: {formatarMesAtivo(mesAtivo)}
+          </div>
         </div>
 
         <nav className="px-3 space-y-[5px]">
@@ -1545,7 +1621,7 @@ function Sidebar({ mesAtivo, setMesAtivo }) {
 
           <div className="mt-3 text-center">
             <p className="text-[8px] font-black uppercase text-white/70">Atualizado em</p>
-            <p className="text-[11px] font-black">01/05/2024 12:30</p>
+            <p className="text-[11px] font-black">{new Date().toLocaleString("pt-PT")}</p>
           </div>
         </div>
 
