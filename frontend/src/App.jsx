@@ -151,6 +151,8 @@ export default function App() {
 
   const [dividasApi, setDividasApi] = React.useState([])
   const [dividaEditando, setDividaEditando] = React.useState(null)
+  const [dividaPagamentoSelecionada, setDividaPagamentoSelecionada] = React.useState(null)
+  const [pagamentosDividasApi, setPagamentosDividasApi] = React.useState([])
 
   const [mesAtivo, setMesAtivo] = React.useState(obterMesAtual())
 
@@ -197,27 +199,65 @@ export default function App() {
       })
   }, [mesAtivo])
 
-  React.useEffect(() => {
-    fetch(`/api/dividas?mes=${mesAtivo}`)
+  function normalizarDivida(item) {
+    const taxaBruta = item.taxaJuros ?? String(item.juros || "0").replace("%", "")
+
+    return {
+      id: item.id,
+      mes: item.mes || mesAtivo,
+      mesInicio: item.mesInicio || item.mes || mesAtivo,
+      credor: item.credor,
+      saldoInicial: Number(item.saldoInicial ?? item.saldo ?? 0),
+      saldo: Number(item.saldo || 0),
+      prestacaoMensal: Number(item.prestacaoMensal || 0),
+      tipoJuros: item.tipoJuros || "mensal",
+      taxaJuros: Number(taxaBruta || 0),
+      progresso: Number(item.progresso || 0),
+      juros: item.juros || `${Number(taxaBruta || 0)}%`,
+      prioridade: item.prioridade || "Baixa",
+      status: item.status || "ativa",
+    }
+  }
+
+  function carregarDividasDoMes() {
+    return fetch(`/api/dividas?mes=${mesAtivo}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Dívidas backend:", data)
-
-        setDividasApi(
-          data.data.map((item) => ({
-            id: item.id,
-            mes: item.mes || mesAtivo,
-            credor: item.credor,
-            saldo: Number(item.saldo || 0),
-            progresso: Number(item.progresso || 0),
-            juros: item.juros || "0%",
-            prioridade: item.prioridade || "Baixa",
-          }))
-        )
+        setDividasApi(data.data.map(normalizarDivida))
       })
       .catch((err) => {
         console.error("Erro dívidas:", err)
       })
+  }
+
+  function carregarPagamentosDividasDoMes() {
+    return fetch(`/api/pagamentos-dividas?mes=${mesAtivo}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Pagamentos de dívidas backend:", data)
+
+        setPagamentosDividasApi(
+          data.data.map((item) => ({
+            id: item.id,
+            dividaId: item.dividaId,
+            mes: item.mes || mesAtivo,
+            valorPago: Number(item.valorPago || 0),
+            jurosPago: Number(item.jurosPago || 0),
+            amortizacao: Number(item.amortizacao || 0),
+            saldoAntes: Number(item.saldoAntes || 0),
+            saldoDepois: Number(item.saldoDepois || 0),
+          }))
+        )
+      })
+      .catch((err) => {
+        console.error("Erro pagamentos dívidas:", err)
+      })
+  }
+
+  React.useEffect(() => {
+    carregarDividasDoMes()
+    carregarPagamentosDividasDoMes()
   }, [mesAtivo])
 
   function formatarEuro(valor) {
@@ -232,6 +272,16 @@ export default function App() {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
     })}%`
+  }
+
+  function formatarTipoJuros(tipo) {
+    return tipo === "anual" ? "Anual" : "Mensal"
+  }
+
+  function obterPagamentoDividaDoMes(dividaId) {
+    return pagamentosDividasApi.find(
+      (pagamento) => Number(pagamento.dividaId) === Number(dividaId)
+    )
   }
 
   function ultimoDiaDoMes(mes) {
@@ -460,15 +510,7 @@ export default function App() {
   function adicionarDividaNaTabela(nova) {
     setDividasApi((listaAtual) => [
       ...listaAtual,
-      {
-        id: nova.id,
-        mes: nova.mes || mesAtivo,
-        credor: nova.credor,
-        saldo: Number(nova.saldo || 0),
-        progresso: Number(nova.progresso || 0),
-        juros: nova.juros || "0%",
-        prioridade: nova.prioridade || "Baixa",
-      },
+      normalizarDivida(nova),
     ])
   }
 
@@ -483,17 +525,7 @@ export default function App() {
   function atualizarDividaNaTabela(atualizada) {
     setDividasApi((listaAtual) =>
       listaAtual.map((item) =>
-        item.id === atualizada.id
-          ? {
-              id: atualizada.id,
-              mes: atualizada.mes || mesAtivo,
-              credor: atualizada.credor,
-              saldo: Number(atualizada.saldo || 0),
-              progresso: Number(atualizada.progresso || 0),
-              juros: atualizada.juros || "0%",
-              prioridade: atualizada.prioridade || "Baixa",
-            }
-          : item
+        item.id === atualizada.id ? normalizarDivida(atualizada) : item
       )
     )
 
@@ -516,10 +548,72 @@ export default function App() {
           if (dividaEditando?.id === id) {
             setDividaEditando(null)
           }
+
+          if (dividaPagamentoSelecionada?.id === id) {
+            setDividaPagamentoSelecionada(null)
+          }
         }
       })
       .catch((err) => {
         console.error("Erro ao apagar dívida:", err)
+      })
+  }
+
+  function iniciarPagamentoDivida(item) {
+    setDividaPagamentoSelecionada(item)
+  }
+
+  function cancelarPagamentoDivida() {
+    setDividaPagamentoSelecionada(null)
+  }
+
+  function registrarPagamentoDivida(valorPago) {
+    if (!dividaPagamentoSelecionada) {
+      return
+    }
+
+    fetch("/api/pagamentos-dividas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        dividaId: dividaPagamentoSelecionada.id,
+        mes: mesAtivo,
+        valorPago: Number(valorPago || 0),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Pagamento de dívida registado:", data)
+
+        if (data.status === "ok") {
+          setPagamentosDividasApi((listaAtual) => {
+            const semDuplicado = listaAtual.filter(
+              (item) => Number(item.dividaId) !== Number(data.data.dividaId)
+            )
+
+            return [
+              ...semDuplicado,
+              {
+                id: data.data.id,
+                dividaId: data.data.dividaId,
+                mes: data.data.mes || mesAtivo,
+                valorPago: Number(data.data.valorPago || 0),
+                jurosPago: Number(data.data.jurosPago || 0),
+                amortizacao: Number(data.data.amortizacao || 0),
+                saldoAntes: Number(data.data.saldoAntes || 0),
+                saldoDepois: Number(data.data.saldoDepois || 0),
+              },
+            ]
+          })
+
+          carregarDividasDoMes()
+          setDividaPagamentoSelecionada(null)
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao registar pagamento da dívida:", err)
       })
   }
 
@@ -727,44 +821,69 @@ export default function App() {
                   <tr>
                     <th className="p-1 text-left">Credor</th>
                     <th className="p-1">Saldo</th>
-                    <th className="p-1">Prog.</th>
+                    <th className="p-1">Prest.</th>
                     <th className="p-1">Juros</th>
+                    <th className="p-1">Tipo</th>
                     <th className="p-1">Prior.</th>
+                    <th className="p-1">Estado</th>
                     <th className="p-1">Ação</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {dividasApi.map((item) => (
-                    <tr key={item.id} className="border-b border-slate-100 text-[10px]">
-                      <td className="p-1 font-semibold">{item.credor}</td>
-                      <td className="p-1 text-center">{formatarEuro(item.saldo)}</td>
-                      <td className="p-1 text-center">{Number(item.progresso || 0)}%</td>
-                      <td className="p-1 text-center">{item.juros}</td>
-                      <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
-                      <td className="p-1 text-center">
-                        <div className="flex justify-center gap-1">
-                          <button
-                            onClick={() => iniciarEdicaoDivida(item)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                          >
-                            Editar
-                          </button>
+                  {dividasApi.map((item) => {
+                    const pagamentoMes = obterPagamentoDividaDoMes(item.id)
 
-                          <button
-                            onClick={() => apagarDivida(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                          >
-                            Apagar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                    return (
+                      <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+                        <td className="p-1 font-semibold">{item.credor}</td>
+                        <td className="p-1 text-center">{formatarEuro(item.saldo)}</td>
+                        <td className="p-1 text-center">{formatarEuro(item.prestacaoMensal)}</td>
+                        <td className="p-1 text-center">{formatarPercentagem(item.taxaJuros)}</td>
+                        <td className="p-1 text-center">{formatarTipoJuros(item.tipoJuros)}</td>
+                        <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
+                        <td className="p-1 text-center">
+                          {pagamentoMes ? (
+                            <span className="rounded bg-green-100 px-2 py-1 text-green-700 font-black">
+                              Pago
+                            </span>
+                          ) : (
+                            <span className="rounded bg-orange-100 px-2 py-1 text-orange-700 font-black">
+                              Pendente
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-1 text-center">
+                          <div className="flex flex-col justify-center gap-1">
+                            <button
+                              onClick={() => iniciarPagamentoDivida(item)}
+                              className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold"
+                            >
+                              Pagar
+                            </button>
+
+                            <button
+                              onClick={() => iniciarEdicaoDivida(item)}
+                              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                            >
+                              Editar
+                            </button>
+
+                            <button
+                              onClick={() => apagarDivida(item.id)}
+                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
+                            >
+                              Apagar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
 
                   <tr className="bg-purple-100 font-black text-[10px]">
                     <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
-                    <td className="p-1.5 text-center" colSpan="5">{formatarEuro(totalDividas)}</td>
+                    <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
                   </tr>
                 </tbody>
               </TableCard>
@@ -775,6 +894,18 @@ export default function App() {
                 onAtualizar={atualizarDividaNaTabela}
                 onCancelarEdicao={cancelarEdicaoDivida}
                 mesAtivo={mesAtivo}
+              />
+
+              <PagamentoDividaForm
+                dividaSelecionada={dividaPagamentoSelecionada}
+                pagamentoAtual={
+                  dividaPagamentoSelecionada
+                    ? obterPagamentoDividaDoMes(dividaPagamentoSelecionada.id)
+                    : null
+                }
+                onRegistrar={registrarPagamentoDivida}
+                onCancelar={cancelarPagamentoDivida}
+                formatarEuro={formatarEuro}
               />
             </div>
 
@@ -1376,9 +1507,12 @@ function AddDividaForm({
   mesAtivo,
 }) {
   const [credor, setCredor] = React.useState("")
+  const [saldoInicial, setSaldoInicial] = React.useState("")
   const [saldo, setSaldo] = React.useState("")
+  const [prestacaoMensal, setPrestacaoMensal] = React.useState("")
+  const [tipoJuros, setTipoJuros] = React.useState("mensal")
+  const [taxaJuros, setTaxaJuros] = React.useState("")
   const [progresso, setProgresso] = React.useState("")
-  const [juros, setJuros] = React.useState("")
   const [prioridade, setPrioridade] = React.useState("Baixa")
 
   const modoEdicao = Boolean(dividaEditando)
@@ -1386,31 +1520,45 @@ function AddDividaForm({
   React.useEffect(() => {
     if (dividaEditando) {
       setCredor(dividaEditando.credor || "")
+      setSaldoInicial(String(dividaEditando.saldoInicial || dividaEditando.saldo || 0))
       setSaldo(String(dividaEditando.saldo || 0))
+      setPrestacaoMensal(String(dividaEditando.prestacaoMensal || 0))
+      setTipoJuros(dividaEditando.tipoJuros || "mensal")
+      setTaxaJuros(String(dividaEditando.taxaJuros || 0))
       setProgresso(String(dividaEditando.progresso || 0))
-      setJuros(dividaEditando.juros || "0%")
       setPrioridade(dividaEditando.prioridade || "Baixa")
     }
   }, [dividaEditando])
 
   function limparFormulario() {
     setCredor("")
+    setSaldoInicial("")
     setSaldo("")
+    setPrestacaoMensal("")
+    setTipoJuros("mensal")
+    setTaxaJuros("")
     setProgresso("")
-    setJuros("")
     setPrioridade("Baixa")
   }
 
   function guardarDivida(e) {
     e.preventDefault()
 
+    const saldoInicialNumerico = Number(saldoInicial || saldo || 0)
+    const saldoNumerico = Number(saldo || saldoInicial || 0)
+
     const dadosDivida = {
       mes: mesAtivo,
+      mesInicio: dividaEditando?.mesInicio || mesAtivo,
       credor,
-      saldo: Number(saldo),
-      progresso: Number(progresso),
-      juros,
+      saldoInicial: saldoInicialNumerico,
+      saldo: saldoNumerico,
+      prestacaoMensal: Number(prestacaoMensal || 0),
+      tipoJuros,
+      taxaJuros: Number(taxaJuros || 0),
+      progresso: Number(progresso || 0),
       prioridade,
+      status: "ativa",
     }
 
     const url = modoEdicao
@@ -1473,7 +1621,21 @@ function AddDividaForm({
 
       <input
         className="w-full mb-2 rounded-lg border p-2 text-sm"
-        placeholder="Saldo"
+        placeholder="Saldo inicial"
+        type="number"
+        value={saldoInicial}
+        onChange={(e) => {
+          setSaldoInicial(e.target.value)
+
+          if (!modoEdicao && !saldo) {
+            setSaldo(e.target.value)
+          }
+        }}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Saldo atual"
         type="number"
         value={saldo}
         onChange={(e) => setSaldo(e.target.value)}
@@ -1481,17 +1643,37 @@ function AddDividaForm({
 
       <input
         className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Prestação mensal"
+        type="number"
+        value={prestacaoMensal}
+        onChange={(e) => setPrestacaoMensal(e.target.value)}
+      />
+
+      <div className="grid grid-cols-[1fr_1fr] gap-2">
+        <input
+          className="w-full mb-2 rounded-lg border p-2 text-sm"
+          placeholder="Taxa de juros (%)"
+          type="number"
+          value={taxaJuros}
+          onChange={(e) => setTaxaJuros(e.target.value)}
+        />
+
+        <select
+          className="w-full mb-2 rounded-lg border p-2 text-sm"
+          value={tipoJuros}
+          onChange={(e) => setTipoJuros(e.target.value)}
+        >
+          <option value="mensal">Juros mensal</option>
+          <option value="anual">Juros anual</option>
+        </select>
+      </div>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
         placeholder="Progresso (%)"
         type="number"
         value={progresso}
         onChange={(e) => setProgresso(e.target.value)}
-      />
-
-      <input
-        className="w-full mb-2 rounded-lg border p-2 text-sm"
-        placeholder="Juros"
-        value={juros}
-        onChange={(e) => setJuros(e.target.value)}
       />
 
       <select
@@ -1521,6 +1703,79 @@ function AddDividaForm({
   )
 }
 
+
+function PagamentoDividaForm({
+  dividaSelecionada,
+  pagamentoAtual,
+  onRegistrar,
+  onCancelar,
+  formatarEuro,
+}) {
+  const [valorPago, setValorPago] = React.useState("")
+
+  React.useEffect(() => {
+    if (dividaSelecionada) {
+      setValorPago(String(dividaSelecionada.prestacaoMensal || ""))
+    }
+  }, [dividaSelecionada])
+
+  if (!dividaSelecionada) {
+    return null
+  }
+
+  function guardarPagamento(e) {
+    e.preventDefault()
+
+    if (typeof onRegistrar === "function") {
+      onRegistrar(Number(valorPago || 0))
+    }
+  }
+
+  return (
+    <form onSubmit={guardarPagamento} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-purple-100">
+      <h3 className="font-black text-purple-700 mb-3">
+        Registar Pagamento
+      </h3>
+
+      <div className="mb-3 rounded-xl bg-purple-50 p-3 text-xs font-bold text-purple-900">
+        <div>{dividaSelecionada.credor}</div>
+        <div>Saldo atual: {formatarEuro(dividaSelecionada.saldo)}</div>
+        <div>Prestação prevista: {formatarEuro(dividaSelecionada.prestacaoMensal)}</div>
+      </div>
+
+      {pagamentoAtual && (
+        <div className="mb-3 rounded-xl bg-green-50 p-3 text-[11px] font-bold text-green-900">
+          <div>Pagamento já registado neste mês.</div>
+          <div>Valor pago: {formatarEuro(pagamentoAtual.valorPago)}</div>
+          <div>Juros pagos: {formatarEuro(pagamentoAtual.jurosPago)}</div>
+          <div>Amortização: {formatarEuro(pagamentoAtual.amortizacao)}</div>
+          <div>Saldo antes: {formatarEuro(pagamentoAtual.saldoAntes)}</div>
+          <div>Saldo depois: {formatarEuro(pagamentoAtual.saldoDepois)}</div>
+        </div>
+      )}
+
+      <input
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        placeholder="Valor pago neste mês"
+        type="number"
+        value={valorPago}
+        onChange={(e) => setValorPago(e.target.value)}
+      />
+
+      <button className="w-full rounded-lg bg-emerald-600 py-2 text-white font-bold">
+        Confirmar pagamento
+      </button>
+
+      <button
+        type="button"
+        onClick={onCancelar}
+        className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+      >
+        Cancelar
+      </button>
+    </form>
+  )
+}
 
 function Sidebar({ mesAtivo, setMesAtivo }) {
   const menuItems = [
