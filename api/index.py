@@ -68,6 +68,16 @@ class handler(BaseHTTPRequestHandler):
                 "data": dados
             }, 201)
 
+        elif path == "/api/dividas":
+            dados["id"] = len(dashboard_data["dividas"]) + 1
+            dashboard_data["dividas"].append(dados)
+
+            send_json(self, {
+                "status": "ok",
+                "message": "Dívida adicionada com sucesso",
+                "data": dados
+            }, 201)
+
         else:
             send_json(self, {
                 "status": "error",
@@ -127,6 +137,27 @@ class handler(BaseHTTPRequestHandler):
                 "message": "Despesa não encontrada"
             }, 404)
 
+        elif path == "/api/dividas":
+            for item in dashboard_data["dividas"]:
+                if item["id"] == item_id:
+                    item["credor"] = dados.get("credor", item["credor"])
+                    item["saldo"] = dados.get("saldo", item["saldo"])
+                    item["progresso"] = dados.get("progresso", item["progresso"])
+                    item["juros"] = dados.get("juros", item["juros"])
+                    item["prioridade"] = dados.get("prioridade", item["prioridade"])
+
+                    send_json(self, {
+                        "status": "ok",
+                        "message": "Dívida atualizada com sucesso",
+                        "data": item
+                    })
+                    return
+
+            send_json(self, {
+                "status": "error",
+                "message": "Dívida não encontrada"
+            }, 404)
+
         else:
             send_json(self, {
                 "status": "error",
@@ -171,6 +202,23 @@ class handler(BaseHTTPRequestHandler):
             send_json(self, {
                 "status": "error",
                 "message": "Despesa não encontrada"
+            }, 404)
+
+        elif path == "/api/dividas":
+            for item in dashboard_data["dividas"]:
+                if item["id"] == item_id:
+                    dashboard_data["dividas"].remove(item)
+
+                    send_json(self, {
+                        "status": "ok",
+                        "message": "Dívida apagada com sucesso",
+                        "data": item
+                    })
+                    return
+
+            send_json(self, {
+                "status": "error",
+                "message": "Dívida não encontrada"
             }, 404)
 
         else:
