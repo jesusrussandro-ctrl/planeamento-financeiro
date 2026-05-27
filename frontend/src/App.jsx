@@ -98,8 +98,10 @@ export default function App() {
   const [dividasApi, setDividasApi] = React.useState([])
   const [dividaEditando, setDividaEditando] = React.useState(null)
 
+  const [mesAtivo, setMesAtivo] = React.useState("2024-05")
+
   React.useEffect(() => {
-    fetch("/api/rendimentos")
+    fetch(`/api/rendimentos?mes=${mesAtivo}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Rendimentos backend:", data)
@@ -107,6 +109,7 @@ export default function App() {
         setRendimentosApi(
           data.data.map((item) => ({
             id: item.id,
+            mes: item.mes || mesAtivo,
             fonte: item.fonte,
             orcamentado: Number(item.orcamentado || 0),
             recebido: Number(item.recebido || 0),
@@ -116,10 +119,10 @@ export default function App() {
       .catch((err) => {
         console.error("Erro rendimentos:", err)
       })
-  }, [])
+  }, [mesAtivo])
 
   React.useEffect(() => {
-    fetch("/api/despesas")
+    fetch(`/api/despesas?mes=${mesAtivo}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Despesas backend:", data)
@@ -127,6 +130,7 @@ export default function App() {
         setDespesasApi(
           data.data.map((item) => ({
             id: item.id,
+            mes: item.mes || mesAtivo,
             categoria: item.categoria,
             orcamentado: Number(item.orcamentado || 0),
             realizado: Number(item.realizado || 0),
@@ -137,10 +141,10 @@ export default function App() {
       .catch((err) => {
         console.error("Erro despesas:", err)
       })
-  }, [])
+  }, [mesAtivo])
 
   React.useEffect(() => {
-    fetch("/api/dividas")
+    fetch(`/api/dividas?mes=${mesAtivo}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Dívidas backend:", data)
@@ -148,6 +152,7 @@ export default function App() {
         setDividasApi(
           data.data.map((item) => ({
             id: item.id,
+            mes: item.mes || mesAtivo,
             credor: item.credor,
             saldo: Number(item.saldo || 0),
             progresso: Number(item.progresso || 0),
@@ -159,7 +164,7 @@ export default function App() {
       .catch((err) => {
         console.error("Erro dívidas:", err)
       })
-  }, [])
+  }, [mesAtivo])
 
   function formatarEuro(valor) {
     return `€ ${Number(valor || 0).toLocaleString("pt-PT", {
@@ -174,6 +179,13 @@ export default function App() {
       maximumFractionDigits: 1,
     })}%`
   }
+
+  function ultimoDiaDoMes(mes) {
+    const [ano, mesNumero] = mes.split("-").map(Number)
+    return new Date(ano, mesNumero, 0).getDate()
+  }
+
+  const dataFimMesAtivo = `${ultimoDiaDoMes(mesAtivo)}/${mesAtivo.slice(5, 7)}/${mesAtivo.slice(0, 4)}`
 
   const totalOrcamentado = rendimentosApi.reduce(
     (total, item) => total + Number(item.orcamentado || 0),
@@ -253,6 +265,7 @@ export default function App() {
       ...listaAtual,
       {
         id: novo.id,
+        mes: novo.mes || mesAtivo,
         fonte: novo.fonte,
         orcamentado: Number(novo.orcamentado || 0),
         recebido: Number(novo.recebido || 0),
@@ -274,6 +287,7 @@ export default function App() {
         item.id === atualizado.id
           ? {
               id: atualizado.id,
+              mes: atualizado.mes || mesAtivo,
               fonte: atualizado.fonte,
               orcamentado: Number(atualizado.orcamentado || 0),
               recebido: Number(atualizado.recebido || 0),
@@ -313,6 +327,7 @@ export default function App() {
       ...listaAtual,
       {
         id: nova.id,
+        mes: nova.mes || mesAtivo,
         categoria: nova.categoria,
         orcamentado: Number(nova.orcamentado || 0),
         realizado: Number(nova.realizado || 0),
@@ -335,6 +350,7 @@ export default function App() {
         item.id === atualizada.id
           ? {
               id: atualizada.id,
+              mes: atualizada.mes || mesAtivo,
               categoria: atualizada.categoria,
               orcamentado: Number(atualizada.orcamentado || 0),
               realizado: Number(atualizada.realizado || 0),
@@ -375,6 +391,7 @@ export default function App() {
       ...listaAtual,
       {
         id: nova.id,
+        mes: nova.mes || mesAtivo,
         credor: nova.credor,
         saldo: Number(nova.saldo || 0),
         progresso: Number(nova.progresso || 0),
@@ -398,6 +415,7 @@ export default function App() {
         item.id === atualizada.id
           ? {
               id: atualizada.id,
+              mes: atualizada.mes || mesAtivo,
               credor: atualizada.credor,
               saldo: Number(atualizada.saldo || 0),
               progresso: Number(atualizada.progresso || 0),
@@ -436,7 +454,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
-      <Sidebar />
+      <Sidebar mesAtivo={mesAtivo} setMesAtivo={setMesAtivo} />
 
       <div className="ml-[242px] p-4 grid grid-cols-[1fr_286px] gap-4">
         <main className="space-y-4">
@@ -446,7 +464,7 @@ export default function App() {
             <KpiCard icon="🧾" title="Total Despesas" value={formatarEuro(totalDespesasRealizado)} subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`} accent="red" />
             <KpiCard icon="💸" title="Disponível p/ Dívidas" value={formatarEuro(disponivelParaDividas)} subtitle={`${formatarPercentagem(totalRecebido > 0 ? (disponivelParaDividas / totalRecebido) * 100 : 0)} do salário`} accent="green" green />
             <KpiCard icon="🏦" title="Total Dívidas" value={formatarEuro(totalDividas)} subtitle={`Pagamento ideal: ${formatarEuro(totalPagamentoIdeal)}`} accent="purple" />
-            <KpiCard icon="🗓️" title="Dias Restantes" value="17" subtitle="até 31/05/2024" accent="orange" />
+            <KpiCard icon="🗓️" title="Dias Restantes" value="17" subtitle={`até ${dataFimMesAtivo}`} accent="orange" />
           </section>
 
           <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
@@ -564,6 +582,7 @@ export default function App() {
                 rendimentoEditando={rendimentoEditando}
                 onAtualizar={atualizarRendimentoNaTabela}
                 onCancelarEdicao={cancelarEdicaoRendimento}
+                mesAtivo={mesAtivo}
               />
             </div>
 
@@ -627,6 +646,7 @@ export default function App() {
                 despesaEditando={despesaEditando}
                 onAtualizar={atualizarDespesaNaTabela}
                 onCancelarEdicao={cancelarEdicaoDespesa}
+                mesAtivo={mesAtivo}
               />
             </div>
 
@@ -683,6 +703,7 @@ export default function App() {
                 dividaEditando={dividaEditando}
                 onAtualizar={atualizarDividaNaTabela}
                 onCancelarEdicao={cancelarEdicaoDivida}
+                mesAtivo={mesAtivo}
               />
             </div>
 
@@ -1022,6 +1043,7 @@ function AddRendimentoForm({
   rendimentoEditando,
   onAtualizar,
   onCancelarEdicao,
+  mesAtivo,
 }) {
   const [fonte, setFonte] = React.useState("")
   const [orcamentado, setOrcamentado] = React.useState("")
@@ -1047,6 +1069,7 @@ function AddRendimentoForm({
     e.preventDefault()
 
     const dadosRendimento = {
+      mes: mesAtivo,
       fonte,
       orcamentado: Number(orcamentado),
       recebido: Number(recebido),
@@ -1149,6 +1172,7 @@ function AddDespesaForm({
   despesaEditando,
   onAtualizar,
   onCancelarEdicao,
+  mesAtivo,
 }) {
   const [categoria, setCategoria] = React.useState("")
   const [orcamentado, setOrcamentado] = React.useState("")
@@ -1174,6 +1198,7 @@ function AddDespesaForm({
     e.preventDefault()
 
     const dadosDespesa = {
+      mes: mesAtivo,
       categoria,
       orcamentado: Number(orcamentado),
       realizado: Number(realizado),
@@ -1277,6 +1302,7 @@ function AddDividaForm({
   dividaEditando,
   onAtualizar,
   onCancelarEdicao,
+  mesAtivo,
 }) {
   const [credor, setCredor] = React.useState("")
   const [saldo, setSaldo] = React.useState("")
@@ -1308,6 +1334,7 @@ function AddDividaForm({
     e.preventDefault()
 
     const dadosDivida = {
+      mes: mesAtivo,
       credor,
       saldo: Number(saldo),
       progresso: Number(progresso),
@@ -1424,7 +1451,7 @@ function AddDividaForm({
 }
 
 
-function Sidebar() {
+function Sidebar({ mesAtivo, setMesAtivo }) {
   const menuItems = [
     ["🏠", "Resumo"],
     ["⚖️", "Rendimentos"],
@@ -1465,12 +1492,25 @@ function Sidebar() {
           </p>
         </div>
 
-        <div className="mx-3 mb-3 grid grid-cols-[1fr_36px] overflow-hidden rounded-[12px] border border-cyan-400/40 bg-[#062a57] shadow-inner">
-          <button className="flex items-center justify-center gap-2 py-2 text-[12px] font-black text-yellow-300">
-            <span>🗓️</span>
-            Maio 2024
-          </button>
-          <button className="border-l border-cyan-400/30 text-yellow-300">⌄</button>
+        <div className="mx-3 mb-3 rounded-[12px] border border-cyan-400/40 bg-[#062a57] shadow-inner p-2">
+          <label className="mb-1 block text-center text-[9px] font-black uppercase text-white/70">
+            Mês ativo
+          </label>
+
+          <select
+            value={mesAtivo}
+            onChange={(e) => setMesAtivo(e.target.value)}
+            className="w-full rounded-[9px] border border-cyan-400/30 bg-[#061b3f] px-2 py-2 text-center text-[12px] font-black text-yellow-300 outline-none"
+          >
+            <option value="2024-05">🗓️ Maio 2024</option>
+            <option value="2024-06">🗓️ Junho 2024</option>
+            <option value="2024-07">🗓️ Julho 2024</option>
+            <option value="2024-08">🗓️ Agosto 2024</option>
+            <option value="2024-09">🗓️ Setembro 2024</option>
+            <option value="2024-10">🗓️ Outubro 2024</option>
+            <option value="2024-11">🗓️ Novembro 2024</option>
+            <option value="2024-12">🗓️ Dezembro 2024</option>
+          </select>
         </div>
 
         <nav className="px-3 space-y-[5px]">
