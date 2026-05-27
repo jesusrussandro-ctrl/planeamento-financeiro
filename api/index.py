@@ -11,6 +11,7 @@ from utils import send_json
 
 
 MES_PADRAO = "2026-05"
+BACKEND_VERSION = "dividas-recalculo-mensal-v2"
 
 
 def garantir_estruturas():
@@ -67,6 +68,15 @@ def normalizar_mes(mes):
     return mes or MES_PADRAO
 
 
+def proximo_mes(mes):
+    ano, mes_num = [int(x) for x in mes.split("-")]
+    mes_num += 1
+    if mes_num > 12:
+        mes_num = 1
+        ano += 1
+    return f"{ano:04d}-{mes_num:02d}"
+
+
 def meses_ate(mes_inicio, mes_final):
     if not mes_inicio or not mes_final:
         return []
@@ -109,27 +119,33 @@ def calcular_taxa_mensal(divida):
     return taxa_juros / 100
 
 
-def pagamentos_da_divida_ate_mes(divida_id, mes_consulta):
+def pagamentos_da_divida(divida_id):
     pagamentos = [
         pagamento for pagamento in dashboard_data.get("pagamentosDividas", [])
         if int(pagamento.get("dividaId", 0)) == int(divida_id)
-        and pagamento.get("mes", MES_PADRAO) <= mes_consulta
     ]
 
     pagamentos.sort(key=lambda item: (item.get("mes", MES_PADRAO), int(item.get("id", 0))))
     return pagamentos
 
 
-def calcular_saldo_divida_no_mes(divida, mes_consulta):
-    """
-    Calcula o estado da dívida em qualquer mês com base no saldo inicial
-    e em todos os pagamentos registados até esse mês.
+def pagamentos_da_divida_no_mes(divida_id, mes):
+    return [
+        pagamento for pagamento in pagamentos_da_divida(divida_id)
+        if pagamento.get("mes", MES_PADRAO) == mes
+    ]
 
-    Regras:
+
+def calcular_estado_divida(divida, mes_consulta, atualizar_pagamentos=True):
+    """
+    Calcula a dívida em qualquer mês futuro a partir do saldoInicial.
+
+    Regras implementadas:
+    - dívida criada em Maio aparece em Maio e meses seguintes;
     - se não houver pagamento num mês, o saldo transita igual;
-    - se houver pagamento, calcula juros, amortização e novo saldo;
-    - se a dívida for paga no mês consultado, aparece com saldo 0 e status "paga";
-    - se a dívida já foi paga antes do mês consultado, não aparece.
+    - se houver pagamento, calcula juros do mês, amortização e saldo depois;
+    - se a dívida foi paga num mês anterior, não aparece nos meses seguintes;
+    - se a dívida foi paga no próprio mês consultado, aparece com saldo 0 e status paga.
     """
     mes_consulta = normalizar_mes(mes_consulta)
     mes_inicio = divida.get("mesInicio", divida.get("mes", MES_PADRAO))
@@ -137,61 +153,101 @@ def calcular_saldo_divida_no_mes(divida, mes_consulta):
     if mes_consulta < mes_inicio:
         return None
 
-    saldo = normalizar_numero(divida.get("saldoInicial", divida.get("saldo", 0)), 0)
+    saldo_inicial = normalizar_numero(divida.get("saldoInicial", divida.get("saldo", 0)), 0)
+    saldo = saldo_inicial
     taxa_mensal = calcular_taxa_mensal(divida)
+    meses = meses_ate(mes_inicio, mes_consulta)
+
+    ultimo_pagamento = None
+    pagamento_mes_atual = None
     mes_quitacao = None
 
-    pagamentos = pagamentos_da_divida_ate_mes(divida.get("id"), mes_consulta)
+    for mes_atual in meses:
+        pagamentos_mes = pagamentos_da_divida_no_mes(divida.get("id"), mes_atual)
 
-    for pagamento in pagamentos:
-        mes_pagamento = pagamento.get("mes", MES_PADRAO)
+        if pagamentos_mes:
+            # Permite mais de um pagamento no mês, embora o frontend use normalmente um só.
+            for pagamento in pagamentos_mes:
+                if saldo <= 0:
+                    pagamento["saldoAntes"] = 0
+                    pagamento["jurosPago"] = 0
+                    pagamento["amortizacao"] = 0
+                    pagamento["saldoDepois"] = 0
+                    continue
 
-        if saldo <= 0:
-            mes_quitacao = mes_pagamento
+                valor_pago = normalizar_numero(pagamento.get("valorPago"), 0)
+
+                juros_pago = round(saldo * taxa_mensal, 2)
+                amortizacao = round(max(0, valor_pago - juros_pago), 2)
+                amortizacao = min(amortizacao, saldo)
+
+                saldo_antes = round(saldo, 2)
+                saldo_depois = round(max(0, saldo - amortizacao), 2)
+
+                if atualizar_pagamentos:
+                    pagamento["saldoAntes"] = saldo_antes
+                    pagamento["jurosPago"] = juros_pago
+                    pagamento["amortizacao"] = amortizacao
+                    pagamento["saldoDepois"] = saldo_depois
+
+                saldo = saldo_depois
+                ultimo_pagamento = pagamento
+
+                if mes_atual == mes_consulta:
+                    pagamento_mes_atual = pagamento
+
+                if saldo <= 0:
+                    mes_quitacao = mes_atual
+                    break
+
+        # Se não há pagamentos no mês, saldo transita igual.
+        if mes_quitacao:
             break
 
-        valor_pago = normalizar_numero(pagamento.get("valorPago"), 0)
-        juros_pago = round(saldo * taxa_mensal, 2)
-        amortizacao = round(max(0, valor_pago - juros_pago), 2)
-
-        # Se o pagamento for superior ao necessário, limita a amortização ao saldo.
-        amortizacao = min(amortizacao, saldo)
-
-        saldo_antes = round(saldo, 2)
-        saldo_depois = round(max(0, saldo - amortizacao), 2)
-
-        pagamento["saldoAntes"] = saldo_antes
-        pagamento["jurosPago"] = juros_pago
-        pagamento["amortizacao"] = amortizacao
-        pagamento["saldoDepois"] = saldo_depois
-
-        saldo = saldo_depois
-
-        if saldo <= 0:
-            mes_quitacao = mes_pagamento
-            break
-
-    # Se foi quitada antes do mês consultado, não transita.
+    # Se quitou antes do mês consultado, não transita para este mês.
     if mes_quitacao and mes_quitacao < mes_consulta:
         return None
 
     status = "paga" if saldo <= 0 else "ativa"
-
     taxa_juros = normalizar_numero(divida.get("taxaJuros", divida.get("juros", 0)), 0)
     tipo_juros = divida.get("tipoJuros", "mensal")
+    saldo_inicial_seguro = saldo_inicial if saldo_inicial > 0 else 1
+    progresso = min(100, max(0, ((saldo_inicial - saldo) / saldo_inicial_seguro) * 100))
 
     return {
         **divida,
         "mes": mes_consulta,
         "saldo": round(saldo, 2),
         "saldoAtual": round(saldo, 2),
-        "saldoInicial": round(normalizar_numero(divida.get("saldoInicial", divida.get("saldo", 0)), 0), 2),
+        "saldoInicial": round(saldo_inicial, 2),
         "prestacaoMensal": round(normalizar_numero(divida.get("prestacaoMensal", 0), 0), 2),
         "tipoJuros": tipo_juros,
         "taxaJuros": taxa_juros,
         "juros": f"{taxa_juros}%",
+        "progresso": round(progresso, 2),
         "status": status,
+        "pagamentoMesAtual": pagamento_mes_atual,
+        "ultimoPagamento": ultimo_pagamento,
+        "estadoPagamentoMes": "Pago" if pagamento_mes_atual else "Pendente",
     }
+
+
+def recalcular_pagamentos_divida(divida_id):
+    divida = encontrar_item_por_id(dashboard_data.get("dividas", []), divida_id)
+    if not divida:
+        return
+
+    pagamentos = pagamentos_da_divida(divida_id)
+    for pagamento in pagamentos:
+        pagamento["saldoAntes"] = 0
+        pagamento["jurosPago"] = 0
+        pagamento["amortizacao"] = 0
+        pagamento["saldoDepois"] = 0
+
+    # Recalcula até ao mês do último pagamento conhecido.
+    if pagamentos:
+        ultimo_mes = pagamentos[-1].get("mes", MES_PADRAO)
+        calcular_estado_divida(divida, ultimo_mes, atualizar_pagamentos=True)
 
 
 def listar_dividas_do_mes(mes):
@@ -200,11 +256,10 @@ def listar_dividas_do_mes(mes):
     dividas_calculadas = []
 
     for divida in dashboard_data.get("dividas", []):
-        # Status "cancelada" permite remover da projeção sem apagar histórico.
         if divida.get("status") == "cancelada":
             continue
 
-        divida_mes = calcular_saldo_divida_no_mes(divida, mes)
+        divida_mes = calcular_estado_divida(divida, mes)
 
         if divida_mes:
             dividas_calculadas.append(divida_mes)
@@ -216,10 +271,12 @@ def normalizar_divida(dados):
     saldo_inicial = normalizar_numero(dados.get("saldoInicial", dados.get("saldo", 0)), 0)
     saldo = normalizar_numero(dados.get("saldo", saldo_inicial), saldo_inicial)
     taxa_juros = extrair_taxa_juros(dados)
+    mes_inicio = dados.get("mesInicio", dados.get("mes", MES_PADRAO))
 
     return {
         **dados,
-        "mesInicio": dados.get("mesInicio", dados.get("mes", MES_PADRAO)),
+        "mes": mes_inicio,
+        "mesInicio": mes_inicio,
         "saldoInicial": saldo_inicial,
         "saldo": saldo,
         "prestacaoMensal": normalizar_numero(dados.get("prestacaoMensal", 0), 0),
@@ -232,53 +289,10 @@ def normalizar_divida(dados):
     }
 
 
-def recalcular_pagamentos_divida(divida_id):
-    """
-    Recalcula todos os pagamentos de uma dívida após inserir, editar ou apagar
-    um pagamento, garantindo que todos os meses seguintes ficam corretos.
-    """
-    divida = encontrar_item_por_id(dashboard_data.get("dividas", []), divida_id)
-    if not divida:
-        return
-
-    pagamentos = [
-        pagamento for pagamento in dashboard_data.get("pagamentosDividas", [])
-        if int(pagamento.get("dividaId", 0)) == int(divida_id)
-    ]
-
-    pagamentos.sort(key=lambda item: (item.get("mes", MES_PADRAO), int(item.get("id", 0))))
-
-    saldo = normalizar_numero(divida.get("saldoInicial", divida.get("saldo", 0)), 0)
-    taxa_mensal = calcular_taxa_mensal(divida)
-
-    for pagamento in pagamentos:
-        if saldo <= 0:
-            pagamento["saldoAntes"] = 0
-            pagamento["jurosPago"] = 0
-            pagamento["amortizacao"] = 0
-            pagamento["saldoDepois"] = 0
-            continue
-
-        valor_pago = normalizar_numero(pagamento.get("valorPago"), 0)
-        juros_pago = round(saldo * taxa_mensal, 2)
-        amortizacao = round(max(0, valor_pago - juros_pago), 2)
-        amortizacao = min(amortizacao, saldo)
-
-        saldo_antes = round(saldo, 2)
-        saldo_depois = round(max(0, saldo - amortizacao), 2)
-
-        pagamento["saldoAntes"] = saldo_antes
-        pagamento["jurosPago"] = juros_pago
-        pagamento["amortizacao"] = amortizacao
-        pagamento["saldoDepois"] = saldo_depois
-
-        saldo = saldo_depois
-
-
 class handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
-        send_json(self, {"status": "ok"})
+        send_json(self, {"status": "ok", "backendVersion": BACKEND_VERSION})
 
     def do_GET(self):
         garantir_estruturas()
@@ -288,9 +302,18 @@ class handler(BaseHTTPRequestHandler):
         query = parse_qs(parsed_url.query)
         mes = query.get("mes", [None])[0]
 
+        if path == "/api/status":
+            send_json(self, {
+                "status": "ok",
+                "backendVersion": BACKEND_VERSION,
+                "mesPadrao": MES_PADRAO,
+            })
+            return
+
         if path == "/api/dashboard":
             send_json(self, {
                 "status": "ok",
+                "backendVersion": BACKEND_VERSION,
                 "data": {
                     **dashboard_data,
                     "rendimentos": filtrar_por_mes(dashboard_data.get("rendimentos", []), mes),
@@ -306,6 +329,7 @@ class handler(BaseHTTPRequestHandler):
         if path == "/api/dividas":
             send_json(self, {
                 "status": "ok",
+                "backendVersion": BACKEND_VERSION,
                 "data": listar_dividas_do_mes(mes)
             })
             return
@@ -321,6 +345,7 @@ class handler(BaseHTTPRequestHandler):
         if path in routes:
             send_json(self, {
                 "status": "ok",
+                "backendVersion": BACKEND_VERSION,
                 "data": filtrar_por_mes(routes[path], mes)
             })
         else:
@@ -372,7 +397,7 @@ class handler(BaseHTTPRequestHandler):
             send_json(self, {
                 "status": "ok",
                 "message": "Dívida adicionada com sucesso",
-                "data": calcular_saldo_divida_no_mes(dados, dados.get("mesInicio", MES_PADRAO))
+                "data": calcular_estado_divida(dados, dados.get("mesInicio", MES_PADRAO))
             }, 201)
 
         elif path == "/api/pagamentos-dividas":
@@ -396,7 +421,15 @@ class handler(BaseHTTPRequestHandler):
                 }, 400)
                 return
 
-            # Permite apenas um pagamento por dívida/mês. Se já existir, atualiza o valor.
+            estado_no_mes = calcular_estado_divida(divida, mes)
+            if not estado_no_mes:
+                send_json(self, {
+                    "status": "error",
+                    "message": "Esta dívida já estava liquidada antes deste mês"
+                }, 400)
+                return
+
+            # Um pagamento por dívida/mês. Se já existir, atualiza.
             pagamento_existente = None
             for pagamento in dashboard_data["pagamentosDividas"]:
                 if (
@@ -428,7 +461,8 @@ class handler(BaseHTTPRequestHandler):
                 "status": "ok",
                 "message": "Pagamento de dívida registado com sucesso",
                 "data": pagamento,
-                "divida": calcular_saldo_divida_no_mes(divida, mes)
+                "divida": calcular_estado_divida(divida, mes),
+                "dividaMesSeguinte": calcular_estado_divida(divida, proximo_mes(mes)),
             }, 201)
 
         else:
@@ -510,13 +544,12 @@ class handler(BaseHTTPRequestHandler):
             item.update(normalizar_divida(item))
 
             recalcular_pagamentos_divida(item_id)
-
             mes_referencia = dados.get("mes", item.get("mesInicio", MES_PADRAO))
 
             send_json(self, {
                 "status": "ok",
                 "message": "Dívida atualizada com sucesso",
-                "data": calcular_saldo_divida_no_mes(item, mes_referencia)
+                "data": calcular_estado_divida(item, mes_referencia)
             })
 
         elif path == "/api/pagamentos-dividas":
@@ -579,6 +612,12 @@ class handler(BaseHTTPRequestHandler):
             return
 
         lista.remove(item)
+
+        if path == "/api/dividas":
+            dashboard_data["pagamentosDividas"] = [
+                pagamento for pagamento in dashboard_data["pagamentosDividas"]
+                if int(pagamento.get("dividaId", 0)) != int(item_id)
+            ]
 
         if path == "/api/pagamentos-dividas":
             recalcular_pagamentos_divida(item.get("dividaId"))
