@@ -10,16 +10,42 @@ from data import dashboard_data
 from utils import send_json
 
 
+def filtrar_por_mes(lista, mes):
+    if not mes:
+        return lista
+
+    return [
+        item for item in lista
+        if item.get("mes") == mes
+    ]
+
+
 class handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
         send_json(self, {"status": "ok"})
 
     def do_GET(self):
-        path = urlparse(self.path).path
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path
+        query = parse_qs(parsed_url.query)
+        mes = query.get("mes", [None])[0]
+
+        if path == "/api/dashboard":
+            send_json(self, {
+                "status": "ok",
+                "data": {
+                    **dashboard_data,
+                    "rendimentos": filtrar_por_mes(dashboard_data.get("rendimentos", []), mes),
+                    "despesas": filtrar_por_mes(dashboard_data.get("despesas", []), mes),
+                    "dividas": filtrar_por_mes(dashboard_data.get("dividas", []), mes),
+                    "objetivos": filtrar_por_mes(dashboard_data.get("objetivos", []), mes),
+                    "pagamentos": filtrar_por_mes(dashboard_data.get("pagamentos", []), mes),
+                }
+            })
+            return
 
         routes = {
-            "/api/dashboard": dashboard_data,
             "/api/rendimentos": dashboard_data.get("rendimentos", []),
             "/api/despesas": dashboard_data.get("despesas", []),
             "/api/dividas": dashboard_data.get("dividas", []),
@@ -30,7 +56,7 @@ class handler(BaseHTTPRequestHandler):
         if path in routes:
             send_json(self, {
                 "status": "ok",
-                "data": routes[path]
+                "data": filtrar_por_mes(routes[path], mes)
             })
         else:
             send_json(self, {
@@ -47,6 +73,9 @@ class handler(BaseHTTPRequestHandler):
             dados = json.loads(body.decode("utf-8")) if body else {}
         except Exception:
             dados = {}
+
+        if "mes" not in dados:
+            dados["mes"] = "2024-05"
 
         if path == "/api/rendimentos":
             dados["id"] = len(dashboard_data["rendimentos"]) + 1
@@ -101,6 +130,7 @@ class handler(BaseHTTPRequestHandler):
         if path == "/api/rendimentos":
             for item in dashboard_data["rendimentos"]:
                 if item["id"] == item_id:
+                    item["mes"] = dados.get("mes", item.get("mes", "2024-05"))
                     item["fonte"] = dados.get("fonte", item["fonte"])
                     item["orcamentado"] = dados.get("orcamentado", item["orcamentado"])
                     item["recebido"] = dados.get("recebido", item["recebido"])
@@ -120,6 +150,7 @@ class handler(BaseHTTPRequestHandler):
         elif path == "/api/despesas":
             for item in dashboard_data["despesas"]:
                 if item["id"] == item_id:
+                    item["mes"] = dados.get("mes", item.get("mes", "2024-05"))
                     item["categoria"] = dados.get("categoria", item["categoria"])
                     item["orcamentado"] = dados.get("orcamentado", item["orcamentado"])
                     item["realizado"] = dados.get("realizado", item["realizado"])
@@ -140,6 +171,7 @@ class handler(BaseHTTPRequestHandler):
         elif path == "/api/dividas":
             for item in dashboard_data["dividas"]:
                 if item["id"] == item_id:
+                    item["mes"] = dados.get("mes", item.get("mes", "2024-05"))
                     item["credor"] = dados.get("credor", item["credor"])
                     item["saldo"] = dados.get("saldo", item["saldo"])
                     item["progresso"] = dados.get("progresso", item["progresso"])
