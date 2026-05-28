@@ -153,6 +153,45 @@ const dividas = [
   ["Crédito Loja", "€ 1.450,00", "15%", "2,90%", "Baixa"],
 ]
 
+const OBJETIVOS_INICIAIS = [
+  { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-500" },
+  { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-500" },
+  { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-500" },
+  { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-500" },
+]
+
+const PAGAMENTOS_INICIAIS = [
+  { id: 1, dia: 1, nome: "Habitação", valor: 700, categoria: "Despesa fixa", pago: false },
+  { id: 2, dia: 5, nome: "Cartão de Crédito", valor: 500, categoria: "Dívida", pago: false },
+  { id: 3, dia: 7, nome: "Luz", valor: 85, categoria: "Despesa fixa", pago: false },
+  { id: 4, dia: 12, nome: "Internet", valor: 35, categoria: "Despesa fixa", pago: false },
+]
+
+const ALERTAS_INICIAIS = []
+
+function lerLocalStorage(chave, valorPadrao) {
+  if (typeof window === "undefined") return valorPadrao
+
+  try {
+    const valorGuardado = window.localStorage.getItem(chave)
+    return valorGuardado ? JSON.parse(valorGuardado) : valorPadrao
+  } catch (erro) {
+    console.error(`Erro ao ler ${chave}:`, erro)
+    return valorPadrao
+  }
+}
+
+function guardarLocalStorage(chave, valor) {
+  if (typeof window === "undefined") return
+
+  try {
+    window.localStorage.setItem(chave, JSON.stringify(valor))
+  } catch (erro) {
+    console.error(`Erro ao guardar ${chave}:`, erro)
+  }
+}
+
+
 export default function App() {
   const [rendimentosApi, setRendimentosApi] = React.useState([])
   const [rendimentoEditando, setRendimentoEditando] = React.useState(null)
@@ -169,6 +208,33 @@ export default function App() {
   const [secaoAtiva, setSecaoAtiva] = React.useState("Resumo")
   const [moedaAtiva, setMoedaAtiva] = React.useState("EUR")
   const [considerarJurosSimulador, setConsiderarJurosSimulador] = React.useState(true)
+
+  const [objetivosUsuario, setObjetivosUsuario] = React.useState(() =>
+    lerLocalStorage("objetivosUsuario", OBJETIVOS_INICIAIS)
+  )
+  const [objetivoEditando, setObjetivoEditando] = React.useState(null)
+
+  const [pagamentosUsuario, setPagamentosUsuario] = React.useState(() =>
+    lerLocalStorage("pagamentosUsuario", PAGAMENTOS_INICIAIS)
+  )
+  const [pagamentoEditando, setPagamentoEditando] = React.useState(null)
+
+  const [alertasUsuario, setAlertasUsuario] = React.useState(() =>
+    lerLocalStorage("alertasUsuario", ALERTAS_INICIAIS)
+  )
+  const [alertaEditando, setAlertaEditando] = React.useState(null)
+
+  React.useEffect(() => {
+    guardarLocalStorage("objetivosUsuario", objetivosUsuario)
+  }, [objetivosUsuario])
+
+  React.useEffect(() => {
+    guardarLocalStorage("pagamentosUsuario", pagamentosUsuario)
+  }, [pagamentosUsuario])
+
+  React.useEffect(() => {
+    guardarLocalStorage("alertasUsuario", alertasUsuario)
+  }, [alertasUsuario])
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -509,24 +575,16 @@ export default function App() {
 
   const sobraPagamentoIdeal = Math.max(0, disponivelParaDividas) - totalPagamentoIdeal
 
-  const objetivosFinanceiros = [
-    { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-500" },
-    { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-500" },
-    { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-500" },
-    { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-500" },
-  ].map((objetivo) => ({
+  const objetivosFinanceiros = objetivosUsuario.map((objetivo) => ({
     ...objetivo,
-    percentagem: objetivo.objetivo > 0
+    objetivo: Number(objetivo.objetivo || 0),
+    atual: Number(objetivo.atual || 0),
+    percentagem: Number(objetivo.objetivo || 0) > 0
       ? limitarPercentagem((Number(objetivo.atual || 0) / Number(objetivo.objetivo || 0)) * 100)
       : 0,
   }))
 
-  const pagamentosFinanceiros = [
-    { id: 1, dia: 1, nome: "Habitação", valor: 700, categoria: "Despesa fixa", pago: false },
-    { id: 2, dia: 5, nome: "Cartão de Crédito", valor: 500, categoria: "Dívida", pago: false },
-    { id: 3, dia: 7, nome: "Luz", valor: 85, categoria: "Despesa fixa", pago: false },
-    { id: 4, dia: 12, nome: "Internet", valor: 35, categoria: "Despesa fixa", pago: false },
-  ].map((pagamento) => {
+  const pagamentosFinanceiros = pagamentosUsuario.map((pagamento) => {
     const [ano, mesNumero] = mesAtivo.split("-").map(Number)
     const ultimoDia = new Date(ano, mesNumero, 0).getDate()
     const diaPagamento = Math.min(Number(pagamento.dia || 1), ultimoDia)
@@ -555,6 +613,8 @@ export default function App() {
 
     return {
       ...pagamento,
+      valor: Number(pagamento.valor || 0),
+      dia: diaPagamento,
       data: `${String(diaPagamento).padStart(2, "0")}/${String(mesNumero).padStart(2, "0")}`,
       diasRestantes: diferencaDias,
       textoDias,
@@ -562,21 +622,45 @@ export default function App() {
     }
   })
 
-  const alertasFinanceiros = (() => {
+  const alertasAutomaticos = (() => {
     const alertas = []
 
     if (totalRecebido <= 0) {
-      alertas.push("Adicione os rendimentos deste mês para calcular melhor a sua situação financeira.")
+      alertas.push({
+        id: "auto-rendimentos",
+        origem: "automatico",
+        tipo: "aviso",
+        titulo: "Rendimentos em falta",
+        mensagem: "Adicione os rendimentos deste mês para calcular melhor a sua situação financeira.",
+      })
     }
 
     if (percentagemDespesasSalario > 60) {
-      alertas.push("As despesas estão acima de 60% do salário. Reveja as categorias com maior peso.")
+      alertas.push({
+        id: "auto-despesas-altas",
+        origem: "automatico",
+        tipo: "urgente",
+        titulo: "Despesas elevadas",
+        mensagem: "As despesas estão acima de 60% do salário. Reveja as categorias com maior peso.",
+      })
     } else if (totalDespesasRealizado > 0) {
-      alertas.push("As despesas estão controladas em relação ao salário deste mês.")
+      alertas.push({
+        id: "auto-despesas-ok",
+        origem: "automatico",
+        tipo: "positivo",
+        titulo: "Despesas controladas",
+        mensagem: "As despesas estão controladas em relação ao salário deste mês.",
+      })
     }
 
     if (Math.max(0, disponivelParaDividas) > 0 && totalDividas > 0) {
-      alertas.push(`Pode direcionar ${formatarEuro(Math.max(0, disponivelParaDividas))} para reduzir dívidas neste mês.`)
+      alertas.push({
+        id: "auto-dividas-disponivel",
+        origem: "automatico",
+        tipo: "conselho",
+        titulo: "Redução de dívidas",
+        mensagem: `Pode direcionar ${formatarEuro(Math.max(0, disponivelParaDividas))} para reduzir dívidas neste mês.`,
+      })
     }
 
     const pagamentosUrgentes = pagamentosFinanceiros.filter((pagamento) =>
@@ -584,7 +668,13 @@ export default function App() {
     )
 
     if (pagamentosUrgentes.length > 0) {
-      alertas.push(`Existem ${pagamentosUrgentes.length} pagamento(s) a vencer nos próximos 5 dias.`)
+      alertas.push({
+        id: "auto-pagamentos-urgentes",
+        origem: "automatico",
+        tipo: "aviso",
+        titulo: "Pagamentos próximos",
+        mensagem: `Existem ${pagamentosUrgentes.length} pagamento(s) a vencer nos próximos 5 dias.`,
+      })
     }
 
     const dividaJurosAlto = dividasApi.find((divida) => {
@@ -593,25 +683,202 @@ export default function App() {
     })
 
     if (dividaJurosAlto) {
-      alertas.push(`Priorize "${dividaJurosAlto.credor}", pois tem juros elevados.`)
+      alertas.push({
+        id: "auto-juros-altos",
+        origem: "automatico",
+        tipo: "urgente",
+        titulo: "Juros elevados",
+        mensagem: `Priorize "${dividaJurosAlto.credor}", pois tem juros elevados.`,
+      })
     }
 
     const objetivoQuaseConcluido = objetivosFinanceiros.find((objetivo) => objetivo.percentagem >= 70)
 
     if (objetivoQuaseConcluido) {
-      alertas.push(`Está perto de concluir o objetivo "${objetivoQuaseConcluido.nome}".`)
+      alertas.push({
+        id: "auto-objetivo-quase",
+        origem: "automatico",
+        tipo: "positivo",
+        titulo: "Objetivo quase concluído",
+        mensagem: `Está perto de concluir o objetivo "${objetivoQuaseConcluido.nome}".`,
+      })
     }
 
     return alertas.slice(0, 4)
   })()
 
-  function renderGoalsPanel() {
+  const alertasManuais = alertasUsuario.map((alerta) => ({
+    ...alerta,
+    origem: "manual",
+  }))
+
+  const alertasFinanceiros = [
+    ...alertasAutomaticos,
+    ...alertasManuais,
+  ]
+
+  function guardarObjetivo(dadosObjetivo) {
+    const objetivoNormalizado = {
+      id: objetivoEditando?.id || Date.now(),
+      icone: dadosObjetivo.icone || "🎯",
+      nome: dadosObjetivo.nome,
+      objetivo: Number(dadosObjetivo.objetivo || 0),
+      atual: Number(dadosObjetivo.atual || 0),
+      cor: dadosObjetivo.cor || "bg-green-500",
+    }
+
+    setObjetivosUsuario((listaAtual) => {
+      if (objetivoEditando) {
+        return listaAtual.map((item) =>
+          Number(item.id) === Number(objetivoEditando.id) ? objetivoNormalizado : item
+        )
+      }
+
+      return [...listaAtual, objetivoNormalizado]
+    })
+
+    setObjetivoEditando(null)
+  }
+
+  function apagarObjetivo(id) {
+    setObjetivosUsuario((listaAtual) =>
+      listaAtual.filter((item) => Number(item.id) !== Number(id))
+    )
+
+    if (Number(objetivoEditando?.id) === Number(id)) {
+      setObjetivoEditando(null)
+    }
+  }
+
+  function guardarPagamentoFinanceiro(dadosPagamento) {
+    const pagamentoNormalizado = {
+      id: pagamentoEditando?.id || Date.now(),
+      dia: Number(dadosPagamento.dia || 1),
+      nome: dadosPagamento.nome,
+      valor: Number(dadosPagamento.valor || 0),
+      categoria: dadosPagamento.categoria || "Geral",
+      pago: Boolean(dadosPagamento.pago),
+    }
+
+    setPagamentosUsuario((listaAtual) => {
+      if (pagamentoEditando) {
+        return listaAtual.map((item) =>
+          Number(item.id) === Number(pagamentoEditando.id) ? pagamentoNormalizado : item
+        )
+      }
+
+      return [...listaAtual, pagamentoNormalizado]
+    })
+
+    setPagamentoEditando(null)
+  }
+
+  function apagarPagamentoFinanceiro(id) {
+    setPagamentosUsuario((listaAtual) =>
+      listaAtual.filter((item) => Number(item.id) !== Number(id))
+    )
+
+    if (Number(pagamentoEditando?.id) === Number(id)) {
+      setPagamentoEditando(null)
+    }
+  }
+
+  function alternarPagamentoPago(id) {
+    setPagamentosUsuario((listaAtual) =>
+      listaAtual.map((item) =>
+        Number(item.id) === Number(id)
+          ? { ...item, pago: !item.pago }
+          : item
+      )
+    )
+  }
+
+  function guardarAlertaManual(dadosAlerta) {
+    const alertaNormalizado = {
+      id: alertaEditando?.id || Date.now(),
+      titulo: dadosAlerta.titulo,
+      mensagem: dadosAlerta.mensagem,
+      tipo: dadosAlerta.tipo || "conselho",
+    }
+
+    setAlertasUsuario((listaAtual) => {
+      if (alertaEditando) {
+        return listaAtual.map((item) =>
+          Number(item.id) === Number(alertaEditando.id) ? alertaNormalizado : item
+        )
+      }
+
+      return [...listaAtual, alertaNormalizado]
+    })
+
+    setAlertaEditando(null)
+  }
+
+  function apagarAlertaManual(id) {
+    setAlertasUsuario((listaAtual) =>
+      listaAtual.filter((item) => Number(item.id) !== Number(id))
+    )
+
+    if (Number(alertaEditando?.id) === Number(id)) {
+      setAlertaEditando(null)
+    }
+  }
+
+  function renderGoalsPanel(mostrarAcoes = false) {
     return (
       <GoalsPanel
         objetivosLista={objetivosFinanceiros}
         formatarEuro={formatarEuro}
-        onNovo={() => setSecaoAtiva("Objetivos")}
+        onNovo={() => {
+          setObjetivoEditando(null)
+          setSecaoAtiva("Objetivos")
+        }}
+        onEditar={(objetivo) => {
+          setObjetivoEditando(objetivo)
+          setSecaoAtiva("Objetivos")
+        }}
+        onApagar={apagarObjetivo}
+        mostrarAcoes={mostrarAcoes}
       />
+    )
+  }
+
+  function renderObjetivosCompleto() {
+    return (
+      <section className="grid grid-cols-[1fr_360px] gap-4 items-start">
+        {renderGoalsPanel(true)}
+        <ObjetivoForm
+          objetivoEditando={objetivoEditando}
+          onGuardar={guardarObjetivo}
+          onCancelar={() => setObjetivoEditando(null)}
+        />
+      </section>
+    )
+  }
+
+  function renderPagamentosCompleto() {
+    return (
+      <section className="grid grid-cols-[1fr_360px] gap-4 items-start">
+        {renderProximosPagamentos(true)}
+        <PagamentoFinanceiroForm
+          pagamentoEditando={pagamentoEditando}
+          onGuardar={guardarPagamentoFinanceiro}
+          onCancelar={() => setPagamentoEditando(null)}
+        />
+      </section>
+    )
+  }
+
+  function renderAlertasCompleto() {
+    return (
+      <section className="grid grid-cols-[1fr_360px] gap-4 items-start">
+        {renderAlertas(true)}
+        <AlertaManualForm
+          alertaEditando={alertaEditando}
+          onGuardar={guardarAlertaManual}
+          onCancelar={() => setAlertaEditando(null)}
+        />
+      </section>
     )
   }
 
@@ -1197,7 +1464,7 @@ export default function App() {
     )
   }
 
-  function renderProximosPagamentos() {
+  function renderProximosPagamentos(mostrarAcoes = false) {
     return (
       <Panel title="Próximos Pagamentos">
         {pagamentosFinanceiros.map((pagamento) => {
@@ -1210,13 +1477,39 @@ export default function App() {
                 : "bg-blue-50 text-blue-700"
 
           return (
-            <div key={pagamento.id} className="grid grid-cols-[44px_1fr_74px_64px] items-center text-xs border-b border-slate-100 py-2 gap-1">
+            <div key={pagamento.id} className={`grid ${mostrarAcoes ? "grid-cols-[44px_1fr_74px_64px_104px]" : "grid-cols-[44px_1fr_74px_64px]"} items-center text-xs border-b border-slate-100 py-2 gap-1`}>
               <span className="font-bold">{pagamento.data}</span>
               <span>{pagamento.nome}</span>
               <span className="font-bold">{formatarEuro(pagamento.valor)}</span>
               <span className={`${badgeClass} px-2 py-1 rounded-full text-[10px] text-center font-bold`}>
                 {pagamento.textoDias}
               </span>
+
+              {mostrarAcoes && (
+                <span className="flex justify-end gap-1">
+                  <button
+                    type="button"
+                    onClick={() => alternarPagamentoPago(pagamento.id)}
+                    className="rounded bg-green-100 px-2 py-1 text-[9px] font-black text-green-700"
+                  >
+                    {pagamento.pago ? "Reabrir" : "Pago"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPagamentoEditando(pagamento)}
+                    className="rounded bg-blue-100 px-2 py-1 text-[9px] font-black text-blue-700"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => apagarPagamentoFinanceiro(pagamento.id)}
+                    className="rounded bg-red-100 px-2 py-1 text-[9px] font-black text-red-700"
+                  >
+                    X
+                  </button>
+                </span>
+              )}
             </div>
           )
         })}
@@ -1224,12 +1517,60 @@ export default function App() {
     )
   }
 
-  function renderAlertas() {
+  function renderAlertas(mostrarAcoes = false) {
+    const estiloPorTipo = {
+      positivo: "bg-green-50 text-green-800",
+      conselho: "bg-orange-50 text-orange-800",
+      aviso: "bg-yellow-50 text-yellow-800",
+      urgente: "bg-red-50 text-red-800",
+    }
+
     return (
       <Panel title="Alertas e Conselhos">
-        {alertasFinanceiros.map((item) => (
-          <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-xs mb-3">{item}</div>
-        ))}
+        {alertasFinanceiros.length === 0 && (
+          <div className="bg-slate-50 text-slate-600 rounded-xl p-3 text-xs mb-3">
+            Ainda não existem alertas para este mês.
+          </div>
+        )}
+
+        {alertasFinanceiros.map((item) => {
+          const texto = typeof item === "string" ? item : item.mensagem
+          const titulo = typeof item === "string" ? "" : item.titulo
+          const tipo = typeof item === "string" ? "conselho" : item.tipo
+          const origem = typeof item === "string" ? "automatico" : item.origem
+
+          return (
+            <div key={item.id || texto} className={`${estiloPorTipo[tipo] || estiloPorTipo.conselho} rounded-xl p-3 text-xs mb-3`}>
+              {titulo && <div className="mb-1 font-black">{titulo}</div>}
+              <div>{texto}</div>
+
+              {mostrarAcoes && origem === "manual" && (
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAlertaEditando(item)}
+                    className="rounded bg-white/70 px-2 py-1 text-[10px] font-black"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => apagarAlertaManual(item.id)}
+                    className="rounded bg-white/70 px-2 py-1 text-[10px] font-black text-red-700"
+                  >
+                    Apagar
+                  </button>
+                </div>
+              )}
+
+              {mostrarAcoes && origem === "automatico" && (
+                <div className="mt-2 text-[9px] font-black opacity-70">
+                  Automático
+                </div>
+              )}
+            </div>
+          )
+        })}
       </Panel>
     )
   }
@@ -1275,7 +1616,7 @@ export default function App() {
     }
 
     if (secaoAtiva === "Objetivos") {
-      return renderGoalsPanel()
+      return renderObjetivosCompleto()
     }
 
     if (secaoAtiva === "Calendário") {
@@ -1288,11 +1629,15 @@ export default function App() {
     }
 
     if (secaoAtiva === "Pagamentos") {
-      return renderProximosPagamentos()
+      return renderPagamentosCompleto()
     }
 
     if (secaoAtiva === "Simulador") {
       return renderSimuladorDividas()
+    }
+
+    if (secaoAtiva === "Alertas") {
+      return renderAlertasCompleto()
     }
 
     if (secaoAtiva === "Relatórios") {
@@ -1605,7 +1950,7 @@ function LegendList({ items, colors }) {
   )
 }
 
-function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Number(valor || 0).toFixed(2)}`, onNovo }) {
+function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Number(valor || 0).toFixed(2)}`, onNovo, onEditar, onApagar, mostrarAcoes = false }) {
   const objetivosParaMostrar = objetivosLista.length > 0
     ? objetivosLista
     : objetivos.map(([icone, nome, objetivoTexto, valorTexto, percentagem, cor], index) => ({
@@ -1665,6 +2010,25 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
                     {Number(objetivo.percentagem || 0).toFixed(0)}%
                   </span>
                 </div>
+
+                {mostrarAcoes && (
+                  <div className="mt-2 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onEditar?.(objetivo)}
+                      className="rounded bg-blue-100 px-2 py-1 text-[10px] font-black text-blue-700"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onApagar?.(objetivo.id)}
+                      className="rounded bg-red-100 px-2 py-1 text-[10px] font-black text-red-700"
+                    >
+                      Apagar
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )
@@ -2254,6 +2618,221 @@ function PagamentoDividaForm({
   )
 }
 
+function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
+  const [icone, setIcone] = React.useState("🎯")
+  const [nome, setNome] = React.useState("")
+  const [objetivo, setObjetivo] = React.useState("")
+  const [atual, setAtual] = React.useState("")
+  const [cor, setCor] = React.useState("bg-green-500")
+
+  const modoEdicao = Boolean(objetivoEditando)
+
+  React.useEffect(() => {
+    if (objetivoEditando) {
+      setIcone(objetivoEditando.icone || "🎯")
+      setNome(objetivoEditando.nome || "")
+      setObjetivo(String(objetivoEditando.objetivo || 0))
+      setAtual(String(objetivoEditando.atual || 0))
+      setCor(objetivoEditando.cor || "bg-green-500")
+    } else {
+      setIcone("🎯")
+      setNome("")
+      setObjetivo("")
+      setAtual("")
+      setCor("bg-green-500")
+    }
+  }, [objetivoEditando])
+
+  function guardar(e) {
+    e.preventDefault()
+
+    if (!nome.trim()) {
+      return
+    }
+
+    onGuardar({ icone, nome, objetivo, atual, cor })
+
+    if (!modoEdicao) {
+      setIcone("🎯")
+      setNome("")
+      setObjetivo("")
+      setAtual("")
+      setCor("bg-green-500")
+    }
+  }
+
+  return (
+    <form onSubmit={guardar} className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+      <h3 className="mb-4 font-black text-blue-950">
+        {modoEdicao ? "Editar Objetivo" : "Adicionar Objetivo"}
+      </h3>
+
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Ícone" value={icone} onChange={(e) => setIcone(e.target.value)} />
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Nome do objetivo" value={nome} onChange={(e) => setNome(e.target.value)} />
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Valor objetivo" type="number" value={objetivo} onChange={(e) => setObjetivo(e.target.value)} />
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Valor atual" type="number" value={atual} onChange={(e) => setAtual(e.target.value)} />
+
+      <select className="w-full mb-3 rounded-lg border p-2 text-sm" value={cor} onChange={(e) => setCor(e.target.value)}>
+        <option value="bg-green-500">Verde</option>
+        <option value="bg-orange-500">Laranja</option>
+        <option value="bg-blue-500">Azul</option>
+        <option value="bg-purple-500">Roxo</option>
+        <option value="bg-red-500">Vermelho</option>
+      </select>
+
+      <button className="w-full rounded-lg bg-blue-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button type="button" onClick={onCancelar} className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold">
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
+function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
+  const [dia, setDia] = React.useState("")
+  const [nome, setNome] = React.useState("")
+  const [valor, setValor] = React.useState("")
+  const [categoria, setCategoria] = React.useState("")
+  const [pago, setPago] = React.useState(false)
+
+  const modoEdicao = Boolean(pagamentoEditando)
+
+  React.useEffect(() => {
+    if (pagamentoEditando) {
+      setDia(String(pagamentoEditando.dia || 1))
+      setNome(pagamentoEditando.nome || "")
+      setValor(String(pagamentoEditando.valor || 0))
+      setCategoria(pagamentoEditando.categoria || "")
+      setPago(Boolean(pagamentoEditando.pago))
+    } else {
+      setDia("")
+      setNome("")
+      setValor("")
+      setCategoria("")
+      setPago(false)
+    }
+  }, [pagamentoEditando])
+
+  function guardar(e) {
+    e.preventDefault()
+
+    if (!nome.trim()) {
+      return
+    }
+
+    onGuardar({ dia, nome, valor, categoria, pago })
+
+    if (!modoEdicao) {
+      setDia("")
+      setNome("")
+      setValor("")
+      setCategoria("")
+      setPago(false)
+    }
+  }
+
+  return (
+    <form onSubmit={guardar} className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+      <h3 className="mb-4 font-black text-orange-700">
+        {modoEdicao ? "Editar Pagamento" : "Adicionar Pagamento"}
+      </h3>
+
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Dia do mês" type="number" min="1" max="31" value={dia} onChange={(e) => setDia(e.target.value)} />
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Valor" type="number" value={valor} onChange={(e) => setValor(e.target.value)} />
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)} />
+
+      <label className="mb-3 flex items-center gap-2 text-sm font-bold">
+        <input type="checkbox" checked={pago} onChange={(e) => setPago(e.target.checked)} />
+        Marcar como pago
+      </label>
+
+      <button className="w-full rounded-lg bg-orange-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button type="button" onClick={onCancelar} className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold">
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
+function AlertaManualForm({ alertaEditando, onGuardar, onCancelar }) {
+  const [titulo, setTitulo] = React.useState("")
+  const [mensagem, setMensagem] = React.useState("")
+  const [tipo, setTipo] = React.useState("conselho")
+
+  const modoEdicao = Boolean(alertaEditando)
+
+  React.useEffect(() => {
+    if (alertaEditando) {
+      setTitulo(alertaEditando.titulo || "")
+      setMensagem(alertaEditando.mensagem || "")
+      setTipo(alertaEditando.tipo || "conselho")
+    } else {
+      setTitulo("")
+      setMensagem("")
+      setTipo("conselho")
+    }
+  }, [alertaEditando])
+
+  function guardar(e) {
+    e.preventDefault()
+
+    if (!mensagem.trim()) {
+      return
+    }
+
+    onGuardar({
+      titulo: titulo || "Alerta personalizado",
+      mensagem,
+      tipo,
+    })
+
+    if (!modoEdicao) {
+      setTitulo("")
+      setMensagem("")
+      setTipo("conselho")
+    }
+  }
+
+  return (
+    <form onSubmit={guardar} className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+      <h3 className="mb-4 font-black text-orange-700">
+        {modoEdicao ? "Editar Alerta Manual" : "Adicionar Alerta Manual"}
+      </h3>
+
+      <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Título" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+      <textarea className="w-full mb-2 min-h-[100px] rounded-lg border p-2 text-sm" placeholder="Mensagem" value={mensagem} onChange={(e) => setMensagem(e.target.value)} />
+
+      <select className="w-full mb-3 rounded-lg border p-2 text-sm" value={tipo} onChange={(e) => setTipo(e.target.value)}>
+        <option value="conselho">Conselho</option>
+        <option value="aviso">Aviso</option>
+        <option value="urgente">Urgente</option>
+        <option value="positivo">Positivo</option>
+      </select>
+
+      <button className="w-full rounded-lg bg-orange-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button type="button" onClick={onCancelar} className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold">
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
 function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva, setMoedaAtiva }) {
   const menuItems = [
     ["🏠", "Resumo"],
@@ -2264,6 +2843,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
     ["🗓️", "Calendário"],
     ["💳", "Pagamentos"],
     ["📋", "Simulador"],
+    ["🚨", "Alertas"],
     ["📊", "Relatórios"],
     ["⚙️", "Definições"],
   ]
