@@ -1247,9 +1247,9 @@ export default function App() {
   function renderGraficos() {
     return (
       <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
-        <ChartBox title="Orçamentado vs Realizado (Despesas)">
+        <ChartBox title="Previsto vs Realizado (Despesas)">
           <div className="flex justify-center gap-5 text-[10px] font-bold mb-1">
-            <span className="text-blue-700">■ Orçamentado</span>
+            <span className="text-blue-700">■ Previsto</span>
             <span className="text-green-600">■ Realizado</span>
           </div>
           <ResponsiveContainer width="100%" height={205}>
@@ -1337,7 +1337,7 @@ export default function App() {
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">Fonte</th>
-              <th className="p-1.5">Orçamentado</th>
+              <th className="p-1.5">Previsto</th>
               <th className="p-1.5">Recebido</th>
               <th className="p-1.5">Ação</th>
             </tr>
@@ -1402,7 +1402,7 @@ export default function App() {
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">Categoria</th>
-              <th className="p-1.5">Orçamentado</th>
+              <th className="p-1.5">Previsto</th>
               <th className="p-1.5">Realizado</th>
               <th className="p-1.5">%</th>
               <th className="p-1.5">Ação</th>
@@ -1687,7 +1687,7 @@ export default function App() {
         <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
           {renderRendimentos()}
           <PlaceholderSection icon="⚖️" title="Resumo de Rendimentos">
-            <p>Total orçamentado: <strong>{formatarEuro(totalOrcamentado)}</strong></p>
+            <p>Total previsto: <strong>{formatarEuro(totalOrcamentado)}</strong></p>
             <p>Total recebido: <strong>{formatarEuro(totalRecebido)}</strong></p>
           </PlaceholderSection>
         </section>
@@ -2303,7 +2303,7 @@ function AddRendimentoForm({
 
       <input
         className="w-full mb-2 rounded-lg border p-2 text-sm"
-        placeholder="Orçamentado"
+        placeholder="Previsto"
         type="number"
         value={orcamentado}
         onChange={(e) => setOrcamentado(e.target.value)}
@@ -2433,7 +2433,7 @@ function AddDespesaForm({
 
       <input
         className="w-full mb-2 rounded-lg border p-2 text-sm"
-        placeholder="Orçamentado"
+        placeholder="Previsto"
         type="number"
         value={orcamentado}
         onChange={(e) => setOrcamentado(e.target.value)}
