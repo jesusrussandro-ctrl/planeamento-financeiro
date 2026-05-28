@@ -1334,7 +1334,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">Fonte</th>
               <th className="p-1.5">Orçamentado</th>
@@ -1356,7 +1356,7 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="bg-emerald-50 font-black">
+            <tr className="sticky bottom-0 z-20 bg-emerald-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">TOTAL</td>
               <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
@@ -1394,7 +1394,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">Categoria</th>
               <th className="p-1.5">Orçamentado</th>
@@ -1420,7 +1420,7 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="bg-blue-50 font-black">
+            <tr className="sticky bottom-0 z-20 bg-blue-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">TOTAL</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
@@ -1459,7 +1459,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1 text-left">Credor</th>
               <th className="p-1">Saldo</th>
@@ -1495,7 +1495,7 @@ export default function App() {
                 </tr>
               )
             })}
-            <tr className="bg-purple-100 font-black text-[10px]">
+            <tr className="sticky bottom-0 z-20 bg-purple-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
               <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
             </tr>
@@ -1512,7 +1512,7 @@ export default function App() {
   function renderPagamentoIdeal() {
     return (
       <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
-        <thead className="bg-slate-50 text-slate-500">
+        <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
           <tr>
             <th className="p-1 text-left">Credor</th>
             <th className="p-1">Pagamento</th>
@@ -1529,13 +1529,13 @@ export default function App() {
               <td className="p-1 text-center">{item.tempoMeses} meses</td>
             </tr>
           ))}
-          <tr className="bg-green-100 font-black text-[10px]">
+          <tr className="sticky bottom-[26px] z-20 bg-green-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
             <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
             <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
             <td className="p-1.5 text-center">100%</td>
             <td className="p-1.5"></td>
           </tr>
-          <tr className="bg-green-50 font-black text-[10px]">
+          <tr className="sticky bottom-0 z-30 bg-green-50 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
             <td className="p-1.5">SOBRA / FOLGA</td>
             <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
             <td className="p-1.5"></td>
