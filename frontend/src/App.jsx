@@ -1356,6 +1356,11 @@ export default function App() {
                 </td>
               </tr>
             ))}
+            {rendimentosApi.length < 6 && (
+              <tr className="h-full">
+                <td colSpan="4"></td>
+              </tr>
+            )}
             <tr className="sticky bottom-0 z-20 bg-emerald-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">TOTAL</td>
               <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
@@ -1420,6 +1425,11 @@ export default function App() {
                 </td>
               </tr>
             ))}
+            {despesasApi.length < 6 && (
+              <tr className="h-full">
+                <td colSpan="5"></td>
+              </tr>
+            )}
             <tr className="sticky bottom-0 z-20 bg-blue-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">TOTAL</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
@@ -1495,6 +1505,11 @@ export default function App() {
                 </tr>
               )
             })}
+            {dividasApi.length < 4 && (
+              <tr className="h-full">
+                <td colSpan="8"></td>
+              </tr>
+            )}
             <tr className="sticky bottom-0 z-20 bg-purple-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
               <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
@@ -1529,6 +1544,11 @@ export default function App() {
               <td className="p-1 text-center">{item.tempoMeses} meses</td>
             </tr>
           ))}
+          {pagamentoIdealDividas.length < 4 && (
+            <tr className="h-full">
+              <td colSpan="4"></td>
+            </tr>
+          )}
           <tr className="sticky bottom-[26px] z-20 bg-green-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
             <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
             <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
@@ -2152,7 +2172,7 @@ function TableCard({ title, color, action, children }) {
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-auto overscroll-contain">
-        <table className="min-w-full text-[10px] leading-tight">{children}</table>
+        <table className="min-w-full h-full text-[10px] leading-tight">{children}</table>
       </div>
     </div>
   )
