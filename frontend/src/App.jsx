@@ -168,6 +168,7 @@ export default function App() {
   const [mesAtivo, setMesAtivo] = React.useState(obterMesAtual())
   const [secaoAtiva, setSecaoAtiva] = React.useState("Resumo")
   const [moedaAtiva, setMoedaAtiva] = React.useState("EUR")
+  const [considerarJurosSimulador, setConsiderarJurosSimulador] = React.useState(true)
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -295,6 +296,127 @@ export default function App() {
     return Math.max(0, Math.min(100, Number(valor || 0)))
   }
 
+  function calcularTaxaMensalDivida(divida) {
+    const taxa = Number(divida?.taxaJuros || 0) / 100
+    const tipo = String(divida?.tipoJuros || "mensal").toLowerCase()
+
+    if (tipo === "anual") {
+      return Math.pow(1 + taxa, 1 / 12) - 1
+    }
+
+    return taxa
+  }
+
+  function simularQuitacaoDividas(dividasBase, valorMensalDisponivel, considerarJuros) {
+    const valorMensal = Math.max(0, Number(valorMensalDisponivel || 0))
+
+    const dividasSimuladas = dividasBase
+      .filter((divida) => Number(divida.saldo || 0) > 0)
+      .map((divida) => ({
+        id: divida.id,
+        credor: divida.credor,
+        saldo: Number(divida.saldo || 0),
+        taxaMensal: calcularTaxaMensalDivida(divida),
+      }))
+
+    const totalInicial = dividasSimuladas.reduce((total, divida) => total + divida.saldo, 0)
+
+    if (totalInicial <= 0) {
+      return {
+        meses: 0,
+        estrategia: considerarJuros ? "Avalanche" : "Bola de Neve",
+        jurosEstimados: 0,
+        dadosGrafico: [{ mes: "Mês 0", divida: 0, projecao: 0, sombra: 0 }],
+      }
+    }
+
+    if (valorMensal <= 0) {
+      return {
+        meses: 0,
+        estrategia: considerarJuros ? "Avalanche" : "Bola de Neve",
+        jurosEstimados: 0,
+        dadosGrafico: [{ mes: "Mês 0", divida: totalInicial, projecao: totalInicial, sombra: totalInicial * 0.55 }],
+      }
+    }
+
+    let mesAtual = 0
+    let jurosEstimados = 0
+    const dadosGrafico = [
+      {
+        mes: "Mês 0",
+        divida: Math.round(totalInicial),
+        projecao: Math.round(totalInicial),
+        sombra: Math.round(totalInicial * 0.55),
+      },
+    ]
+
+    while (
+      dividasSimuladas.some((divida) => divida.saldo > 0.01) &&
+      mesAtual < 360
+    ) {
+      mesAtual += 1
+
+      if (considerarJuros) {
+        dividasSimuladas.forEach((divida) => {
+          if (divida.saldo > 0) {
+            const jurosMes = divida.saldo * divida.taxaMensal
+            divida.saldo += jurosMes
+            jurosEstimados += jurosMes
+          }
+        })
+      }
+
+      let valorRestante = valorMensal
+
+      const dividasOrdenadas = [...dividasSimuladas]
+        .filter((divida) => divida.saldo > 0.01)
+        .sort((a, b) => {
+          if (considerarJuros) {
+            return b.taxaMensal - a.taxaMensal || a.saldo - b.saldo
+          }
+
+          return a.saldo - b.saldo
+        })
+
+      for (const divida of dividasOrdenadas) {
+        if (valorRestante <= 0) {
+          break
+        }
+
+        const pagamento = Math.min(valorRestante, divida.saldo)
+        divida.saldo -= pagamento
+        valorRestante -= pagamento
+      }
+
+      const totalMes = dividasSimuladas.reduce((total, divida) => total + Math.max(0, divida.saldo), 0)
+
+      dadosGrafico.push({
+        mes: `Mês ${mesAtual}`,
+        divida: Math.round(totalMes),
+        projecao: Math.round(totalMes),
+        sombra: Math.round(totalMes * 0.55),
+      })
+
+      if (totalMes <= 0.01) {
+        break
+      }
+    }
+
+    const intervalo = Math.max(1, Math.ceil(dadosGrafico.length / 12))
+    const dadosCompactos = dadosGrafico.filter((item, index) => (
+      index === 0 ||
+      index === dadosGrafico.length - 1 ||
+      index % intervalo === 0
+    ))
+
+    return {
+      meses: mesAtual >= 360 ? 360 : mesAtual,
+      estrategia: considerarJuros ? "Avalanche" : "Bola de Neve",
+      jurosEstimados,
+      dadosGrafico: dadosCompactos,
+    }
+  }
+
 
   function formatarTipoJuros(tipo) {
     return tipo === "anual" ? "Anual" : "Mensal"
@@ -386,6 +508,137 @@ export default function App() {
   )
 
   const sobraPagamentoIdeal = Math.max(0, disponivelParaDividas) - totalPagamentoIdeal
+
+  const objetivosFinanceiros = [
+    { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-500" },
+    { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-500" },
+    { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-500" },
+    { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-500" },
+  ].map((objetivo) => ({
+    ...objetivo,
+    percentagem: objetivo.objetivo > 0
+      ? limitarPercentagem((Number(objetivo.atual || 0) / Number(objetivo.objetivo || 0)) * 100)
+      : 0,
+  }))
+
+  const pagamentosFinanceiros = [
+    { id: 1, dia: 1, nome: "Habitação", valor: 700, categoria: "Despesa fixa", pago: false },
+    { id: 2, dia: 5, nome: "Cartão de Crédito", valor: 500, categoria: "Dívida", pago: false },
+    { id: 3, dia: 7, nome: "Luz", valor: 85, categoria: "Despesa fixa", pago: false },
+    { id: 4, dia: 12, nome: "Internet", valor: 35, categoria: "Despesa fixa", pago: false },
+  ].map((pagamento) => {
+    const [ano, mesNumero] = mesAtivo.split("-").map(Number)
+    const ultimoDia = new Date(ano, mesNumero, 0).getDate()
+    const diaPagamento = Math.min(Number(pagamento.dia || 1), ultimoDia)
+    const dataPagamento = new Date(ano, mesNumero - 1, diaPagamento)
+    const hoje = new Date()
+    const hojeSemHora = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())
+    const dataSemHora = new Date(dataPagamento.getFullYear(), dataPagamento.getMonth(), dataPagamento.getDate())
+    const diferencaDias = Math.ceil((dataSemHora - hojeSemHora) / (1000 * 60 * 60 * 24))
+
+    let estado = "normal"
+    let textoDias = `${diferencaDias} dias`
+
+    if (pagamento.pago) {
+      estado = "pago"
+      textoDias = "Pago"
+    } else if (diferencaDias < 0) {
+      estado = "vencido"
+      textoDias = "Vencido"
+    } else if (diferencaDias === 0) {
+      estado = "vence-hoje"
+      textoDias = "Hoje"
+    } else if (diferencaDias <= 5) {
+      estado = "urgente"
+      textoDias = `${diferencaDias} dias`
+    }
+
+    return {
+      ...pagamento,
+      data: `${String(diaPagamento).padStart(2, "0")}/${String(mesNumero).padStart(2, "0")}`,
+      diasRestantes: diferencaDias,
+      textoDias,
+      estado,
+    }
+  })
+
+  const alertasFinanceiros = (() => {
+    const alertas = []
+
+    if (totalRecebido <= 0) {
+      alertas.push("Adicione os rendimentos deste mês para calcular melhor a sua situação financeira.")
+    }
+
+    if (percentagemDespesasSalario > 60) {
+      alertas.push("As despesas estão acima de 60% do salário. Reveja as categorias com maior peso.")
+    } else if (totalDespesasRealizado > 0) {
+      alertas.push("As despesas estão controladas em relação ao salário deste mês.")
+    }
+
+    if (Math.max(0, disponivelParaDividas) > 0 && totalDividas > 0) {
+      alertas.push(`Pode direcionar ${formatarEuro(Math.max(0, disponivelParaDividas))} para reduzir dívidas neste mês.`)
+    }
+
+    const pagamentosUrgentes = pagamentosFinanceiros.filter((pagamento) =>
+      !pagamento.pago && pagamento.diasRestantes >= 0 && pagamento.diasRestantes <= 5
+    )
+
+    if (pagamentosUrgentes.length > 0) {
+      alertas.push(`Existem ${pagamentosUrgentes.length} pagamento(s) a vencer nos próximos 5 dias.`)
+    }
+
+    const dividaJurosAlto = dividasApi.find((divida) => {
+      const taxaMensal = calcularTaxaMensalDivida(divida) * 100
+      return taxaMensal >= 3
+    })
+
+    if (dividaJurosAlto) {
+      alertas.push(`Priorize "${dividaJurosAlto.credor}", pois tem juros elevados.`)
+    }
+
+    const objetivoQuaseConcluido = objetivosFinanceiros.find((objetivo) => objetivo.percentagem >= 70)
+
+    if (objetivoQuaseConcluido) {
+      alertas.push(`Está perto de concluir o objetivo "${objetivoQuaseConcluido.nome}".`)
+    }
+
+    return alertas.slice(0, 4)
+  })()
+
+  function renderGoalsPanel() {
+    return (
+      <GoalsPanel
+        objetivosLista={objetivosFinanceiros}
+        formatarEuro={formatarEuro}
+        onNovo={() => setSecaoAtiva("Objetivos")}
+      />
+    )
+  }
+
+  const simulacaoDividas = simularQuitacaoDividas(
+    dividasApi,
+    Math.max(0, disponivelParaDividas),
+    considerarJurosSimulador
+  )
+
+  function renderSimuladorDividas() {
+    return (
+      <section className="grid grid-cols-[330px_1fr] gap-3">
+        <SimulatorCard
+          valorDisponivel={Math.max(0, disponivelParaDividas)}
+          considerarJuros={considerarJurosSimulador}
+          setConsiderarJuros={setConsiderarJurosSimulador}
+          simulacao={simulacaoDividas}
+          formatarEuro={formatarEuro}
+        />
+        <DebtEvolutionCard
+          dados={simulacaoDividas.dadosGrafico}
+          meses={simulacaoDividas.meses}
+          formatarEuro={formatarEuro}
+        />
+      </section>
+    )
+  }
 
   const despesasGrafico = despesasApi.map((item) => ({
     id: item.id,
@@ -947,14 +1200,26 @@ export default function App() {
   function renderProximosPagamentos() {
     return (
       <Panel title="Próximos Pagamentos">
-        {pagamentos.map(([data, nome, valor, dias]) => (
-          <div key={nome} className="grid grid-cols-[44px_1fr_64px_54px] items-center text-xs border-b border-slate-100 py-2 gap-1">
-            <span className="font-bold">{data}</span>
-            <span>{nome}</span>
-            <span className="font-bold">{valor}</span>
-            <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-[10px] text-center">{dias}</span>
-          </div>
-        ))}
+        {pagamentosFinanceiros.map((pagamento) => {
+          const badgeClass = pagamento.estado === "pago"
+            ? "bg-green-100 text-green-700"
+            : pagamento.estado === "vencido" || pagamento.estado === "vence-hoje"
+              ? "bg-red-100 text-red-700"
+              : pagamento.estado === "urgente"
+                ? "bg-orange-100 text-orange-700"
+                : "bg-blue-50 text-blue-700"
+
+          return (
+            <div key={pagamento.id} className="grid grid-cols-[44px_1fr_74px_64px] items-center text-xs border-b border-slate-100 py-2 gap-1">
+              <span className="font-bold">{pagamento.data}</span>
+              <span>{pagamento.nome}</span>
+              <span className="font-bold">{formatarEuro(pagamento.valor)}</span>
+              <span className={`${badgeClass} px-2 py-1 rounded-full text-[10px] text-center font-bold`}>
+                {pagamento.textoDias}
+              </span>
+            </div>
+          )
+        })}
       </Panel>
     )
   }
@@ -962,7 +1227,7 @@ export default function App() {
   function renderAlertas() {
     return (
       <Panel title="Alertas e Conselhos">
-        {["Muito bem! Está a manter a disciplina nos pagamentos das dívidas.", "As despesas de lazer estão 10% acima do recomendado.", "Se aumentar €150/mês na dívida, termina 9 meses mais cedo."].map((item) => (
+        {alertasFinanceiros.map((item) => (
           <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-xs mb-3">{item}</div>
         ))}
       </Panel>
@@ -1004,16 +1269,13 @@ export default function App() {
             {renderDividas()}
             {renderPagamentoIdeal()}
           </section>
-          <section className="grid grid-cols-[330px_1fr] gap-3">
-            <SimulatorCard />
-            <DebtEvolutionCard />
-          </section>
+          {renderSimuladorDividas()}
         </>
       )
     }
 
     if (secaoAtiva === "Objetivos") {
-      return <GoalsPanel />
+      return renderGoalsPanel()
     }
 
     if (secaoAtiva === "Calendário") {
@@ -1030,12 +1292,7 @@ export default function App() {
     }
 
     if (secaoAtiva === "Simulador") {
-      return (
-        <section className="grid grid-cols-[330px_1fr] gap-3">
-          <SimulatorCard />
-          <DebtEvolutionCard />
-        </section>
-      )
+      return renderSimuladorDividas()
     }
 
     if (secaoAtiva === "Relatórios") {
@@ -1065,10 +1322,7 @@ export default function App() {
           {renderDividas()}
           {renderPagamentoIdeal()}
         </section>
-        <section className="grid grid-cols-[330px_1fr] gap-3">
-          <SimulatorCard />
-          <DebtEvolutionCard />
-        </section>
+        {renderSimuladorDividas()}
       </>
     )
   }
@@ -1102,7 +1356,7 @@ export default function App() {
 
         {secaoAtiva === "Resumo" && (
           <aside className="space-y-4">
-            <GoalsPanel />
+            {renderGoalsPanel()}
             {renderProximosPagamentos()}
             {renderAlertas()}
           </aside>
@@ -1111,12 +1365,22 @@ export default function App() {
     </div>
   )
 }
-function SimulatorCard() {
+function SimulatorCard({
+  valorDisponivel,
+  considerarJuros,
+  setConsiderarJuros,
+  simulacao,
+  formatarEuro,
+}) {
+  const meses = Number(simulacao?.meses || 0)
+  const estrategia = simulacao?.estrategia || "Avalanche"
+  const jurosEstimados = Number(simulacao?.jurosEstimados || 0)
+
   return (
     <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden min-h-[205px]">
       <div className="p-4">
         <h3 className="font-black text-[12px] uppercase text-blue-900 mb-3">
-          Saúlador: quanto tempo para ficar sem dívidas?
+          Simulador: quanto tempo para ficar sem dívidas?
         </h3>
 
         <div className="space-y-2 mb-3">
@@ -1125,7 +1389,7 @@ function SimulatorCard() {
               Valor disponível mensal para dívidas
             </span>
             <div className="w-[110px] h-8 bg-green-50 rounded-lg flex items-center justify-center text-[11px] font-black text-green-900">
-              € 1.350,00
+              {formatarEuro(valorDisponivel)}
             </div>
           </div>
 
@@ -1133,9 +1397,15 @@ function SimulatorCard() {
             <span className="text-[11px] font-bold text-slate-700">
               Considerar juros na simulação?
             </span>
-            <div className="w-[110px] h-8 bg-green-50 rounded-lg flex items-center justify-center gap-2 text-[11px] font-black text-green-900">
-              Sim <span className="text-green-700">⌄</span>
-            </div>
+
+            <select
+              value={considerarJuros ? "sim" : "nao"}
+              onChange={(e) => setConsiderarJuros(e.target.value === "sim")}
+              className="w-[110px] h-8 bg-green-50 rounded-lg text-center text-[11px] font-black text-green-900 outline-none"
+            >
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
           </div>
         </div>
 
@@ -1148,8 +1418,12 @@ function SimulatorCard() {
             <div className="flex items-center gap-3">
               <div className="text-3xl">📅</div>
               <div>
-                <div className="text-[38px] leading-none font-black text-blue-800">23</div>
-                <div className="text-[12px] font-black text-blue-900 uppercase">Meses</div>
+                <div className="text-[38px] leading-none font-black text-blue-800">
+                  {meses}
+                </div>
+                <div className="text-[12px] font-black text-blue-900 uppercase">
+                  {meses === 1 ? "Mês" : "Meses"}
+                </div>
               </div>
             </div>
 
@@ -1158,13 +1432,15 @@ function SimulatorCard() {
                 Estratégia recomendada
               </div>
               <div className="flex items-center gap-2 text-[12px] font-black">
-                🏆 Avalanche
+                🏆 {estrategia}
               </div>
               <p className="text-[9px] text-slate-500 font-bold mt-1">
-                Poupança estimada em juros
+                {considerarJuros ? "Juros estimados na simulação" : "Simulação sem juros"}
               </p>
               <div className="flex justify-between items-end">
-                <span className="text-[12px] font-black">€ 3.420,00</span>
+                <span className="text-[12px] font-black">
+                  {considerarJuros ? formatarEuro(jurosEstimados) : formatarEuro(0)}
+                </span>
                 <span className="text-3xl text-green-600">↗</span>
               </div>
             </div>
@@ -1175,7 +1451,11 @@ function SimulatorCard() {
   )
 }
 
-function DebtEvolutionCard() {
+function DebtEvolutionCard({ dados, meses, formatarEuro }) {
+  const dadosGrafico = Array.isArray(dados) && dados.length > 0
+    ? dados
+    : [{ mes: "Mês 0", divida: 0, projecao: 0, sombra: 0 }]
+
   return (
     <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[205px] p-4 grid grid-cols-[1fr_105px] gap-3">
       <div>
@@ -1184,11 +1464,11 @@ function DebtEvolutionCard() {
         </h3>
 
         <ResponsiveContainer width="100%" height={170}>
-          <ComposedChart data={evolucao} margin={{ top: 6, right: 8, left: -8, bottom: 0 }}>
+          <ComposedChart data={dadosGrafico} margin={{ top: 6, right: 8, left: -8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis dataKey="mes" tick={{ fontSize: 10, fontWeight: 700 }} />
             <YAxis tick={{ fontSize: 10, fontWeight: 700 }} />
-            <Tooltip />
+            <Tooltip formatter={(value) => formatarEuro(value)} />
 
             <Area
               type="monotone"
@@ -1220,15 +1500,19 @@ function DebtEvolutionCard() {
         <div className="flex justify-center gap-7 text-[10px] font-black mt-1">
           <span className="text-[#4f46e5]">━ Dívida Real</span>
           <span className="text-[#6d28d9]">-- Projeção</span>
-          <span className="text-green-600">✦ Meta: € 0</span>
+          <span className="text-green-600">✦ Meta: {formatarEuro(0)}</span>
         </div>
       </div>
 
       <div className="flex items-center justify-center">
         <div className="w-full rounded-[14px] bg-[#f3efff] border border-purple-200 p-3 text-center shadow-sm">
           <div className="text-[12px] font-black text-purple-700">Faltam</div>
-          <div className="text-[42px] leading-none font-black text-purple-700">23</div>
-          <div className="text-[12px] font-black text-purple-700">meses</div>
+          <div className="text-[42px] leading-none font-black text-purple-700">
+            {Number(meses || 0)}
+          </div>
+          <div className="text-[12px] font-black text-purple-700">
+            {Number(meses || 0) === 1 ? "mês" : "meses"}
+          </div>
           <div className="text-[11px] font-black text-purple-700 mt-2 leading-tight">
             para ficar sem dívidas
           </div>
@@ -1321,38 +1605,79 @@ function LegendList({ items, colors }) {
   )
 }
 
-function GoalsPanel() {
+function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Number(valor || 0).toFixed(2)}`, onNovo }) {
+  const objetivosParaMostrar = objetivosLista.length > 0
+    ? objetivosLista
+    : objetivos.map(([icone, nome, objetivoTexto, valorTexto, percentagem, cor], index) => ({
+        id: index + 1,
+        icone,
+        nome,
+        objetivo: objetivoTexto,
+        atual: valorTexto,
+        percentagem,
+        cor,
+      }))
+
   return (
     <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden">
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-black text-[14px] uppercase">🎯 Objetivos Financeiros</h3>
-          <button className="bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full">+ Novo</button>
+          <button
+            type="button"
+            onClick={onNovo}
+            className="bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full"
+          >
+            + Novo
+          </button>
         </div>
 
-        {objetivos.map(([icon, nome, objetivo, valor, progresso, color]) => (
-          <div key={nome} className="grid grid-cols-[38px_1fr] gap-3 mb-4">
-            <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center text-xl">{icon}</div>
-            <div>
-              <div className="flex justify-between text-[11px] font-black">
-                <span>{nome}</span>
-                <span>{valor}</span>
+        {objetivosParaMostrar.map((objetivo) => {
+          const valorObjetivo = typeof objetivo.objetivo === "number"
+            ? formatarEuro(objetivo.objetivo)
+            : objetivo.objetivo
+
+          const valorAtual = typeof objetivo.atual === "number"
+            ? formatarEuro(objetivo.atual)
+            : objetivo.atual
+
+          return (
+            <div key={objetivo.id || objetivo.nome} className="grid grid-cols-[38px_1fr] gap-3 mb-4">
+              <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center text-xl">
+                {objetivo.icone}
               </div>
-              <p className="text-[10px] text-slate-600 font-bold mb-1">{objetivo}</p>
-              <div className="flex items-center gap-2">
-                <div className="h-2 flex-1 bg-slate-200 rounded-full">
-                  <div className={`h-2 rounded-full ${color}`} style={{ width: `${progresso}%` }} />
+              <div>
+                <div className="flex justify-between gap-2 text-[11px] font-black">
+                  <span>{objetivo.nome}</span>
+                  <span>{valorAtual}</span>
                 </div>
-                <span className="text-[11px] font-black text-green-600">{progresso}%</span>
+                <p className="text-[10px] text-slate-600 font-bold mb-1">
+                  Objetivo: {valorObjetivo}
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 flex-1 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-2 rounded-full ${objetivo.cor}`}
+                      style={{ width: `${Math.max(0, Math.min(100, Number(objetivo.percentagem || 0)))}%` }}
+                    />
+                  </div>
+                  <span className="text-[11px] font-black text-green-600">
+                    {Number(objetivo.percentagem || 0).toFixed(0)}%
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
-      <div className="bg-orange-50 text-center py-3 text-[12px] font-black">
+      <button
+        type="button"
+        onClick={onNovo}
+        className="w-full bg-orange-50 text-center py-3 text-[12px] font-black"
+      >
         Ver todos os objetivos →
-      </div>
+      </button>
     </div>
   )
 }
