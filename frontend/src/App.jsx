@@ -1548,7 +1548,7 @@ export default function App() {
 
   function renderProximosPagamentos(mostrarAcoes = false) {
     return (
-      <Panel title="Próximos Pagamentos" className="h-[320px]" bodyClassName="overflow-y-auto overflow-x-hidden pr-1">
+      <Panel title="Próximos Pagamentos" className="h-full min-h-[320px]" bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain">
         {pagamentosFinanceiros.map((pagamento) => {
           const badgeClass = pagamento.estado === "pago"
             ? "bg-green-100 text-green-700"
@@ -1608,7 +1608,11 @@ export default function App() {
     }
 
     return (
-      <Panel title="Alertas e Conselhos">
+      <Panel
+        title="Alertas e Conselhos"
+        className={mostrarAcoes ? "min-h-[420px]" : "h-full min-h-[205px]"}
+        bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain"
+      >
         {alertasFinanceiros.length === 0 && (
           <div className="bg-slate-50 text-slate-600 rounded-xl p-3 text-xs mb-3">
             Ainda não existem alertas para este mês.
@@ -1742,14 +1746,26 @@ export default function App() {
     return (
       <>
         {renderKpis()}
-        {renderGraficos()}
-        <section className="grid grid-cols-4 gap-4">
-          {renderRendimentos()}
-          {renderDespesas()}
-          {renderDividas()}
-          {renderPagamentoIdeal()}
+
+        <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
+          {renderGraficos()}
+          {renderGoalsPanel()}
         </section>
-        {renderSimuladorDividas()}
+
+        <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
+          <section className="grid grid-cols-4 gap-4 items-stretch">
+            {renderRendimentos()}
+            {renderDespesas()}
+            {renderDividas()}
+            {renderPagamentoIdeal()}
+          </section>
+          {renderProximosPagamentos()}
+        </section>
+
+        <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
+          {renderSimuladorDividas()}
+          {renderAlertas()}
+        </section>
       </>
     )
   }
@@ -1765,7 +1781,7 @@ export default function App() {
         setMoedaAtiva={setMoedaAtiva}
       />
 
-      <div className={secaoAtiva === "Resumo" ? "ml-[242px] p-4 grid grid-cols-[1fr_286px] gap-4" : "ml-[242px] p-4 grid grid-cols-1 gap-4"}>
+      <div className="ml-[242px] p-4 grid grid-cols-1 gap-4">
         <main className="space-y-4">
           <section className="rounded-[14px] bg-white px-4 py-3 shadow-lg border border-slate-100 flex items-center justify-between">
             <div>
@@ -1780,14 +1796,6 @@ export default function App() {
           {secaoAtiva !== "Resumo" && renderKpis()}
           {renderConteudoPrincipal()}
         </main>
-
-        {secaoAtiva === "Resumo" && (
-          <aside className="space-y-4">
-            {renderGoalsPanel()}
-            {renderProximosPagamentos()}
-            {renderAlertas()}
-          </aside>
-        )}
       </div>
     </div>
   )
@@ -2046,8 +2054,8 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       }))
 
   return (
-    <div className="h-[420px] rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
-      <div className="shrink-0 p-4 pb-2">
+    <div className="h-full min-h-[245px] rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
+      <div className="shrink-0 p-3 pb-2">
         <div className="flex justify-between items-center">
           <h3 className="font-black text-[14px] uppercase">🎯 Objetivos Financeiros</h3>
           <button
@@ -2061,7 +2069,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
       </div>
 
-      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pr-3">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pr-2">
         {objetivosParaMostrar.map((objetivo) => {
           const valorObjetivo = typeof objetivo.objetivo === "number"
             ? formatarEuro(objetivo.objetivo)
@@ -2072,7 +2080,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
             : objetivo.atual
 
           return (
-            <div key={objetivo.id || objetivo.nome} className="grid grid-cols-[38px_1fr] gap-3 mb-4">
+            <div key={objetivo.id || objetivo.nome} className="grid grid-cols-[38px_1fr] gap-3 mb-3">
               <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center text-xl">
                 {objetivo.icone}
               </div>
@@ -2123,7 +2131,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       <button
         type="button"
         onClick={onNovo}
-        className="shrink-0 w-full bg-orange-50 text-center py-3 text-[12px] font-black"
+        className="shrink-0 w-full bg-orange-50 text-center py-2.5 text-[12px] font-black"
       >
         Ver todos os objetivos →
       </button>
