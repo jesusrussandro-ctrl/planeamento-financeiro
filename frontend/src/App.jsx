@@ -1548,7 +1548,7 @@ export default function App() {
 
   function renderProximosPagamentos(mostrarAcoes = false) {
     return (
-      <Panel title="Próximos Pagamentos">
+      <Panel title="Próximos Pagamentos" className="h-[320px]" bodyClassName="overflow-y-auto overflow-x-hidden pr-1">
         {pagamentosFinanceiros.map((pagamento) => {
           const badgeClass = pagamento.estado === "pago"
             ? "bg-green-100 text-green-700"
@@ -2046,9 +2046,9 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       }))
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden">
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-4">
+    <div className="h-[420px] rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
+      <div className="shrink-0 p-4 pb-2">
+        <div className="flex justify-between items-center">
           <h3 className="font-black text-[14px] uppercase">🎯 Objetivos Financeiros</h3>
           <button
             type="button"
@@ -2059,6 +2059,9 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
           </button>
         </div>
 
+      </div>
+
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pr-3">
         {objetivosParaMostrar.map((objetivo) => {
           const valorObjetivo = typeof objetivo.objetivo === "number"
             ? formatarEuro(objetivo.objetivo)
@@ -2120,7 +2123,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       <button
         type="button"
         onClick={onNovo}
-        className="w-full bg-orange-50 text-center py-3 text-[12px] font-black"
+        className="shrink-0 w-full bg-orange-50 text-center py-3 text-[12px] font-black"
       >
         Ver todos os objetivos →
       </button>
@@ -2147,11 +2150,13 @@ function TableCard({ title, color, action, children }) {
   )
 }
 
-function Panel({ title, children }) {
+function Panel({ title, children, className = "", bodyClassName = "" }) {
   return (
-    <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-      <h3 className="font-black text-orange-700 mb-4">{title}</h3>
-      {children}
+    <div className={`rounded-[24px] bg-white p-5 shadow-lg border border-slate-100 flex flex-col ${className}`}>
+      <h3 className="shrink-0 font-black text-orange-700 mb-4">{title}</h3>
+      <div className={`flex-1 ${bodyClassName}`}>
+        {children}
+      </div>
     </div>
   )
 }
