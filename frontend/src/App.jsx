@@ -1803,7 +1803,7 @@ export default function App() {
 
       <div className="ml-[242px] p-4 grid grid-cols-1 gap-4">
         <main className="space-y-4">
-          <section className="rounded-[14px] bg-white px-4 py-3 shadow-lg border border-slate-100 flex items-center justify-between">
+          <section className="rounded-none bg-white px-4 py-3 shadow-lg border border-slate-100 flex items-center justify-between">
             <div>
               <p className="text-[10px] font-black uppercase text-slate-400">Secção ativa</p>
               <h2 className="text-[18px] font-black text-blue-950">{secaoAtiva}</h2>
@@ -1832,7 +1832,7 @@ function SimulatorCard({
   const jurosEstimados = Number(simulacao?.jurosEstimados || 0)
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden min-h-[205px]">
+    <div className="rounded-none bg-white shadow-lg border border-slate-100 overflow-hidden min-h-[205px]">
       <div className="p-4">
         <h3 className="font-black text-[12px] uppercase text-blue-900 mb-3">
           Simulador: quanto tempo para ficar sem dívidas?
@@ -1864,7 +1864,7 @@ function SimulatorCard({
           </div>
         </div>
 
-        <div className="rounded-[14px] bg-gradient-to-br from-[#eef2ff] to-white p-3">
+        <div className="rounded-none bg-gradient-to-br from-[#eef2ff] to-white p-3">
           <h4 className="text-[11px] font-black uppercase text-blue-800 mb-2">
             Tempo estimado para ficar sem dívidas
           </h4>
@@ -1912,7 +1912,7 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
     : [{ mes: "Mês 0", divida: 0, projecao: 0, sombra: 0 }]
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[205px] p-4 grid grid-cols-[1fr_105px] gap-3">
+    <div className="rounded-none bg-white shadow-lg border border-slate-100 min-h-[205px] p-4 grid grid-cols-[1fr_105px] gap-3">
       <div>
         <h3 className="text-center font-black text-[13px] uppercase text-blue-950 mb-2">
           Evolução da Dívida ao Longo dos Meses
@@ -1960,7 +1960,7 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
       </div>
 
       <div className="flex items-center justify-center">
-        <div className="w-full rounded-[14px] bg-[#f3efff] border border-purple-200 p-3 text-center shadow-sm">
+        <div className="w-full rounded-none bg-[#f3efff] border border-purple-200 p-3 text-center shadow-sm">
           <div className="text-[12px] font-black text-purple-700">Faltam</div>
           <div className="text-[42px] leading-none font-black text-purple-700">
             {Number(meses || 0)}
@@ -1979,7 +1979,7 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
 
 function HealthCard() {
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-3 flex gap-3 items-center">
+    <div className="rounded-none bg-white shadow-lg border border-slate-100 min-h-[120px] p-3 flex gap-3 items-center">
       <div>
         <h3 className="text-[12px] uppercase font-black text-blue-950 mb-2">Índice de Saúde Financeira</h3>
         <div
@@ -2014,7 +2014,7 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPerc
   }
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-4 flex items-center gap-4">
+    <div className="rounded-none bg-white shadow-lg border border-slate-100 min-h-[120px] p-4 flex items-center gap-4">
       <div className={`w-14 h-14 rounded-full ${colors[accent]} flex items-center justify-center text-3xl`}>
         {icon}
       </div>
@@ -2039,7 +2039,7 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPerc
 
 function ChartBox({ title, children }) {
   return (
-    <div className="rounded-[14px] bg-white p-4 shadow-lg border border-slate-100 min-h-[245px]">
+    <div className="rounded-none bg-white p-4 shadow-lg border border-slate-100 min-h-[245px]">
       <h3 className="text-center font-black text-[13px] uppercase text-blue-950 mb-2">{title}</h3>
       {children}
     </div>
@@ -2074,7 +2074,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       }))
 
   return (
-    <div className="h-full min-h-[245px] rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
+    <div className="h-full min-h-[245px] rounded-none bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
       <div className="shrink-0 p-3 pb-2">
         <div className="flex justify-between items-center">
           <h3 className="font-black text-[14px] uppercase">🎯 Objetivos Financeiros</h3>
@@ -2161,7 +2161,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
 function TableCard({ title, color, action, children }) {
   return (
-    <div className="h-[320px] w-full rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
+    <div className="h-[320px] w-full rounded-none bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
       <div className={`${color} relative shrink-0 text-white text-center py-2.5 px-4 font-black text-xs uppercase`}>
         <span>{title}</span>
         {action && (
@@ -2180,7 +2180,7 @@ function TableCard({ title, color, action, children }) {
 
 function Panel({ title, children, className = "", bodyClassName = "" }) {
   return (
-    <div className={`rounded-[24px] bg-white p-5 shadow-lg border border-slate-100 flex flex-col ${className}`}>
+    <div className={`rounded-none bg-white p-5 shadow-lg border border-slate-100 flex flex-col ${className}`}>
       <h3 className="shrink-0 font-black text-orange-700 mb-4">{title}</h3>
       <div className={`flex-1 ${bodyClassName}`}>
         {children}
@@ -2190,9 +2190,9 @@ function Panel({ title, children, className = "", bodyClassName = "" }) {
 }
 function PlaceholderSection({ icon, title, children }) {
   return (
-    <div className="rounded-[24px] bg-white p-6 shadow-lg border border-slate-100 min-h-[260px]">
+    <div className="rounded-none bg-white p-6 shadow-lg border border-slate-100 min-h-[260px]">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">
+        <div className="flex h-12 w-12 items-center justify-center rounded-none bg-blue-50 text-2xl">
           {icon}
         </div>
         <div>
@@ -2289,7 +2289,7 @@ function AddRendimentoForm({
   }
 
   return (
-    <form onSubmit={guardarRendimento} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+    <form onSubmit={guardarRendimento} className="mt-4 rounded-none bg-white p-4 shadow-lg border border-slate-100">
       <h3 className="font-black text-emerald-700 mb-3">
         {modoEdicao ? "Editar Rendimento" : "Adicionar Rendimento"}
       </h3>
@@ -2419,7 +2419,7 @@ function AddDespesaForm({
   }
 
   return (
-    <form onSubmit={guardarDespesa} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+    <form onSubmit={guardarDespesa} className="mt-4 rounded-none bg-white p-4 shadow-lg border border-slate-100">
       <h3 className="font-black text-blue-700 mb-3">
         {modoEdicao ? "Editar Despesa" : "Adicionar Despesa"}
       </h3>
@@ -2573,7 +2573,7 @@ function AddDividaForm({
   }
 
   return (
-    <form onSubmit={guardarDivida} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+    <form onSubmit={guardarDivida} className="mt-4 rounded-none bg-white p-4 shadow-lg border border-slate-100">
       <h3 className="font-black text-purple-700 mb-3">
         {modoEdicao ? "Editar Dívida" : "Adicionar Dívida"}
       </h3>
@@ -2698,7 +2698,7 @@ function PagamentoDividaForm({
   }
 
   return (
-    <form onSubmit={guardarPagamento} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-purple-100">
+    <form onSubmit={guardarPagamento} className="mt-4 rounded-none bg-white p-4 shadow-lg border border-purple-100">
       <h3 className="font-black text-purple-700 mb-3">
         Registar Pagamento
       </h3>
@@ -2787,7 +2787,7 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
   }
 
   return (
-    <form onSubmit={guardar} className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+    <form onSubmit={guardar} className="rounded-none bg-white p-5 shadow-lg border border-slate-100">
       <h3 className="mb-4 font-black text-blue-950">
         {modoEdicao ? "Editar Objetivo" : "Adicionar Objetivo"}
       </h3>
@@ -2862,7 +2862,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
   }
 
   return (
-    <form onSubmit={guardar} className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+    <form onSubmit={guardar} className="rounded-none bg-white p-5 shadow-lg border border-slate-100">
       <h3 className="mb-4 font-black text-orange-700">
         {modoEdicao ? "Editar Pagamento" : "Adicionar Pagamento"}
       </h3>
@@ -2930,7 +2930,7 @@ function AlertaManualForm({ alertaEditando, onGuardar, onCancelar }) {
   }
 
   return (
-    <form onSubmit={guardar} className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+    <form onSubmit={guardar} className="rounded-none bg-white p-5 shadow-lg border border-slate-100">
       <h3 className="mb-4 font-black text-orange-700">
         {modoEdicao ? "Editar Alerta Manual" : "Adicionar Alerta Manual"}
       </h3>
@@ -2983,7 +2983,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
 
   return (
     <aside className="fixed left-0 top-0 z-20 w-[226px] min-h-screen p-[6px]">
-      <div className="min-h-[calc(100vh-12px)] rounded-[22px] bg-gradient-to-b from-[#061b3f] via-[#03152f] to-[#020d22] text-white shadow-2xl border border-white/20 overflow-hidden">
+      <div className="min-h-[calc(100vh-12px)] rounded-none bg-gradient-to-b from-[#061b3f] via-[#03152f] to-[#020d22] text-white shadow-2xl border border-white/20 overflow-hidden">
         <div className="px-4 pt-4 pb-3 text-center">
           <div className="mx-auto mb-2 flex h-[70px] w-[92px] items-center justify-center text-[56px] leading-none text-[#ffb000]">
             📊€
@@ -3000,7 +3000,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </p>
         </div>
 
-        <div className="mx-3 mb-3 rounded-[12px] border border-cyan-400/40 bg-[#062a57] shadow-inner p-2">
+        <div className="mx-3 mb-3 rounded-none border border-cyan-400/40 bg-[#062a57] shadow-inner p-2">
           <label className="mb-1 block text-center text-[9px] font-black uppercase text-white/70">
             Mês ativo
           </label>
@@ -3008,7 +3008,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           <select
             value={mesAtivo}
             onChange={(e) => setMesAtivo(e.target.value)}
-            className="w-full rounded-[9px] border border-cyan-400/30 bg-[#061b3f] px-2 py-2 text-center text-[12px] font-black text-yellow-300 outline-none"
+            className="w-full rounded-none border border-cyan-400/30 bg-[#061b3f] px-2 py-2 text-center text-[12px] font-black text-yellow-300 outline-none"
           >
             {MESES_FUTUROS.map((grupo) => (
               <optgroup key={grupo.ano} label={String(grupo.ano)}>
@@ -3032,7 +3032,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
               key={label}
               type="button"
               onClick={() => setSecaoAtiva(label)}
-              className={`w-full flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all text-left ${secaoAtiva === label
+              className={`w-full flex items-center gap-3 rounded-none px-3 py-[7px] text-[13px] font-black transition-all text-left ${secaoAtiva === label
                   ? "bg-gradient-to-r from-[#0b7cff] to-[#1d4ed8] shadow-[0_0_18px_rgba(59,130,246,0.65)]"
                   : "hover:bg-white/10"
                 }`}
@@ -3043,7 +3043,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           ))}
         </nav>
 
-        <div className="mx-3 mt-4 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
+        <div className="mx-3 mt-4 rounded-none border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
           <div className="mb-2 text-center text-[9px] font-black uppercase text-white/80">
             Moeda
           </div>
@@ -3051,7 +3051,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           <select
             value={moedaAtiva}
             onChange={(e) => setMoedaAtiva(e.target.value)}
-            className="w-full rounded-[9px] border border-cyan-400/30 bg-[#062a57] px-2 py-2 text-center text-[11px] font-black text-white outline-none"
+            className="w-full rounded-none border border-cyan-400/30 bg-[#062a57] px-2 py-2 text-center text-[11px] font-black text-white outline-none"
           >
             {Object.entries(MOEDAS).map(([codigo, moeda]) => (
               <option key={codigo} value={codigo}>
@@ -3070,7 +3070,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </div>
         </div>
 
-        <div className="mx-3 mt-3 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
+        <div className="mx-3 mt-3 rounded-none border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
           <h3 className="mb-2 text-center text-[12px] font-black uppercase">Saúde Financeira</h3>
 
           <div
