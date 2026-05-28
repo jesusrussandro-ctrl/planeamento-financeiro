@@ -2130,8 +2130,8 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
 function TableCard({ title, color, action, children }) {
   return (
-    <div className="rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100">
-      <div className={`${color} relative text-white text-center py-2.5 px-4 font-black text-xs uppercase`}>
+    <div className="h-[320px] w-full rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
+      <div className={`${color} relative shrink-0 text-white text-center py-2.5 px-4 font-black text-xs uppercase`}>
         <span>{title}</span>
         {action && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -2139,7 +2139,10 @@ function TableCard({ title, color, action, children }) {
           </div>
         )}
       </div>
-      <table className="w-full text-[10px] leading-tight">{children}</table>
+
+      <div className="flex-1 overflow-y-auto overflow-x-auto overscroll-contain">
+        <table className="min-w-full text-[10px] leading-tight">{children}</table>
+      </div>
     </div>
   )
 }
