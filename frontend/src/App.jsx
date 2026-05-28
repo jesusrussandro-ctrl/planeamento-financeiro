@@ -209,6 +209,10 @@ export default function App() {
   const [moedaAtiva, setMoedaAtiva] = React.useState("EUR")
   const [considerarJurosSimulador, setConsiderarJurosSimulador] = React.useState(true)
 
+  const [mostrarFormularioRendimento, setMostrarFormularioRendimento] = React.useState(false)
+  const [mostrarFormularioDespesa, setMostrarFormularioDespesa] = React.useState(false)
+  const [mostrarFormularioDivida, setMostrarFormularioDivida] = React.useState(false)
+
   const [objetivosUsuario, setObjetivosUsuario] = React.useState(() =>
     lerLocalStorage("objetivosUsuario", OBJETIVOS_INICIAIS)
   )
@@ -934,14 +938,17 @@ export default function App() {
         recebido: Number(novo.recebido || 0),
       },
     ])
+    setMostrarFormularioRendimento(false)
   }
 
   function iniciarEdicaoRendimento(item) {
     setRendimentoEditando(item)
+    setMostrarFormularioRendimento(true)
   }
 
   function cancelarEdicaoRendimento() {
     setRendimentoEditando(null)
+    setMostrarFormularioRendimento(false)
   }
 
   function atualizarRendimentoNaTabela(atualizado) {
@@ -960,6 +967,7 @@ export default function App() {
     )
 
     setRendimentoEditando(null)
+    setMostrarFormularioRendimento(false)
   }
 
   function apagarRendimento(id) {
@@ -977,6 +985,7 @@ export default function App() {
 
           if (rendimentoEditando?.id === id) {
             setRendimentoEditando(null)
+            setMostrarFormularioRendimento(false)
           }
         }
       })
@@ -997,14 +1006,17 @@ export default function App() {
         percentagem: nova.percentagem || "0%",
       },
     ])
+    setMostrarFormularioDespesa(false)
   }
 
   function iniciarEdicaoDespesa(item) {
     setDespesaEditando(item)
+    setMostrarFormularioDespesa(true)
   }
 
   function cancelarEdicaoDespesa() {
     setDespesaEditando(null)
+    setMostrarFormularioDespesa(false)
   }
 
   function atualizarDespesaNaTabela(atualizada) {
@@ -1024,6 +1036,7 @@ export default function App() {
     )
 
     setDespesaEditando(null)
+    setMostrarFormularioDespesa(false)
   }
 
   function apagarDespesa(id) {
@@ -1041,6 +1054,7 @@ export default function App() {
 
           if (despesaEditando?.id === id) {
             setDespesaEditando(null)
+            setMostrarFormularioDespesa(false)
           }
         }
       })
@@ -1054,14 +1068,17 @@ export default function App() {
       ...listaAtual,
       normalizarDivida(nova),
     ])
+    setMostrarFormularioDivida(false)
   }
 
   function iniciarEdicaoDivida(item) {
     setDividaEditando(item)
+    setMostrarFormularioDivida(true)
   }
 
   function cancelarEdicaoDivida() {
     setDividaEditando(null)
+    setMostrarFormularioDivida(false)
   }
 
   function atualizarDividaNaTabela(atualizada) {
@@ -1072,6 +1089,7 @@ export default function App() {
     )
 
     setDividaEditando(null)
+    setMostrarFormularioDivida(false)
   }
 
   function apagarDivida(id) {
@@ -1089,6 +1107,7 @@ export default function App() {
 
           if (dividaEditando?.id === id) {
             setDividaEditando(null)
+            setMostrarFormularioDivida(false)
           }
 
           if (dividaPagamentoSelecionada?.id === id) {
@@ -1295,7 +1314,26 @@ export default function App() {
   function renderRendimentos() {
     return (
       <div>
-        <TableCard title="Rendimentos" color="bg-emerald-700">
+        <TableCard
+          title="Rendimentos"
+          color="bg-emerald-700"
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                if (mostrarFormularioRendimento && !rendimentoEditando) {
+                  setMostrarFormularioRendimento(false)
+                } else {
+                  setRendimentoEditando(null)
+                  setMostrarFormularioRendimento(true)
+                }
+              }}
+              className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
+            >
+              {mostrarFormularioRendimento || rendimentoEditando ? "Fechar" : "+ Adicionar"}
+            </button>
+          }
+        >
           <thead className="bg-slate-50 text-slate-500">
             <tr>
               <th className="p-1.5 text-left">Fonte</th>
@@ -1326,7 +1364,9 @@ export default function App() {
             </tr>
           </tbody>
         </TableCard>
-        <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} rendimentoEditando={rendimentoEditando} onAtualizar={atualizarRendimentoNaTabela} onCancelarEdicao={cancelarEdicaoRendimento} mesAtivo={mesAtivo} />
+        {(mostrarFormularioRendimento || rendimentoEditando) && (
+          <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} rendimentoEditando={rendimentoEditando} onAtualizar={atualizarRendimentoNaTabela} onCancelarEdicao={cancelarEdicaoRendimento} mesAtivo={mesAtivo} />
+        )}
       </div>
     )
   }
@@ -1334,7 +1374,26 @@ export default function App() {
   function renderDespesas() {
     return (
       <div>
-        <TableCard title="Despesas Mensais" color="bg-blue-700">
+        <TableCard
+          title="Despesas Mensais"
+          color="bg-blue-700"
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                if (mostrarFormularioDespesa && !despesaEditando) {
+                  setMostrarFormularioDespesa(false)
+                } else {
+                  setDespesaEditando(null)
+                  setMostrarFormularioDespesa(true)
+                }
+              }}
+              className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
+            >
+              {mostrarFormularioDespesa || despesaEditando ? "Fechar" : "+ Adicionar"}
+            </button>
+          }
+        >
           <thead className="bg-slate-50 text-slate-500">
             <tr>
               <th className="p-1.5 text-left">Categoria</th>
@@ -1370,7 +1429,9 @@ export default function App() {
             </tr>
           </tbody>
         </TableCard>
-        <AddDespesaForm onAdicionar={adicionarDespesaNaTabela} despesaEditando={despesaEditando} onAtualizar={atualizarDespesaNaTabela} onCancelarEdicao={cancelarEdicaoDespesa} mesAtivo={mesAtivo} />
+        {(mostrarFormularioDespesa || despesaEditando) && (
+          <AddDespesaForm onAdicionar={adicionarDespesaNaTabela} despesaEditando={despesaEditando} onAtualizar={atualizarDespesaNaTabela} onCancelarEdicao={cancelarEdicaoDespesa} mesAtivo={mesAtivo} />
+        )}
       </div>
     )
   }
@@ -1378,7 +1439,26 @@ export default function App() {
   function renderDividas() {
     return (
       <div>
-        <TableCard title="Dívidas" color="bg-purple-700">
+        <TableCard
+          title="Dívidas"
+          color="bg-purple-700"
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                if (mostrarFormularioDivida && !dividaEditando) {
+                  setMostrarFormularioDivida(false)
+                } else {
+                  setDividaEditando(null)
+                  setMostrarFormularioDivida(true)
+                }
+              }}
+              className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
+            >
+              {mostrarFormularioDivida || dividaEditando ? "Fechar" : "+ Adicionar"}
+            </button>
+          }
+        >
           <thead className="bg-slate-50 text-slate-500">
             <tr>
               <th className="p-1 text-left">Credor</th>
@@ -1421,7 +1501,9 @@ export default function App() {
             </tr>
           </tbody>
         </TableCard>
-        <AddDividaForm onAdicionar={adicionarDividaNaTabela} dividaEditando={dividaEditando} onAtualizar={atualizarDividaNaTabela} onCancelarEdicao={cancelarEdicaoDivida} mesAtivo={mesAtivo} />
+        {(mostrarFormularioDivida || dividaEditando) && (
+          <AddDividaForm onAdicionar={adicionarDividaNaTabela} dividaEditando={dividaEditando} onAtualizar={atualizarDividaNaTabela} onCancelarEdicao={cancelarEdicaoDivida} mesAtivo={mesAtivo} />
+        )}
         <PagamentoDividaForm dividaSelecionada={dividaPagamentoSelecionada} pagamentoAtual={dividaPagamentoSelecionada ? obterPagamentoDividaDoMes(dividaPagamentoSelecionada.id) : null} onRegistrar={registrarPagamentoDivida} onCancelar={cancelarPagamentoDivida} formatarEuro={formatarEuro} />
       </div>
     )
@@ -2046,10 +2128,17 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
   )
 }
 
-function TableCard({ title, color, children }) {
+function TableCard({ title, color, action, children }) {
   return (
     <div className="rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100">
-      <div className={`${color} text-white text-center py-2.5 font-black text-xs uppercase`}>{title}</div>
+      <div className={`${color} relative text-white text-center py-2.5 px-4 font-black text-xs uppercase`}>
+        <span>{title}</span>
+        {action && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            {action}
+          </div>
+        )}
+      </div>
       <table className="w-full text-[10px] leading-tight">{children}</table>
     </div>
   )
