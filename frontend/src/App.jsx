@@ -167,6 +167,11 @@ const PAGAMENTOS_INICIAIS = [
   { id: 4, dia: 12, nome: "Internet", valor: 35, categoria: "Despesa fixa", pago: false },
 ]
 
+const POUPANCAS_INICIAIS = [
+  { id: 1, tipo: "Fundo de Emergência", previsto: 300, guardado: 200 },
+  { id: 2, tipo: "Reserva Mensal", previsto: 150, guardado: 150 },
+]
+
 const ALERTAS_INICIAIS = []
 
 function lerLocalStorage(chave, valorPadrao) {
@@ -212,6 +217,13 @@ export default function App() {
   const [mostrarFormularioRendimento, setMostrarFormularioRendimento] = React.useState(false)
   const [mostrarFormularioDespesa, setMostrarFormularioDespesa] = React.useState(false)
   const [mostrarFormularioDivida, setMostrarFormularioDivida] = React.useState(false)
+  const [mostrarFormularioPoupanca, setMostrarFormularioPoupanca] = React.useState(false)
+
+  const [poupancasUsuario, setPoupancasUsuario] = React.useState(() =>
+    lerLocalStorage("poupancasUsuario", POUPANCAS_INICIAIS)
+  )
+  const [poupancaEditando, setPoupancaEditando] = React.useState(null)
+
 
   const [objetivosUsuario, setObjetivosUsuario] = React.useState(() =>
     lerLocalStorage("objetivosUsuario", OBJETIVOS_INICIAIS)
@@ -239,6 +251,10 @@ export default function App() {
   React.useEffect(() => {
     guardarLocalStorage("alertasUsuario", alertasUsuario)
   }, [alertasUsuario])
+
+  React.useEffect(() => {
+    guardarLocalStorage("poupancasUsuario", poupancasUsuario)
+  }, [poupancasUsuario])
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -579,6 +595,23 @@ export default function App() {
 
   const sobraPagamentoIdeal = Math.max(0, disponivelParaDividas) - totalPagamentoIdeal
 
+  const poupancasFinanceiras = poupancasUsuario.map((item) => ({
+    ...item,
+    previsto: Number(item.previsto || 0),
+    guardado: Number(item.guardado || 0),
+  }))
+
+  const totalPoupancaPrevisto = poupancasFinanceiras.reduce(
+    (total, item) => total + Number(item.previsto || 0),
+    0
+  )
+
+  const totalPoupancaGuardado = poupancasFinanceiras.reduce(
+    (total, item) => total + Number(item.guardado || 0),
+    0
+  )
+
+
   const objetivosFinanceiros = objetivosUsuario.map((objetivo) => ({
     ...objetivo,
     objetivo: Number(objetivo.objetivo || 0),
@@ -825,6 +858,49 @@ export default function App() {
 
     if (Number(alertaEditando?.id) === Number(id)) {
       setAlertaEditando(null)
+    }
+  }
+
+  function guardarPoupanca(dadosPoupanca) {
+    const poupancaNormalizada = {
+      id: poupancaEditando?.id || Date.now(),
+      tipo: dadosPoupanca.tipo,
+      previsto: Number(dadosPoupanca.previsto || 0),
+      guardado: Number(dadosPoupanca.guardado || 0),
+    }
+
+    setPoupancasUsuario((listaAtual) => {
+      if (poupancaEditando) {
+        return listaAtual.map((item) =>
+          Number(item.id) === Number(poupancaEditando.id) ? poupancaNormalizada : item
+        )
+      }
+
+      return [...listaAtual, poupancaNormalizada]
+    })
+
+    setPoupancaEditando(null)
+    setMostrarFormularioPoupanca(false)
+  }
+
+  function iniciarEdicaoPoupanca(item) {
+    setPoupancaEditando(item)
+    setMostrarFormularioPoupanca(true)
+  }
+
+  function cancelarEdicaoPoupanca() {
+    setPoupancaEditando(null)
+    setMostrarFormularioPoupanca(false)
+  }
+
+  function apagarPoupanca(id) {
+    setPoupancasUsuario((listaAtual) =>
+      listaAtual.filter((item) => Number(item.id) !== Number(id))
+    )
+
+    if (Number(poupancaEditando?.id) === Number(id)) {
+      setPoupancaEditando(null)
+      setMostrarFormularioPoupanca(false)
     }
   }
 
@@ -1311,6 +1387,75 @@ export default function App() {
     )
   }
 
+  function renderPoupancas() {
+    return (
+      <div>
+        <TableCard
+          title="Poupança / Reserva"
+          color="bg-teal-700"
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                if (mostrarFormularioPoupanca && !poupancaEditando) {
+                  setMostrarFormularioPoupanca(false)
+                } else {
+                  setPoupancaEditando(null)
+                  setMostrarFormularioPoupanca(true)
+                }
+              }}
+              className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
+            >
+              {mostrarFormularioPoupanca || poupancaEditando ? "Fechar" : "+ Adicionar"}
+            </button>
+          }
+        >
+          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+            <tr>
+              <th className="p-1.5 text-left">Tipo</th>
+              <th className="p-1.5">Previsto</th>
+              <th className="p-1.5">Guardado</th>
+              <th className="p-1.5">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {poupancasFinanceiras.map((item) => (
+              <tr key={item.id} className="border-b border-slate-100">
+                <td className="p-1.5 font-semibold">{item.tipo}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.previsto)}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
+                <td className="p-1.5 text-center">
+                  <div className="flex justify-center gap-1">
+                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
+                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {poupancasFinanceiras.length < 6 && (
+              <tr className="h-full">
+                <td colSpan="4"></td>
+              </tr>
+            )}
+            <tr className="sticky bottom-0 z-20 bg-teal-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalPoupancaGuardado)}</td>
+              <td className="p-1.5"></td>
+            </tr>
+          </tbody>
+        </TableCard>
+        {(mostrarFormularioPoupanca || poupancaEditando) && (
+          <AddPoupancaForm
+            poupancaEditando={poupancaEditando}
+            onGuardar={guardarPoupanca}
+            onCancelar={cancelarEdicaoPoupanca}
+          />
+        )}
+      </div>
+    )
+  }
+
   function renderRendimentos() {
     return (
       <div>
@@ -1685,10 +1830,28 @@ export default function App() {
     if (secaoAtiva === "Rendimentos") {
       return (
         <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
-          {renderRendimentos()}
+          <div className="space-y-4">
+            {renderRendimentos()}
+            {renderPoupancas()}
+          </div>
           <PlaceholderSection icon="⚖️" title="Resumo de Rendimentos">
             <p>Total previsto: <strong>{formatarEuro(totalOrcamentado)}</strong></p>
             <p>Total recebido: <strong>{formatarEuro(totalRecebido)}</strong></p>
+            <p>Total poupança prevista: <strong>{formatarEuro(totalPoupancaPrevisto)}</strong></p>
+            <p>Total guardado: <strong>{formatarEuro(totalPoupancaGuardado)}</strong></p>
+          </PlaceholderSection>
+        </section>
+      )
+    }
+
+    if (secaoAtiva === "Poupança") {
+      return (
+        <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
+          {renderPoupancas()}
+          <PlaceholderSection icon="💰" title="Resumo de Poupança / Reserva">
+            <p>Total previsto: <strong>{formatarEuro(totalPoupancaPrevisto)}</strong></p>
+            <p>Total guardado: <strong>{formatarEuro(totalPoupancaGuardado)}</strong></p>
+            <p>Diferença: <strong>{formatarEuro(totalPoupancaGuardado - totalPoupancaPrevisto)}</strong></p>
           </PlaceholderSection>
         </section>
       )
@@ -1774,7 +1937,10 @@ export default function App() {
 
         <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
           <section className="grid grid-cols-4 gap-4 items-stretch">
-            {renderRendimentos()}
+            <div className="space-y-4">
+              {renderRendimentos()}
+              {renderPoupancas()}
+            </div>
             {renderDespesas()}
             {renderDividas()}
             {renderPagamentoIdeal()}
@@ -2743,6 +2909,91 @@ function PagamentoDividaForm({
   )
 }
 
+function AddPoupancaForm({ poupancaEditando, onGuardar, onCancelar }) {
+  const [tipo, setTipo] = React.useState("")
+  const [previsto, setPrevisto] = React.useState("")
+  const [guardado, setGuardado] = React.useState("")
+
+  const modoEdicao = Boolean(poupancaEditando)
+
+  React.useEffect(() => {
+    if (poupancaEditando) {
+      setTipo(poupancaEditando.tipo || "")
+      setPrevisto(String(poupancaEditando.previsto || 0))
+      setGuardado(String(poupancaEditando.guardado || 0))
+    } else {
+      setTipo("")
+      setPrevisto("")
+      setGuardado("")
+    }
+  }, [poupancaEditando])
+
+  function guardar(e) {
+    e.preventDefault()
+
+    if (!tipo.trim()) {
+      return
+    }
+
+    onGuardar({
+      tipo,
+      previsto,
+      guardado,
+    })
+
+    if (!modoEdicao) {
+      setTipo("")
+      setPrevisto("")
+      setGuardado("")
+    }
+  }
+
+  return (
+    <form onSubmit={guardar} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-teal-700 mb-3">
+        {modoEdicao ? "Editar Poupança / Reserva" : "Adicionar Poupança / Reserva"}
+      </h3>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Tipo"
+        value={tipo}
+        onChange={(e) => setTipo(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Previsto"
+        type="number"
+        value={previsto}
+        onChange={(e) => setPrevisto(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        placeholder="Guardado"
+        type="number"
+        value={guardado}
+        onChange={(e) => setGuardado(e.target.value)}
+      />
+
+      <button className="w-full rounded-lg bg-teal-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button
+          type="button"
+          onClick={onCancelar}
+          className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+        >
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
 function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
   const [icone, setIcone] = React.useState("🎯")
   const [nome, setNome] = React.useState("")
@@ -2962,6 +3213,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
   const menuItems = [
     ["🏠", "Resumo"],
     ["⚖️", "Rendimentos"],
+    ["💰", "Poupança"],
     ["💸", "Despesas"],
     ["🪙", "Dívidas"],
     ["🎯", "Objetivos"],
