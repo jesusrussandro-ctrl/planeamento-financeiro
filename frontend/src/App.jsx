@@ -20,6 +20,17 @@ import {
 
 const COLORS = ["#0e7490", "#0891b2", "#84cc16", "#7c3aed", "#2563eb", "#f59e0b"]
 
+const MOEDAS = {
+  EUR: { label: "EUR - Euro (€)", locale: "pt-PT", currency: "EUR", flag: "🇪🇺" },
+  USD: { label: "USD - Dólar ($)", locale: "en-US", currency: "USD", flag: "🇺🇸" },
+  GBP: { label: "GBP - Libra (£)", locale: "en-GB", currency: "GBP", flag: "🇬🇧" },
+  BRL: { label: "BRL - Real (R$)", locale: "pt-BR", currency: "BRL", flag: "🇧🇷" },
+  AOA: { label: "AOA - Kwanza (Kz)", locale: "pt-AO", currency: "AOA", flag: "🇦🇴" },
+  CVE: { label: "CVE - Escudo cabo-verdiano ($)", locale: "pt-CV", currency: "CVE", flag: "🇨🇻" },
+  MZN: { label: "MZN - Metical (MT)", locale: "pt-MZ", currency: "MZN", flag: "🇲🇿" },
+  AED: { label: "AED - Dirham dos Emirados Árabes Unidos (د.إ)", locale: "ar-AE", currency: "AED", flag: "🇦🇪" },
+}
+
 const NOMES_MESES = [
   "Janeiro",
   "Fevereiro",
@@ -155,6 +166,8 @@ export default function App() {
   const [pagamentosDividasApi, setPagamentosDividasApi] = React.useState([])
 
   const [mesAtivo, setMesAtivo] = React.useState(obterMesAtual())
+  const [secaoAtiva, setSecaoAtiva] = React.useState("Resumo")
+  const [moedaAtiva, setMoedaAtiva] = React.useState("EUR")
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -261,10 +274,14 @@ export default function App() {
   }, [mesAtivo])
 
   function formatarEuro(valor) {
-    return `€ ${Number(valor || 0).toLocaleString("pt-PT", {
+    const moeda = MOEDAS[moedaAtiva] || MOEDAS.EUR
+
+    return new Intl.NumberFormat(moeda.locale, {
+      style: "currency",
+      currency: moeda.currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    })}`
+    }).format(Number(valor || 0))
   }
 
   function formatarPercentagem(valor) {
@@ -273,6 +290,11 @@ export default function App() {
       maximumFractionDigits: 1,
     })}%`
   }
+
+  function limitarPercentagem(valor) {
+    return Math.max(0, Math.min(100, Number(valor || 0)))
+  }
+
 
   function formatarTipoJuros(tipo) {
     return tipo === "anual" ? "Anual" : "Mensal"
@@ -617,365 +639,474 @@ export default function App() {
       })
   }
 
-  return (
-    <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
-      <Sidebar mesAtivo={mesAtivo} setMesAtivo={setMesAtivo} />
+  function renderKpis() {
+    const percentagemDisponivelSalario = totalRecebido > 0
+      ? (disponivelParaDividas / totalRecebido) * 100
+      : 0
 
-      <div className="ml-[242px] p-4 grid grid-cols-[1fr_286px] gap-4">
-        <main className="space-y-4">
-          <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
-            <HealthCard />
-            <KpiCard icon="💼" title="Salário Líquido" value={formatarEuro(totalRecebido)} accent="blue" showBar />
-            <KpiCard icon="🧾" title="Total Despesas" value={formatarEuro(totalDespesasRealizado)} subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`} accent="red" />
-            <KpiCard icon="💸" title="Disponível p/ Dívidas" value={formatarEuro(disponivelParaDividas)} subtitle={`${formatarPercentagem(totalRecebido > 0 ? (disponivelParaDividas / totalRecebido) * 100 : 0)} do salário`} accent="green" green />
-            <KpiCard icon="🏦" title="Total Dívidas" value={formatarEuro(totalDividas)} subtitle={`Pagamento ideal: ${formatarEuro(totalPagamentoIdeal)}`} accent="purple" />
-            <KpiCard icon="🗓️" title="Dias Restantes" value={String(diasRestantesMesAtivo)} subtitle={`até ${dataFimMesAtivo}`} accent="orange" />
-          </section>
+    const percentagemPagamentoIdeal = disponivelParaDividas > 0
+      ? (totalPagamentoIdeal / disponivelParaDividas) * 100
+      : 0
 
-          <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
-            <ChartBox title="Orçamentado vs Realizado (Despesas)">
-              <div className="flex justify-center gap-5 text-[10px] font-bold mb-1">
-                <span className="text-blue-700">■ Orçamentado</span>
-                <span className="text-green-600">■ Realizado</span>
-              </div>
-              <ResponsiveContainer width="100%" height={205}>
-                <BarChart data={despesasGrafico} layout="vertical" barGap={2}>
-                  <XAxis type="number" tick={{ fontSize: 10 }} />
-                  <YAxis dataKey="name" type="category" width={86} tick={{ fontSize: 11, fontWeight: 700 }} />
+    const percentagemDiasRestantes = ultimoDiaDoMes(mesAtivo) > 0
+      ? (diasRestantesMesAtivo / ultimoDiaDoMes(mesAtivo)) * 100
+      : 0
+
+    return (
+      <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
+        <HealthCard />
+        <KpiCard
+          icon="💼"
+          title="Salário Líquido"
+          value={formatarEuro(totalRecebido)}
+          subtitle="Total recebido no mês"
+          accent="blue"
+          showBar
+          barPercent={totalRecebido > 0 ? 100 : 0}
+        />
+        <KpiCard
+          icon="🧾"
+          title="Total Despesas"
+          value={formatarEuro(totalDespesasRealizado)}
+          subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`}
+          accent="red"
+          showBar
+          barPercent={limitarPercentagem(percentagemDespesasSalario)}
+        />
+        <KpiCard
+          icon="💸"
+          title="Disponível p/ Dívidas"
+          value={formatarEuro(disponivelParaDividas)}
+          subtitle={`${formatarPercentagem(percentagemDisponivelSalario)} do salário`}
+          accent="green"
+          green
+          showBar
+          barPercent={limitarPercentagem(percentagemDisponivelSalario)}
+        />
+        <KpiCard
+          icon="🏦"
+          title="Total Dívidas"
+          value={formatarEuro(totalDividas)}
+          subtitle={`Pagamento ideal: ${formatarEuro(totalPagamentoIdeal)}`}
+          accent="purple"
+          showBar
+          barPercent={limitarPercentagem(percentagemPagamentoIdeal)}
+        />
+        <KpiCard
+          icon="🗓️"
+          title="Dias Restantes"
+          value={String(diasRestantesMesAtivo)}
+          subtitle={`até ${dataFimMesAtivo}`}
+          accent="orange"
+          showBar
+          barPercent={limitarPercentagem(percentagemDiasRestantes)}
+        />
+      </section>
+    )
+  }
+
+  function renderGraficos() {
+    return (
+      <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
+        <ChartBox title="Orçamentado vs Realizado (Despesas)">
+          <div className="flex justify-center gap-5 text-[10px] font-bold mb-1">
+            <span className="text-blue-700">■ Orçamentado</span>
+            <span className="text-green-600">■ Realizado</span>
+          </div>
+          <ResponsiveContainer width="100%" height={205}>
+            <BarChart data={despesasGrafico} layout="vertical" barGap={2}>
+              <XAxis type="number" tick={{ fontSize: 10 }} />
+              <YAxis dataKey="name" type="category" width={86} tick={{ fontSize: 11, fontWeight: 700 }} />
+              <Tooltip />
+              <Bar dataKey="orcamentado" fill="#2563eb" radius={5} barSize={9} />
+              <Bar dataKey="realizado" fill="#22c55e" radius={5} barSize={9} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartBox>
+
+        <ChartBox title="Distribuição das Despesas">
+          <div className="grid grid-cols-[1fr_120px] items-center">
+            <div className="relative h-[210px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={distribuicaoDespesas} dataKey="value" innerRadius={56} outerRadius={86}>
+                    {distribuicaoDespesas.map((entry, index) => (
+                      <Cell key={entry.name} fill={COLORS[index]} />
+                    ))}
+                  </Pie>
                   <Tooltip />
-                  <Bar dataKey="orcamentado" fill="#2563eb" radius={5} barSize={9} />
-                  <Bar dataKey="realizado" fill="#22c55e" radius={5} barSize={9} />
-                </BarChart>
+                </PieChart>
               </ResponsiveContainer>
-            </ChartBox>
+              <div className="absolute inset-0 flex items-center justify-center text-center pointer-events-none">
+                <div className="font-black text-blue-950">
+                  {formatarEuro(totalDespesasRealizado)}
+                  <div className="text-[10px]">Total</div>
+                </div>
+              </div>
+            </div>
+            <LegendList items={distribuicaoDespesas} colors={COLORS} />
+          </div>
+        </ChartBox>
 
-            <ChartBox title="Distribuição das Despesas">
-              <div className="grid grid-cols-[1fr_120px] items-center">
-                <div className="relative h-[210px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie data={distribuicaoDespesas} dataKey="value" innerRadius={56} outerRadius={86}>
-                        {distribuicaoDespesas.map((entry, index) => (
-                          <Cell key={entry.name} fill={COLORS[index]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex items-center justify-center text-center pointer-events-none">
-                    <div className="font-black text-blue-950">
-                      {formatarEuro(totalDespesasRealizado)}
-                      <div className="text-[10px]">Total</div>
+        <ChartBox title="Distribuição da Renda">
+          <div className="grid grid-cols-[1fr_120px] items-center">
+            <div className="relative h-[210px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={renda} dataKey="value" innerRadius={56} outerRadius={86}>
+                    {renda.map((entry) => (
+                      <Cell key={entry.name} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex items-center justify-center text-4xl pointer-events-none">
+                💼
+              </div>
+            </div>
+            <LegendList items={renda} colors={renda.map((i) => i.color)} />
+          </div>
+        </ChartBox>
+      </section>
+    )
+  }
+
+  function renderRendimentos() {
+    return (
+      <div>
+        <TableCard title="Rendimentos" color="bg-emerald-700">
+          <thead className="bg-slate-50 text-slate-500">
+            <tr>
+              <th className="p-1.5 text-left">Fonte</th>
+              <th className="p-1.5">Orçamentado</th>
+              <th className="p-1.5">Recebido</th>
+              <th className="p-1.5">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rendimentosApi.map((item) => (
+              <tr key={item.id} className="border-b border-slate-100">
+                <td className="p-1.5 font-semibold">{item.fonte}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
+                <td className="p-1.5 text-center">
+                  <div className="flex justify-center gap-1">
+                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
+                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            <tr className="bg-emerald-50 font-black">
+              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
+              <td className="p-1.5"></td>
+            </tr>
+          </tbody>
+        </TableCard>
+        <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} rendimentoEditando={rendimentoEditando} onAtualizar={atualizarRendimentoNaTabela} onCancelarEdicao={cancelarEdicaoRendimento} mesAtivo={mesAtivo} />
+      </div>
+    )
+  }
+
+  function renderDespesas() {
+    return (
+      <div>
+        <TableCard title="Despesas Mensais" color="bg-blue-700">
+          <thead className="bg-slate-50 text-slate-500">
+            <tr>
+              <th className="p-1.5 text-left">Categoria</th>
+              <th className="p-1.5">Orçamentado</th>
+              <th className="p-1.5">Realizado</th>
+              <th className="p-1.5">%</th>
+              <th className="p-1.5">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {despesasApi.map((item) => (
+              <tr key={item.id} className="border-b border-slate-100">
+                <td className="p-1.5 font-semibold">{item.categoria}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.realizado)}</td>
+                <td className="p-1.5 text-center text-blue-700 font-bold">
+                  {totalRecebido > 0 ? formatarPercentagem((Number(item.realizado || 0) / totalRecebido) * 100) : item.percentagem}
+                </td>
+                <td className="p-1.5 text-center">
+                  <div className="flex justify-center gap-1">
+                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
+                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            <tr className="bg-blue-50 font-black">
+              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
+              <td className="p-1.5 text-center">{formatarPercentagem(percentagemDespesasSalario)}</td>
+              <td className="p-1.5"></td>
+            </tr>
+          </tbody>
+        </TableCard>
+        <AddDespesaForm onAdicionar={adicionarDespesaNaTabela} despesaEditando={despesaEditando} onAtualizar={atualizarDespesaNaTabela} onCancelarEdicao={cancelarEdicaoDespesa} mesAtivo={mesAtivo} />
+      </div>
+    )
+  }
+
+  function renderDividas() {
+    return (
+      <div>
+        <TableCard title="Dívidas" color="bg-purple-700">
+          <thead className="bg-slate-50 text-slate-500">
+            <tr>
+              <th className="p-1 text-left">Credor</th>
+              <th className="p-1">Saldo</th>
+              <th className="p-1">Prest.</th>
+              <th className="p-1">Juros</th>
+              <th className="p-1">Tipo</th>
+              <th className="p-1">Prior.</th>
+              <th className="p-1">Estado</th>
+              <th className="p-1">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dividasApi.map((item) => {
+              const pagamentoMes = obterPagamentoDividaDoMes(item.id)
+              return (
+                <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+                  <td className="p-1 font-semibold">{item.credor}</td>
+                  <td className="p-1 text-center">{formatarEuro(item.saldo)}</td>
+                  <td className="p-1 text-center">{formatarEuro(item.prestacaoMensal)}</td>
+                  <td className="p-1 text-center">{formatarPercentagem(item.taxaJuros)}</td>
+                  <td className="p-1 text-center">{formatarTipoJuros(item.tipoJuros)}</td>
+                  <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
+                  <td className="p-1 text-center">
+                    {pagamentoMes ? <span className="rounded bg-green-100 px-2 py-1 text-green-700 font-black">Pago</span> : <span className="rounded bg-orange-100 px-2 py-1 text-orange-700 font-black">Pendente</span>}
+                  </td>
+                  <td className="p-1 text-center">
+                    <div className="flex flex-col justify-center gap-1">
+                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold">Pagar</button>
+                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
+                      <button onClick={() => apagarDivida(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
                     </div>
-                  </div>
-                </div>
-                <LegendList items={distribuicaoDespesas} colors={COLORS} />
-              </div>
-            </ChartBox>
+                  </td>
+                </tr>
+              )
+            })}
+            <tr className="bg-purple-100 font-black text-[10px]">
+              <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
+              <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
+            </tr>
+          </tbody>
+        </TableCard>
+        <AddDividaForm onAdicionar={adicionarDividaNaTabela} dividaEditando={dividaEditando} onAtualizar={atualizarDividaNaTabela} onCancelarEdicao={cancelarEdicaoDivida} mesAtivo={mesAtivo} />
+        <PagamentoDividaForm dividaSelecionada={dividaPagamentoSelecionada} pagamentoAtual={dividaPagamentoSelecionada ? obterPagamentoDividaDoMes(dividaPagamentoSelecionada.id) : null} onRegistrar={registrarPagamentoDivida} onCancelar={cancelarPagamentoDivida} formatarEuro={formatarEuro} />
+      </div>
+    )
+  }
 
-            <ChartBox title="Distribuição da Renda">
-              <div className="grid grid-cols-[1fr_120px] items-center">
-                <div className="relative h-[210px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie data={renda} dataKey="value" innerRadius={56} outerRadius={86}>
-                        {renda.map((entry) => (
-                          <Cell key={entry.name} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex items-center justify-center text-4xl pointer-events-none">
-                    💼
-                  </div>
-                </div>
-                <LegendList items={renda} colors={renda.map((i) => i.color)} />
-              </div>
-            </ChartBox>
+  function renderPagamentoIdeal() {
+    return (
+      <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
+        <thead className="bg-slate-50 text-slate-500">
+          <tr>
+            <th className="p-1 text-left">Credor</th>
+            <th className="p-1">Pagamento</th>
+            <th className="p-1">% Disp.</th>
+            <th className="p-1">Tempo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pagamentoIdealDividas.map((item) => (
+            <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+              <td className="p-1 font-semibold">{item.credor}</td>
+              <td className="p-1 text-center">{formatarEuro(item.pagamento)}</td>
+              <td className="p-1 text-center">{formatarPercentagem(item.percentagemDisponivel)}</td>
+              <td className="p-1 text-center">{item.tempoMeses} meses</td>
+            </tr>
+          ))}
+          <tr className="bg-green-100 font-black text-[10px]">
+            <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
+            <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
+            <td className="p-1.5 text-center">100%</td>
+            <td className="p-1.5"></td>
+          </tr>
+          <tr className="bg-green-50 font-black text-[10px]">
+            <td className="p-1.5">SOBRA / FOLGA</td>
+            <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
+            <td className="p-1.5"></td>
+            <td className="p-1.5"></td>
+          </tr>
+        </tbody>
+      </TableCard>
+    )
+  }
+
+  function renderProximosPagamentos() {
+    return (
+      <Panel title="Próximos Pagamentos">
+        {pagamentos.map(([data, nome, valor, dias]) => (
+          <div key={nome} className="grid grid-cols-[44px_1fr_64px_54px] items-center text-xs border-b border-slate-100 py-2 gap-1">
+            <span className="font-bold">{data}</span>
+            <span>{nome}</span>
+            <span className="font-bold">{valor}</span>
+            <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-[10px] text-center">{dias}</span>
+          </div>
+        ))}
+      </Panel>
+    )
+  }
+
+  function renderAlertas() {
+    return (
+      <Panel title="Alertas e Conselhos">
+        {["Muito bem! Está a manter a disciplina nos pagamentos das dívidas.", "As despesas de lazer estão 10% acima do recomendado.", "Se aumentar €150/mês na dívida, termina 9 meses mais cedo."].map((item) => (
+          <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-xs mb-3">{item}</div>
+        ))}
+      </Panel>
+    )
+  }
+
+  function renderConteudoPrincipal() {
+    if (secaoAtiva === "Rendimentos") {
+      return (
+        <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
+          {renderRendimentos()}
+          <PlaceholderSection icon="⚖️" title="Resumo de Rendimentos">
+            <p>Total orçamentado: <strong>{formatarEuro(totalOrcamentado)}</strong></p>
+            <p>Total recebido: <strong>{formatarEuro(totalRecebido)}</strong></p>
+          </PlaceholderSection>
+        </section>
+      )
+    }
+
+    if (secaoAtiva === "Despesas") {
+      return (
+        <>
+          {renderGraficos()}
+          <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
+            {renderDespesas()}
+            <PlaceholderSection icon="💸" title="Resumo de Despesas">
+              <p>Total realizado: <strong>{formatarEuro(totalDespesasRealizado)}</strong></p>
+              <p>Peso no salário: <strong>{formatarPercentagem(percentagemDespesasSalario)}</strong></p>
+            </PlaceholderSection>
           </section>
+        </>
+      )
+    }
 
-          <section className="grid grid-cols-4 gap-4">
-            <div>
-              <TableCard title="Rendimentos" color="bg-emerald-700">
-                <thead className="bg-slate-50 text-slate-500">
-                  <tr>
-                    <th className="p-1.5 text-left">Fonte</th>
-                    <th className="p-1.5">Orçamentado</th>
-                    <th className="p-1.5">Recebido</th>
-                    <th className="p-1.5">Ação</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {rendimentosApi.map((item) => (
-                    <tr key={item.id} className="border-b border-slate-100">
-                      <td className="p-1.5 font-semibold">{item.fonte}</td>
-                      <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
-                      <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
-                      <td className="p-1.5 text-center">
-                        <div className="flex justify-center gap-1">
-                          <button
-                            onClick={() => iniciarEdicaoRendimento(item)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                          >
-                            Editar
-                          </button>
-
-                          <button
-                            onClick={() => apagarRendimento(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                          >
-                            Apagar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-
-                  <tr className="bg-emerald-50 font-black">
-                    <td className="p-1.5">TOTAL</td>
-                    <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
-                    <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
-                    <td className="p-1.5"></td>
-                  </tr>
-                </tbody>
-              </TableCard>
-
-              <AddRendimentoForm
-                onAdicionar={adicionarRendimentoNaTabela}
-                rendimentoEditando={rendimentoEditando}
-                onAtualizar={atualizarRendimentoNaTabela}
-                onCancelarEdicao={cancelarEdicaoRendimento}
-                mesAtivo={mesAtivo}
-              />
-            </div>
-
-            <div>
-              <TableCard title="Despesas Mensais" color="bg-blue-700">
-                <thead className="bg-slate-50 text-slate-500">
-                  <tr>
-                    <th className="p-1.5 text-left">Categoria</th>
-                    <th className="p-1.5">Orçamentado</th>
-                    <th className="p-1.5">Realizado</th>
-                    <th className="p-1.5">%</th>
-                    <th className="p-1.5">Ação</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {despesasApi.map((item) => (
-                    <tr key={item.id} className="border-b border-slate-100">
-                      <td className="p-1.5 font-semibold">{item.categoria}</td>
-                      <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
-                      <td className="p-1.5 text-center">{formatarEuro(item.realizado)}</td>
-                      <td className="p-1.5 text-center text-blue-700 font-bold">
-                        {totalRecebido > 0
-                          ? formatarPercentagem((Number(item.realizado || 0) / totalRecebido) * 100)
-                          : item.percentagem}
-                      </td>
-                      <td className="p-1.5 text-center">
-                        <div className="flex justify-center gap-1">
-                          <button
-                            onClick={() => iniciarEdicaoDespesa(item)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                          >
-                            Editar
-                          </button>
-
-                          <button
-                            onClick={() => apagarDespesa(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                          >
-                            Apagar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-
-                  <tr className="bg-blue-50 font-black">
-                    <td className="p-1.5">TOTAL</td>
-                    <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
-                    <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
-                    <td className="p-1.5 text-center">
-                      {formatarPercentagem(percentagemDespesasSalario)}
-                    </td>
-                    <td className="p-1.5"></td>
-                  </tr>
-                </tbody>
-              </TableCard>
-
-              <AddDespesaForm
-                onAdicionar={adicionarDespesaNaTabela}
-                despesaEditando={despesaEditando}
-                onAtualizar={atualizarDespesaNaTabela}
-                onCancelarEdicao={cancelarEdicaoDespesa}
-                mesAtivo={mesAtivo}
-              />
-            </div>
-
-            <div>
-              <TableCard title="Dívidas" color="bg-purple-700">
-                <thead className="bg-slate-50 text-slate-500">
-                  <tr>
-                    <th className="p-1 text-left">Credor</th>
-                    <th className="p-1">Saldo</th>
-                    <th className="p-1">Prest.</th>
-                    <th className="p-1">Juros</th>
-                    <th className="p-1">Tipo</th>
-                    <th className="p-1">Prior.</th>
-                    <th className="p-1">Estado</th>
-                    <th className="p-1">Ação</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {dividasApi.map((item) => {
-                    const pagamentoMes = obterPagamentoDividaDoMes(item.id)
-
-                    return (
-                      <tr key={item.id} className="border-b border-slate-100 text-[10px]">
-                        <td className="p-1 font-semibold">{item.credor}</td>
-                        <td className="p-1 text-center">{formatarEuro(item.saldo)}</td>
-                        <td className="p-1 text-center">{formatarEuro(item.prestacaoMensal)}</td>
-                        <td className="p-1 text-center">{formatarPercentagem(item.taxaJuros)}</td>
-                        <td className="p-1 text-center">{formatarTipoJuros(item.tipoJuros)}</td>
-                        <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
-                        <td className="p-1 text-center">
-                          {pagamentoMes ? (
-                            <span className="rounded bg-green-100 px-2 py-1 text-green-700 font-black">
-                              Pago
-                            </span>
-                          ) : (
-                            <span className="rounded bg-orange-100 px-2 py-1 text-orange-700 font-black">
-                              Pendente
-                            </span>
-                          )}
-                        </td>
-                        <td className="p-1 text-center">
-                          <div className="flex flex-col justify-center gap-1">
-                            <button
-                              onClick={() => iniciarPagamentoDivida(item)}
-                              className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold"
-                            >
-                              Pagar
-                            </button>
-
-                            <button
-                              onClick={() => iniciarEdicaoDivida(item)}
-                              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                            >
-                              Editar
-                            </button>
-
-                            <button
-                              onClick={() => apagarDivida(item.id)}
-                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold"
-                            >
-                              Apagar
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-
-                  <tr className="bg-purple-100 font-black text-[10px]">
-                    <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
-                    <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
-                  </tr>
-                </tbody>
-              </TableCard>
-
-              <AddDividaForm
-                onAdicionar={adicionarDividaNaTabela}
-                dividaEditando={dividaEditando}
-                onAtualizar={atualizarDividaNaTabela}
-                onCancelarEdicao={cancelarEdicaoDivida}
-                mesAtivo={mesAtivo}
-              />
-
-              <PagamentoDividaForm
-                dividaSelecionada={dividaPagamentoSelecionada}
-                pagamentoAtual={
-                  dividaPagamentoSelecionada
-                    ? obterPagamentoDividaDoMes(dividaPagamentoSelecionada.id)
-                    : null
-                }
-                onRegistrar={registrarPagamentoDivida}
-                onCancelar={cancelarPagamentoDivida}
-                formatarEuro={formatarEuro}
-              />
-            </div>
-
-            <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
-              <thead className="bg-slate-50 text-slate-500">
-                <tr>
-                  <th className="p-1 text-left">Credor</th>
-                  <th className="p-1">Pagamento</th>
-                  <th className="p-1">% Disp.</th>
-                  <th className="p-1">Tempo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pagamentoIdealDividas.map((item) => (
-                  <tr key={item.id} className="border-b border-slate-100 text-[10px]">
-                    <td className="p-1 font-semibold">{item.credor}</td>
-                    <td className="p-1 text-center">{formatarEuro(item.pagamento)}</td>
-                    <td className="p-1 text-center">{formatarPercentagem(item.percentagemDisponivel)}</td>
-                    <td className="p-1 text-center">{item.tempoMeses} meses</td>
-                  </tr>
-                ))}
-
-                <tr className="bg-green-100 font-black text-[10px]">
-                  <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
-                  <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
-                  <td className="p-1.5 text-center">100%</td>
-                  <td className="p-1.5"></td>
-                </tr>
-                <tr className="bg-green-50 font-black text-[10px]">
-                  <td className="p-1.5">SOBRA / FOLGA</td>
-                  <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
-                  <td className="p-1.5"></td>
-                  <td className="p-1.5"></td>
-                </tr>
-              </tbody>
-            </TableCard>
+    if (secaoAtiva === "Dívidas") {
+      return (
+        <>
+          <section className="grid grid-cols-[1.4fr_0.9fr] gap-4 items-start">
+            {renderDividas()}
+            {renderPagamentoIdeal()}
           </section>
-
           <section className="grid grid-cols-[330px_1fr] gap-3">
             <SimulatorCard />
             <DebtEvolutionCard />
           </section>
+        </>
+      )
+    }
+
+    if (secaoAtiva === "Objetivos") {
+      return <GoalsPanel />
+    }
+
+    if (secaoAtiva === "Calendário") {
+      return (
+        <PlaceholderSection icon="🗓️" title="Calendário Financeiro">
+          <p>Esta área vai mostrar os compromissos organizados por dia do mês.</p>
+          <div className="mt-4">{renderProximosPagamentos()}</div>
+        </PlaceholderSection>
+      )
+    }
+
+    if (secaoAtiva === "Pagamentos") {
+      return renderProximosPagamentos()
+    }
+
+    if (secaoAtiva === "Simulador") {
+      return (
+        <section className="grid grid-cols-[330px_1fr] gap-3">
+          <SimulatorCard />
+          <DebtEvolutionCard />
+        </section>
+      )
+    }
+
+    if (secaoAtiva === "Relatórios") {
+      return (
+        <PlaceholderSection icon="📊" title="Relatórios">
+          <p>Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.</p>
+        </PlaceholderSection>
+      )
+    }
+
+    if (secaoAtiva === "Definições") {
+      return (
+        <PlaceholderSection icon="⚙️" title="Definições">
+          <p>Moeda atual: <strong>{MOEDAS[moedaAtiva]?.label || MOEDAS.EUR.label}</strong></p>
+          <p>Mês ativo: <strong>{formatarMesAtivo(mesAtivo)}</strong></p>
+        </PlaceholderSection>
+      )
+    }
+
+    return (
+      <>
+        {renderKpis()}
+        {renderGraficos()}
+        <section className="grid grid-cols-4 gap-4">
+          {renderRendimentos()}
+          {renderDespesas()}
+          {renderDividas()}
+          {renderPagamentoIdeal()}
+        </section>
+        <section className="grid grid-cols-[330px_1fr] gap-3">
+          <SimulatorCard />
+          <DebtEvolutionCard />
+        </section>
+      </>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
+      <Sidebar
+        mesAtivo={mesAtivo}
+        setMesAtivo={setMesAtivo}
+        secaoAtiva={secaoAtiva}
+        setSecaoAtiva={setSecaoAtiva}
+        moedaAtiva={moedaAtiva}
+        setMoedaAtiva={setMoedaAtiva}
+      />
+
+      <div className={secaoAtiva === "Resumo" ? "ml-[242px] p-4 grid grid-cols-[1fr_286px] gap-4" : "ml-[242px] p-4 grid grid-cols-1 gap-4"}>
+        <main className="space-y-4">
+          <section className="rounded-[14px] bg-white px-4 py-3 shadow-lg border border-slate-100 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-black uppercase text-slate-400">Secção ativa</p>
+              <h2 className="text-[18px] font-black text-blue-950">{secaoAtiva}</h2>
+            </div>
+            <div className="rounded-full bg-blue-50 px-3 py-1 text-[11px] font-black text-blue-700">
+              {formatarMesAtivo(mesAtivo)}
+            </div>
+          </section>
+
+          {secaoAtiva !== "Resumo" && renderKpis()}
+          {renderConteudoPrincipal()}
         </main>
 
-        <aside className="space-y-4">
-          <GoalsPanel />
-
-          <Panel title="Próximos Pagamentos">
-            {pagamentos.map(([data, nome, valor, dias]) => (
-              <div key={nome} className="grid grid-cols-[44px_1fr_64px_54px] items-center text-xs border-b border-slate-100 py-2 gap-1">
-                <span className="font-bold">{data}</span>
-                <span>{nome}</span>
-                <span className="font-bold">{valor}</span>
-                <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-[10px] text-center">{dias}</span>
-              </div>
-            ))}
-          </Panel>
-
-          <Panel title="Alertas e Conselhos">
-            {[
-              "Muito bem! Está a manter a disciplina nos pagamentos das dívidas.",
-              "As despesas de lazer estão 10% acima do recomendado.",
-              "Se aumentar €150/mês na dívida, termina 9 meses mais cedo.",
-            ].map((item) => (
-              <div key={item} className="bg-orange-50 text-orange-800 rounded-xl p-3 text-xs mb-3">
-                {item}
-              </div>
-            ))}
-          </Panel>
-        </aside>
+        {secaoAtiva === "Resumo" && (
+          <aside className="space-y-4">
+            <GoalsPanel />
+            {renderProximosPagamentos()}
+            {renderAlertas()}
+          </aside>
+        )}
       </div>
     </div>
   )
@@ -1134,7 +1265,7 @@ function HealthCard() {
   )
 }
 
-function KpiCard({ icon, title, value, subtitle, accent, showBar, green }) {
+function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPercent = 0 }) {
   const colors = {
     blue: "bg-blue-100",
     red: "bg-red-100",
@@ -1154,8 +1285,11 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green }) {
           {value}
         </p>
         {showBar && (
-          <div className="w-[90px] h-2 rounded-full bg-blue-100 mt-3">
-            <div className="w-[55px] h-2 rounded-full bg-blue-500" />
+          <div className="w-[90px] h-2 rounded-full bg-blue-100 mt-3 overflow-hidden">
+            <div
+              className="h-2 rounded-full bg-blue-500 transition-all"
+              style={{ width: `${Math.max(0, Math.min(100, Number(barPercent || 0)))}%` }}
+            />
           </div>
         )}
         {subtitle && <p className="text-[11px] font-bold text-blue-950 mt-2">{subtitle}</p>}
@@ -1237,6 +1371,24 @@ function Panel({ title, children }) {
     <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
       <h3 className="font-black text-orange-700 mb-4">{title}</h3>
       {children}
+    </div>
+  )
+}
+function PlaceholderSection({ icon, title, children }) {
+  return (
+    <div className="rounded-[24px] bg-white p-6 shadow-lg border border-slate-100 min-h-[260px]">
+      <div className="mb-4 flex items-center gap-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">
+          {icon}
+        </div>
+        <div>
+          <p className="text-[10px] font-black uppercase text-slate-400">Módulo</p>
+          <h3 className="text-xl font-black text-blue-950">{title}</h3>
+        </div>
+      </div>
+      <div className="space-y-2 text-sm font-semibold text-slate-700">
+        {children}
+      </div>
     </div>
   )
 }
@@ -1777,7 +1929,7 @@ function PagamentoDividaForm({
   )
 }
 
-function Sidebar({ mesAtivo, setMesAtivo }) {
+function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva, setMoedaAtiva }) {
   const menuItems = [
     ["🏠", "Resumo"],
     ["⚖️", "Rendimentos"],
@@ -1845,17 +1997,19 @@ function Sidebar({ mesAtivo, setMesAtivo }) {
         </div>
 
         <nav className="px-3 space-y-[5px]">
-          {menuItems.map(([icon, label], index) => (
-            <div
+          {menuItems.map(([icon, label]) => (
+            <button
               key={label}
-              className={`flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all ${index === 0
+              type="button"
+              onClick={() => setSecaoAtiva(label)}
+              className={`w-full flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all text-left ${secaoAtiva === label
                   ? "bg-gradient-to-r from-[#0b7cff] to-[#1d4ed8] shadow-[0_0_18px_rgba(59,130,246,0.65)]"
                   : "hover:bg-white/10"
                 }`}
             >
               <span className="w-4 text-center text-[15px]">{icon}</span>
               <span>{label}</span>
-            </div>
+            </button>
           ))}
         </nav>
 
@@ -1864,14 +2018,20 @@ function Sidebar({ mesAtivo, setMesAtivo }) {
             Moeda
           </div>
 
-          <div className="grid grid-cols-[1fr_32px] overflow-hidden rounded-[9px] border border-cyan-400/30 bg-[#062a57]">
-            <div className="flex items-center justify-center gap-2 py-2 text-[11px] font-black">
-              <span className="rounded bg-blue-700 px-1">🇪🇺</span>
-              EUR - Euro (€)
-            </div>
-            <div className="flex items-center justify-center border-l border-cyan-400/30 text-cyan-300">
-              ⌄
-            </div>
+          <select
+            value={moedaAtiva}
+            onChange={(e) => setMoedaAtiva(e.target.value)}
+            className="w-full rounded-[9px] border border-cyan-400/30 bg-[#062a57] px-2 py-2 text-center text-[11px] font-black text-white outline-none"
+          >
+            {Object.entries(MOEDAS).map(([codigo, moeda]) => (
+              <option key={codigo} value={codigo}>
+                {moeda.flag} {moeda.label}
+              </option>
+            ))}
+          </select>
+
+          <div className="mt-2 rounded-lg bg-cyan-400/10 px-2 py-1 text-center text-[9px] font-bold text-cyan-100">
+            Sem conversão cambial. Apenas formato visual.
           </div>
 
           <div className="mt-3 text-center">
