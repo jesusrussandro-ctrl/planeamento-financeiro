@@ -1801,6 +1801,75 @@ export default function App() {
       })
   }
 
+  function fecharFormulariosOperacionais() {
+    setMostrarFormularioRendimento(false)
+    setMostrarFormularioDespesa(false)
+    setMostrarFormularioDespesaExtra(false)
+    setMostrarFormularioPoupanca(false)
+    setMostrarFormularioDivida(false)
+
+    setRendimentoEditando(null)
+    setDespesaEditando(null)
+    setDespesaExtraEditando(null)
+    setPoupancaEditando(null)
+    setDividaEditando(null)
+  }
+
+  function scrollParaCard(id) {
+    window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
+    }, 150)
+  }
+
+  function abrirAtalho(tipo) {
+    if (tipo === "relatorios") {
+      fecharFormulariosOperacionais()
+      setSecaoAtiva("Relatórios")
+      return
+    }
+
+    if (tipo === "calendario") {
+      fecharFormulariosOperacionais()
+      setSecaoAtiva("Calendário")
+      return
+    }
+
+    setSecaoAtiva("Resumo")
+    fecharFormulariosOperacionais()
+
+    if (tipo === "rendimento") {
+      setMostrarFormularioRendimento(true)
+      scrollParaCard("card-rendimentos")
+      return
+    }
+
+    if (tipo === "despesa") {
+      setMostrarFormularioDespesa(true)
+      scrollParaCard("card-despesas")
+      return
+    }
+
+    if (tipo === "despesaExtra") {
+      setMostrarFormularioDespesaExtra(true)
+      scrollParaCard("card-despesas-extras")
+      return
+    }
+
+    if (tipo === "poupanca") {
+      setMostrarFormularioPoupanca(true)
+      scrollParaCard("card-poupanca")
+      return
+    }
+
+    if (tipo === "divida") {
+      setMostrarFormularioDivida(true)
+      scrollParaCard("card-dividas")
+    }
+  }
+
   function renderKpis() {
     const percentagemDisponivelSalario = totalRecebido > 0
       ? (disponivelParaDividas / totalRecebido) * 100
@@ -1953,7 +2022,7 @@ export default function App() {
 
   function renderPoupancas() {
     return (
-      <div>
+      <div id="card-poupanca">
         <TableCard
           title={t("table.savings")}
           color="bg-teal-700"
@@ -2027,7 +2096,7 @@ export default function App() {
 
   function renderRendimentos() {
     return (
-      <div>
+      <div id="card-rendimentos">
         <TableCard
           title={t("table.income")}
           color="bg-emerald-700"
@@ -2092,7 +2161,7 @@ export default function App() {
 
   function renderBeneficios() {
     return (
-      <div>
+      <div id="card-beneficios">
         <TableCard
           title={t("table.benefits")}
           color="bg-cyan-700"
@@ -2182,7 +2251,7 @@ export default function App() {
     }
 
     return (
-      <div>
+      <div id="card-despesas-extras">
         <TableCard
           title={t("table.extraExpenses")}
           color="bg-orange-700"
@@ -2262,7 +2331,7 @@ export default function App() {
 
   function renderDespesas() {
     return (
-      <div>
+      <div id="card-despesas">
         <TableCard
           title={t("table.expenses")}
           color="bg-blue-700"
@@ -2332,7 +2401,7 @@ export default function App() {
 
   function renderDividas() {
     return (
-      <div>
+      <div id="card-dividas">
         <TableCard
           title={t("table.debts")}
           color="bg-purple-700"
@@ -2447,6 +2516,55 @@ export default function App() {
           </tr>
         </tbody>
       </TableCard>
+    )
+  }
+
+  function renderAcessosRapidos() {
+    const atalhos = [
+      { id: "rendimento", label: "Adicionar Rendimento", icon: "➕", bg: "bg-green-100", text: "text-green-700" },
+      { id: "despesa", label: "Adicionar Despesa", icon: "📉", bg: "bg-red-100", text: "text-red-700" },
+      { id: "despesaExtra", label: "Adicionar Despesa Extra", icon: "📊", bg: "bg-blue-100", text: "text-blue-700" },
+      { id: "poupanca", label: "Adicionar Poupança", icon: "🐷", bg: "bg-green-100", text: "text-green-700" },
+      { id: "divida", label: "Adicionar Dívida", icon: "🏦", bg: "bg-purple-100", text: "text-purple-700" },
+      { id: "relatorios", label: "Ver Relatórios", icon: "📈", bg: "bg-blue-100", text: "text-blue-700" },
+    ]
+
+    return (
+      <div className="rounded-[24px] bg-white shadow-lg border border-slate-100 overflow-hidden">
+        <div className="bg-blue-50 px-4 py-3 text-center border-b border-blue-100">
+          <h3 className="text-[15px] font-black uppercase text-blue-900">
+            Acessos Rápidos
+          </h3>
+        </div>
+
+        <div className="p-3">
+          <div className="grid grid-cols-3 gap-2">
+            {atalhos.map((atalho) => (
+              <button
+                key={atalho.id}
+                type="button"
+                onClick={() => abrirAtalho(atalho.id)}
+                className="min-h-[78px] rounded-2xl border border-slate-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-2xl ${atalho.bg} ${atalho.text} text-xl`}>
+                  {atalho.icon}
+                </div>
+                <div className="text-[10px] font-black leading-tight text-blue-950">
+                  {atalho.label}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => abrirAtalho("calendario")}
+            className="mt-3 w-full rounded-2xl border-2 border-blue-100 bg-blue-50 py-3 text-[13px] font-black text-blue-700 transition hover:bg-blue-100"
+          >
+            Ir para Calendário
+          </button>
+        </div>
+      </div>
     )
   }
 
@@ -2988,7 +3106,10 @@ export default function App() {
               {renderDividas()}
               {renderBeneficios()}
             </div>
-            {renderPagamentoIdeal()}
+            <div className="space-y-4">
+              {renderPagamentoIdeal()}
+              {renderAcessosRapidos()}
+            </div>
           </section>
           {renderProximosPagamentos()}
         </section>
@@ -3554,7 +3675,7 @@ function AddDespesaForm({
   onCancelarEdicao,
   mesAtivo,
 }) {
-  const [poupancaId, setPoupancaId] = React.useState("")
+  const [categoria, setCategoria] = React.useState("")
   const [orcamentado, setOrcamentado] = React.useState("")
   const [realizado, setRealizado] = React.useState("")
 
@@ -4350,7 +4471,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
   const [dia, setDia] = React.useState("")
   const [nome, setNome] = React.useState("")
   const [valor, setValor] = React.useState("")
-  const [poupancaId, setPoupancaId] = React.useState("")
+  const [categoria, setCategoria] = React.useState("")
   const [pago, setPago] = React.useState(false)
 
   const modoEdicao = Boolean(pagamentoEditando)
@@ -4366,7 +4487,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
       setDia("")
       setNome("")
       setValor("")
-      setPoupancaId("")
+      setCategoria("")
       setPago(false)
     }
   }, [pagamentoEditando])
@@ -4384,7 +4505,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
       setDia("")
       setNome("")
       setValor("")
-      setPoupancaId("")
+      setCategoria("")
       setPago(false)
     }
   }
