@@ -120,6 +120,12 @@ function formatarMesAtivo(mes) {
   return `${NOMES_MESES[mesNumero - 1]} ${ano}`
 }
 
+function obterMesAnterior(mes) {
+  const [ano, mesNumero] = mes.split("-").map(Number)
+  const data = new Date(ano, mesNumero - 2, 1)
+  return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}`
+}
+
 const MESES_FUTUROS = gerarMesesFuturos(5)
 
 
@@ -310,6 +316,7 @@ export default function App() {
     lerLocalStorage("configuracoesUsuario", CONFIGURACOES_INICIAIS)
   )
   const [mensagemDefinicoes, setMensagemDefinicoes] = React.useState("")
+  const [mesComparacaoRelatorio, setMesComparacaoRelatorio] = React.useState(() => obterMesAtual())
 
   const idiomaAtivo = configuracoesUsuario.idiomaPadrao || "pt"
   const t = React.useCallback((chave) => traduzirTexto(idiomaAtivo, chave), [idiomaAtivo])
@@ -2558,6 +2565,245 @@ export default function App() {
     )
   }
 
+
+  function renderRelatorios() {
+    const saldoLivreEstimado = disponivelParaDividas - totalPagamentoIdeal
+    const taxaPoupanca = totalRecebido > 0 ? (totalPoupancaGuardado / totalRecebido) * 100 : 0
+    const taxaDividas = totalRecebido > 0 ? (totalPagamentoIdeal / totalRecebido) * 100 : 0
+
+    const linhasResumo = [
+      ["Mês", formatarMesAtivo(mesAtivo)],
+      ["Rendimentos recebidos", formatarEuro(totalRecebido)],
+      ["Despesas mensais", formatarEuro(totalDespesasRealizado)],
+      ["Despesas extras realizadas", formatarEuro(totalDespesasExtrasRealizadas)],
+      ["Despesas extras abatidas na poupança", formatarEuro(totalDespesasExtrasAbatidasPoupanca)],
+      ["Benefícios usados", formatarEuro(totalBeneficiosUsados)],
+      ["Despesas em dinheiro", formatarEuro(totalDespesasEmDinheiro)],
+      ["Poupança guardada", formatarEuro(totalPoupancaGuardado)],
+      ["Pagamento ideal de dívidas", formatarEuro(totalPagamentoIdeal)],
+      ["Saldo livre estimado", formatarEuro(saldoLivreEstimado)],
+      ["Total de dívidas", formatarEuro(totalDividas)],
+    ]
+
+    const categoriasRelatorio = despesasGrafico
+      .filter((item) => Number(item.realizado || 0) > 0)
+      .map((item) => ({
+        categoria: item.name,
+        previsto: Number(item.orcamentado || 0),
+        realizado: Number(item.realizado || 0),
+        peso: totalRecebido > 0 ? (Number(item.realizado || 0) / totalRecebido) * 100 : 0,
+      }))
+      .sort((a, b) => b.realizado - a.realizado)
+
+    const conclusoes = []
+
+    if (totalRecebido <= 0) {
+      conclusoes.push("Adicione os rendimentos do mês para o relatório ficar completo.")
+    }
+
+    if (percentagemDespesasSalario > Number(configuracoesUsuario.limiteDespesas || 60)) {
+      conclusoes.push(`As despesas em dinheiro estão acima do limite recomendado de ${Number(configuracoesUsuario.limiteDespesas || 60)}% do rendimento.`)
+    } else if (totalDespesasEmDinheiro > 0) {
+      conclusoes.push("As despesas em dinheiro estão dentro do limite recomendado.")
+    }
+
+    if (taxaPoupanca < Number(configuracoesUsuario.metaPoupanca || 10) && totalRecebido > 0) {
+      conclusoes.push(`A poupança está abaixo da meta de ${Number(configuracoesUsuario.metaPoupanca || 10)}% definida nas regras financeiras.`)
+    } else if (totalPoupancaGuardado > 0) {
+      conclusoes.push("A poupança do mês está alinhada com a meta definida.")
+    }
+
+    if (taxaDividas > Number(configuracoesUsuario.limiteDividas || 30)) {
+      conclusoes.push(`O peso das dívidas está acima do limite recomendado de ${Number(configuracoesUsuario.limiteDividas || 30)}% do rendimento.`)
+    }
+
+    if (conclusoes.length === 0) {
+      conclusoes.push("Ainda não existem dados suficientes para uma conclusão automática.")
+    }
+
+    function descarregarFicheiro(nome, conteudo, tipo) {
+      const blob = new Blob([conteudo], { type: tipo })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = nome
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      URL.revokeObjectURL(url)
+    }
+
+    function exportarRelatorioJSON() {
+      const relatorio = {
+        mes: mesAtivo,
+        mesLabel: formatarMesAtivo(mesAtivo),
+        geradoEm: new Date().toISOString(),
+        resumo: {
+          totalRecebido,
+          totalDespesasRealizado,
+          totalDespesasExtrasRealizadas,
+          totalDespesasExtrasAbatidasPoupanca,
+          totalBeneficiosUsados,
+          totalDespesasEmDinheiro,
+          totalPoupancaGuardado,
+          totalPagamentoIdeal,
+          saldoLivreEstimado,
+          totalDividas,
+        },
+        categorias: categoriasRelatorio,
+        conclusoes,
+      }
+
+      descarregarFicheiro(
+        `relatorio-financeiro-${mesAtivo}.json`,
+        JSON.stringify(relatorio, null, 2),
+        "application/json"
+      )
+    }
+
+    function exportarRelatorioCSV() {
+      const linhas = [
+        ["Relatório financeiro", formatarMesAtivo(mesAtivo)],
+        [],
+        ["Resumo", "Valor"],
+        ...linhasResumo,
+        [],
+        ["Categoria", "Previsto", "Realizado", "% do rendimento"],
+        ...categoriasRelatorio.map((item) => [
+          item.categoria,
+          item.previsto.toFixed(2),
+          item.realizado.toFixed(2),
+          item.peso.toFixed(1),
+        ]),
+        [],
+        ["Conclusões"],
+        ...conclusoes.map((texto) => [texto]),
+      ]
+
+      const csv = linhas
+        .map((linha) => linha.map((campo) => `"${String(campo ?? "").replaceAll('"', '""')}"`).join(";"))
+        .join("\n")
+
+      descarregarFicheiro(
+        `relatorio-financeiro-${mesAtivo}.csv`,
+        csv,
+        "text/csv;charset=utf-8"
+      )
+    }
+
+    return (
+      <section className="space-y-4">
+        <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">📊</div>
+              <div>
+                <p className="text-[10px] font-black uppercase text-slate-400">Relatório mensal</p>
+                <h3 className="text-xl font-black text-blue-950">{formatarMesAtivo(mesAtivo)}</h3>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={exportarRelatorioCSV} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-black text-white hover:bg-emerald-700">
+                Exportar CSV
+              </button>
+              <button type="button" onClick={exportarRelatorioJSON} className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-black text-white hover:bg-blue-700">
+                Exportar JSON
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <section className="grid grid-cols-5 gap-3">
+          <ReportMetricCard title="Recebido" value={formatarEuro(totalRecebido)} subtitle="Rendimentos do mês" />
+          <ReportMetricCard title="Despesas em dinheiro" value={formatarEuro(totalDespesasEmDinheiro)} subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do rendimento`} />
+          <ReportMetricCard title="Poupança" value={formatarEuro(totalPoupancaGuardado)} subtitle={`${formatarPercentagem(taxaPoupanca)} do rendimento`} />
+          <ReportMetricCard title="Dívidas" value={formatarEuro(totalPagamentoIdeal)} subtitle={`${formatarPercentagem(taxaDividas)} do rendimento`} />
+          <ReportMetricCard title="Saldo livre" value={formatarEuro(saldoLivreEstimado)} subtitle="Após despesas, poupança e dívidas" />
+        </section>
+
+        <section className="grid grid-cols-[1.1fr_0.9fr] gap-4 items-start">
+          <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+            <h3 className="mb-4 text-lg font-black text-blue-950">Resumo do mês</h3>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm font-bold">
+              {linhasResumo.slice(1).map(([label, value]) => (
+                <div key={label} className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <span className="text-slate-500">{label}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+            <h3 className="mb-4 text-lg font-black text-blue-950">Comparação entre meses</h3>
+            <label className="mb-1 block text-[11px] font-black uppercase text-slate-500">Comparar com</label>
+            <select
+              value={mesComparacaoRelatorio}
+              onChange={(e) => setMesComparacaoRelatorio(e.target.value)}
+              className="mb-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold outline-none focus:border-blue-400"
+            >
+              {MESES_FUTUROS.map((grupo) => (
+                <optgroup key={grupo.ano} label={String(grupo.ano)}>
+                  {grupo.meses.map((mes) => (
+                    <option key={mes.valor} value={mes.valor}>{mes.label}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <div className="rounded-2xl bg-yellow-50 p-4 text-sm font-bold text-yellow-800">
+              A comparação detalhada com {formatarMesAtivo(mesComparacaoRelatorio)} fica preparada aqui. Quando os dados históricos forem guardados na base de dados, este bloco vai mostrar aumentos e reduções reais entre meses.
+            </div>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-[1fr_360px] gap-4 items-start">
+          <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+            <h3 className="mb-4 text-lg font-black text-blue-950">Análise por categoria</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 text-slate-500">
+                  <tr>
+                    <th className="p-2 text-left">Categoria</th>
+                    <th className="p-2 text-center">Previsto</th>
+                    <th className="p-2 text-center">Realizado</th>
+                    <th className="p-2 text-center">% rendimento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categoriasRelatorio.map((item) => (
+                    <tr key={item.categoria} className="border-b border-slate-100">
+                      <td className="p-2 font-bold">{item.categoria}</td>
+                      <td className="p-2 text-center">{formatarEuro(item.previsto)}</td>
+                      <td className="p-2 text-center">{formatarEuro(item.realizado)}</td>
+                      <td className="p-2 text-center font-black text-blue-700">{formatarPercentagem(item.peso)}</td>
+                    </tr>
+                  ))}
+                  {categoriasRelatorio.length === 0 && (
+                    <tr>
+                      <td colSpan="4" className="p-4 text-center text-slate-500 font-bold">Sem despesas para analisar neste mês.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+            <h3 className="mb-4 text-lg font-black text-blue-950">Conclusão automática</h3>
+            <div className="space-y-3">
+              {conclusoes.map((texto) => (
+                <div key={texto} className="rounded-2xl bg-blue-50 p-3 text-sm font-bold text-blue-900">
+                  {texto}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </section>
+    )
+  }
+
   function renderConteudoPrincipal() {
     if (secaoAtiva === "Rendimentos") {
       return (
@@ -2680,11 +2926,7 @@ export default function App() {
     }
 
     if (secaoAtiva === "Relatórios") {
-      return (
-        <PlaceholderSection icon="📊" title={t("reports.title")}>
-          <p>{t("reports.text")}</p>
-        </PlaceholderSection>
-      )
+      return renderRelatorios()
     }
 
     if (secaoAtiva === "Definições") {
@@ -4427,6 +4669,16 @@ function ResumoLinha({ label, value }) {
     <div className="flex items-center justify-between border-b border-slate-100 pb-2">
       <span className="text-slate-500">{label}</span>
       <strong>{value}</strong>
+    </div>
+  )
+}
+
+function ReportMetricCard({ title, value, subtitle }) {
+  return (
+    <div className="rounded-[20px] bg-white p-4 shadow-lg border border-slate-100">
+      <p className="text-[10px] font-black uppercase text-slate-400">{title}</p>
+      <div className="mt-2 text-[20px] font-black text-blue-950">{value}</div>
+      <p className="mt-2 text-[11px] font-bold text-slate-500">{subtitle}</p>
     </div>
   )
 }
