@@ -2067,11 +2067,6 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            {poupancasFinanceiras.length < 6 && (
-              <tr className="h-full">
-                <td colSpan="5"></td>
-              </tr>
-            )}
             <tr className="sticky bottom-0 z-20 bg-teal-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5"></td>
@@ -2139,11 +2134,6 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            {rendimentosApi.length < 6 && (
-              <tr className="h-full">
-                <td colSpan="4"></td>
-              </tr>
-            )}
             <tr className="sticky bottom-0 z-20 bg-emerald-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
@@ -2208,11 +2198,6 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            {beneficiosFinanceiros.length < 6 && (
-              <tr className="h-full">
-                <td colSpan="6"></td>
-              </tr>
-            )}
             <tr className="sticky bottom-[26px] z-20 bg-cyan-100 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("benefit.totalUsed")}</td>
               <td className="p-1.5"></td>
@@ -2302,11 +2287,6 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            {despesasExtrasFinanceiras.length < 6 && (
-              <tr className="h-full">
-                <td colSpan="6"></td>
-              </tr>
-            )}
             <tr className="sticky bottom-0 z-20 bg-orange-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("extra.total")}</td>
               <td className="p-1.5"></td>
@@ -2378,11 +2358,6 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            {despesasApi.length < 6 && (
-              <tr className="h-full">
-                <td colSpan="5"></td>
-              </tr>
-            )}
             <tr className="sticky bottom-0 z-20 bg-blue-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
@@ -2458,11 +2433,6 @@ export default function App() {
                 </tr>
               )
             })}
-            {dividasApi.length < 4 && (
-              <tr className="h-full">
-                <td colSpan="8"></td>
-              </tr>
-            )}
             <tr className="sticky bottom-0 z-20 bg-purple-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.debts")}</td>
               <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
@@ -2497,11 +2467,6 @@ export default function App() {
               <td className="p-1 text-center">{item.tempoMeses} {t("months")}</td>
             </tr>
           ))}
-          {pagamentoIdealDividas.length < 4 && (
-            <tr className="h-full">
-              <td colSpan="4"></td>
-            </tr>
-          )}
           <tr className="sticky bottom-[26px] z-20 bg-green-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
             <td className="p-1.5">{t("distributed.total")}</td>
             <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
@@ -2530,15 +2495,15 @@ export default function App() {
     ]
 
     return (
-      <div className="h-[150px] rounded-[16px] bg-white shadow-lg border border-slate-100 overflow-hidden">
+      <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] rounded-[16px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
         <div className="bg-blue-50 px-3 py-1.5 text-center border-b border-blue-100">
           <h3 className="text-[10px] font-black uppercase text-blue-900">
             Acessos Rápidos
           </h3>
         </div>
 
-        <div className="p-2">
-          <div className="grid grid-cols-3 gap-1.5">
+        <div className="flex min-h-0 flex-1 flex-col p-2">
+          <div className="grid flex-1 grid-cols-3 gap-1.5">
             {atalhos.map((atalho) => (
               <button
                 key={atalho.id}
@@ -2559,7 +2524,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => abrirAtalho("calendario")}
-            className="mt-2 w-full rounded-xl border border-blue-100 bg-blue-50 py-1.5 text-[9px] font-black text-blue-700 transition hover:bg-blue-100"
+            className="mt-2 w-full shrink-0 rounded-xl border border-blue-100 bg-blue-50 py-1.5 text-[9px] font-black text-blue-700 transition hover:bg-blue-100"
           >
             Ir para Calendário
           </button>
@@ -2581,7 +2546,7 @@ export default function App() {
                 : "bg-blue-50 text-blue-700"
 
           return (
-            <div key={pagamento.id} className={`grid ${mostrarAcoes ? "grid-cols-[44px_1fr_74px_64px_104px]" : "grid-cols-[44px_1fr_74px_64px]"} items-center text-xs border-b border-slate-100 py-2 gap-1`}>
+            <div key={pagamento.id} className={`grid ${mostrarAcoes ? "grid-cols-[44px_1fr_74px_64px_104px]" : "grid-cols-[42px_1fr_78px_76px]"} items-center text-xs border-b border-slate-100 py-2 gap-1`}>
               <span className="font-bold">{pagamento.data}</span>
               <span>{pagamento.nome}</span>
               <span className="font-bold">{formatarEuro(pagamento.valor)}</span>
@@ -3087,12 +3052,12 @@ export default function App() {
       <>
         {renderKpis()}
 
-        <section className="grid grid-cols-[1fr_220px] gap-2 items-stretch h-[160px]">
+        <section className="grid grid-cols-[1fr_310px] gap-2 items-stretch h-[160px]">
           {renderGraficos()}
           {renderGoalsPanel()}
         </section>
 
-        <section className="grid grid-cols-[1fr_220px] gap-2 items-stretch h-[318px]">
+        <section className="grid grid-cols-[1fr_310px] gap-2 items-start">
           <section className="grid grid-cols-4 gap-2 items-stretch">
             <div className="space-y-2">
               {renderRendimentos()}
@@ -3111,11 +3076,11 @@ export default function App() {
               {renderAcessosRapidos()}
             </div>
           </section>
-          <div className="h-full min-h-0 space-y-2 overflow-hidden">
-            <div className="h-[155px] min-h-0">
+          <div className="space-y-2 overflow-hidden">
+            <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] min-h-0">
               {renderProximosPagamentos()}
             </div>
-            <div className="h-[155px] min-h-0">
+            <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] min-h-0">
               {renderAlertas()}
             </div>
           </div>
@@ -3498,7 +3463,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
 function TableCard({ title, color, action, children }) {
   return (
-    <div className="h-[150px] w-full rounded-[16px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
+    <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] w-full rounded-[16px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
       <div className={`${color} relative shrink-0 text-white text-center py-1.5 px-3 font-black text-[10px] uppercase`}>
         <span>{title}</span>
         {action && (
@@ -3509,7 +3474,7 @@ function TableCard({ title, color, action, children }) {
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-auto overscroll-contain">
-        <table className="min-w-full h-full text-[8px] leading-tight">{children}</table>
+        <table className="min-w-full h-full text-[9px] leading-tight">{children}</table>
       </div>
     </div>
   )
