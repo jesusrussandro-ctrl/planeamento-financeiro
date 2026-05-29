@@ -45,7 +45,7 @@ const TRADUCOES = {
   pt: {
     "menu.Resumo": "Resumo", "menu.Rendimentos": "Rendimentos", "menu.Poupança": "Poupança", "menu.Despesas": "Despesas", "menu.Dívidas": "Dívidas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendário", "menu.Pagamentos": "Pagamentos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Relatórios", "menu.Definições": "Definições",
     "app.title1": "Planeamento", "app.title2": "Financeiro", "app.subtitle": "Controlo Financeiro Familiar", "active.section": "Secção ativa", "month.active": "Mês ativo", "viewing": "A visualizar", "currency": "Moeda", "no.conversion": "Sem conversão cambial. Apenas formato visual.", "updated.at": "Atualizado em", "financial.health": "Saúde Financeira", "excellent": "Excelente",
-    "kpi.health": "Índice de Saúde Financeira", "kpi.health.text": "A sua situação financeira está muito saudável!", "kpi.salary": "Salário Líquido", "kpi.salary.sub": "Total recebido no mês", "kpi.expenses": "Total Despesas", "kpi.availableDebts": "Disponível p/ Dívidas", "kpi.totalDebts": "Total Dívidas", "kpi.idealPayment": "Pagamento ideal", "kpi.daysLeft": "Dias Restantes", "until": "até", "of.salary": "do salário",
+    "kpi.health": "Índice de Saúde Financeira", "kpi.health.text": "A sua situação financeira está muito saudável!", "kpi.salary": "Salário Líquido", "kpi.salary.sub": "Total recebido no mês", "kpi.expenses": "Total Despesas", "kpi.savings": "Total Poupado", "kpi.savings.sub": "Guardado no mês", "kpi.availableDebts": "Disponível p/ Dívidas", "kpi.totalDebts": "Total Dívidas", "kpi.idealPayment": "Pagamento ideal", "kpi.daysLeft": "Dias Restantes", "until": "até", "of.salary": "do salário",
     "chart.expectedVsActual": "Previsto vs Realizado (Despesas)", "chart.distributionExpenses": "Distribuição das Despesas", "chart.distributionIncome": "Distribuição da Renda", "expected": "Previsto", "actual": "Realizado", "total": "Total",
     "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "linkedGoal": "Objetivo ligado", "noLinkedGoal": "Sem ligação", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
     "goals.title": "🎯 Objetivos Financeiros", "goals.new": "+ Novo", "goals.seeAll": "Ver todos os objetivos →", "goal.label": "Objetivo", "upcoming.payments": "Próximos Pagamentos", "alerts.title": "Alertas e Conselhos", "alerts.none": "Ainda não existem alertas para este mês.", "automatic": "Automático", "reports.title": "Relatórios", "reports.text": "Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.",
@@ -54,7 +54,7 @@ const TRADUCOES = {
   en: {
     "menu.Resumo": "Summary", "menu.Rendimentos": "Income", "menu.Poupança": "Savings", "menu.Despesas": "Expenses", "menu.Dívidas": "Debts", "menu.Objetivos": "Goals", "menu.Calendário": "Calendar", "menu.Pagamentos": "Payments", "menu.Simulador": "Simulator", "menu.Alertas": "Alerts", "menu.Relatórios": "Reports", "menu.Definições": "Settings",
     "app.title1": "Financial", "app.title2": "Planning", "app.subtitle": "Family Financial Control", "active.section": "Active section", "month.active": "Active month", "viewing": "Viewing", "currency": "Currency", "no.conversion": "No exchange conversion. Visual format only.", "updated.at": "Updated at", "financial.health": "Financial Health", "excellent": "Excellent",
-    "kpi.health": "Financial Health Index", "kpi.health.text": "Your financial situation is very healthy!", "kpi.salary": "Net Salary", "kpi.salary.sub": "Total received this month", "kpi.expenses": "Total Expenses", "kpi.availableDebts": "Available for Debts", "kpi.totalDebts": "Total Debts", "kpi.idealPayment": "Ideal payment", "kpi.daysLeft": "Days Left", "until": "until", "of.salary": "of salary",
+    "kpi.health": "Financial Health Index", "kpi.health.text": "Your financial situation is very healthy!", "kpi.salary": "Net Salary", "kpi.salary.sub": "Total received this month", "kpi.expenses": "Total Expenses", "kpi.savings": "Total Saved", "kpi.savings.sub": "Saved this month", "kpi.availableDebts": "Available for Debts", "kpi.totalDebts": "Total Debts", "kpi.idealPayment": "Ideal payment", "kpi.daysLeft": "Days Left", "until": "until", "of.salary": "of salary",
     "chart.expectedVsActual": "Expected vs Actual (Expenses)", "chart.distributionExpenses": "Expense Distribution", "chart.distributionIncome": "Income Distribution", "expected": "Expected", "actual": "Actual", "total": "Total",
     "table.income": "Income", "table.savings": "Savings / Reserve", "table.expenses": "Monthly Expenses", "table.debts": "Debts", "table.idealDebts": "Ideal Debt Payment", "add": "+ Add", "close": "Close", "edit": "Edit", "delete": "Delete", "action": "Action", "source": "Source", "received": "Received", "type": "Type", "linkedGoal": "Linked goal", "noLinkedGoal": "No link", "saved": "Saved", "category": "Category", "percent": "%", "creditor": "Creditor", "balance": "Balance", "installment": "Inst.", "interest": "Interest", "priority": "Prior.", "status": "Status", "pay": "Pay", "paid": "Paid", "pending": "Pending", "payment": "Payment", "time": "Time", "months": "months", "distributed.total": "TOTAL DISTRIBUTED", "remaining": "REMAINING", "total.income": "TOTAL", "total.debts": "TOTAL DEBTS",
     "goals.title": "🎯 Financial Goals", "goals.new": "+ New", "goals.seeAll": "See all goals →", "goal.label": "Goal", "upcoming.payments": "Upcoming Payments", "alerts.title": "Alerts and Advice", "alerts.none": "There are no alerts for this month yet.", "automatic": "Automatic", "reports.title": "Reports", "reports.text": "Next we will add monthly summaries, month comparison and export.",
@@ -632,7 +632,28 @@ export default function App() {
     ? (totalDespesasRealizado / totalRecebido) * 100
     : 0
 
-  const disponivelParaDividas = totalRecebido - totalDespesasRealizado
+  const poupancasFinanceiras = poupancasUsuario.map((item) => ({
+    ...item,
+    objetivoId: item.objetivoId || "",
+    previsto: Number(item.previsto || 0),
+    guardado: Number(item.guardado || 0),
+  }))
+
+  const totalPoupancaPrevisto = poupancasFinanceiras.reduce(
+    (total, item) => total + Number(item.previsto || 0),
+    0
+  )
+
+  const totalPoupancaGuardado = poupancasFinanceiras.reduce(
+    (total, item) => total + Number(item.guardado || 0),
+    0
+  )
+
+  const percentagemPoupancaSalario = totalRecebido > 0
+    ? (totalPoupancaGuardado / totalRecebido) * 100
+    : 0
+
+  const disponivelParaDividas = totalRecebido - totalDespesasRealizado - totalPoupancaGuardado
 
   const totalDividas = dividasApi.reduce(
     (total, item) => total + Number(item.saldo || 0),
@@ -664,24 +685,6 @@ export default function App() {
   )
 
   const sobraPagamentoIdeal = Math.max(0, disponivelParaDividas) - totalPagamentoIdeal
-
-  const poupancasFinanceiras = poupancasUsuario.map((item) => ({
-    ...item,
-    objetivoId: item.objetivoId || "",
-    previsto: Number(item.previsto || 0),
-    guardado: Number(item.guardado || 0),
-  }))
-
-  const totalPoupancaPrevisto = poupancasFinanceiras.reduce(
-    (total, item) => total + Number(item.previsto || 0),
-    0
-  )
-
-  const totalPoupancaGuardado = poupancasFinanceiras.reduce(
-    (total, item) => total + Number(item.guardado || 0),
-    0
-  )
-
 
   const objetivosFinanceiros = objetivosUsuario.map((objetivo) => {
     const objetivoValor = Number(objetivo.objetivo || 0)
@@ -769,6 +772,27 @@ export default function App() {
         tipo: "positivo",
         titulo: "Despesas controladas",
         mensagem: "As despesas estão controladas em relação ao salário deste mês.",
+      })
+    }
+
+    const metaPoupancaPercentual = Number(configuracoesUsuario.metaPoupanca || 10)
+    const poupancaRecomendada = totalRecebido * (metaPoupancaPercentual / 100)
+
+    if (totalRecebido > 0 && totalPoupancaGuardado > totalRecebido) {
+      alertas.push({
+        id: "auto-poupanca-maior-rendimento",
+        origem: "automatico",
+        tipo: "urgente",
+        titulo: "Poupança maior que o rendimento",
+        mensagem: "A poupança guardada é maior do que o rendimento recebido neste mês. Verifique os lançamentos.",
+      })
+    } else if (totalRecebido > 0 && totalPoupancaGuardado < poupancaRecomendada) {
+      alertas.push({
+        id: "auto-poupanca-abaixo-meta",
+        origem: "automatico",
+        tipo: "aviso",
+        titulo: "Poupança abaixo da meta",
+        mensagem: `A meta de poupança é ${formatarEuro(poupancaRecomendada)} neste mês. Até agora guardou ${formatarEuro(totalPoupancaGuardado)}.`,
       })
     }
 
@@ -1530,7 +1554,7 @@ export default function App() {
       : 0
 
     return (
-      <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
+      <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-3">
         <HealthCard t={t} />
         <KpiCard
           icon="💼"
@@ -1549,6 +1573,16 @@ export default function App() {
           accent="red"
           showBar
           barPercent={limitarPercentagem(percentagemDespesasSalario)}
+        />
+        <KpiCard
+          icon="💰"
+          title={t("kpi.savings")}
+          value={formatarEuro(totalPoupancaGuardado)}
+          subtitle={`${formatarPercentagem(percentagemPoupancaSalario)} ${t("of.salary")}`}
+          accent="green"
+          green
+          showBar
+          barPercent={limitarPercentagem(percentagemPoupancaSalario)}
         />
         <KpiCard
           icon="💸"
