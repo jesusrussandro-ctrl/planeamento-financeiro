@@ -2044,22 +2044,22 @@ export default function App() {
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
-            <tr>
-              <th className="p-1.5 text-left">{t("type")}</th>
-              <th className="p-1.5">{t("linkedGoal")}</th>
-              <th className="p-1.5">{t("expected")}</th>
-              <th className="p-1.5">{t("saved")}</th>
-              <th className="p-1.5">{t("action")}</th>
+            <tr className="h-[34px]">
+              <th className="px-1.5 py-1 text-left">{t("type")}</th>
+              <th className="px-1.5 py-1">{t("linkedGoal")}</th>
+              <th className="px-1.5 py-1">{t("expected")}</th>
+              <th className="px-1.5 py-1">{t("saved")}</th>
+              <th className="px-1.5 py-1">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
             {poupancasFinanceiras.map((item) => (
-              <tr key={item.id} className="border-b border-slate-100">
-                <td className="p-1.5 font-semibold">{item.tipo}</td>
-                <td className="p-1.5 text-center text-[9px] font-bold text-slate-600">{obterNomeObjetivoLigado(item.objetivoId)}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.previsto)}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
-                <td className="p-1.5 text-center">
+              <tr key={item.id} className="h-[34px] border-b border-slate-100 align-middle">
+                <td className="px-1.5 py-1 font-semibold">{item.tipo}</td>
+                <td className="px-1.5 py-1 text-center text-[9px] font-bold text-slate-600">{obterNomeObjetivoLigado(item.objetivoId)}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.previsto)}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.guardado)}</td>
+                <td className="px-1.5 py-1 text-center">
                   <div className="flex justify-center gap-1 whitespace-nowrap">
                     <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
                     <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
@@ -2067,12 +2067,12 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("total.income")}</td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
-              <td className="p-1.5 text-center">{formatarEuro(totalPoupancaGuardado)}</td>
-              <td className="p-1.5"></td>
+            <tr className="sticky bottom-0 z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("total.income")}</td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalPoupancaGuardado)}</td>
+              <td className="px-1.5 py-1"></td>
             </tr>
           </tbody>
         </TableCard>
@@ -2113,20 +2113,20 @@ export default function App() {
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
-            <tr>
-              <th className="p-1.5 text-left">{t("source")}</th>
-              <th className="p-1.5">{t("expected")}</th>
-              <th className="p-1.5">{t("received")}</th>
-              <th className="p-1.5">{t("action")}</th>
+            <tr className="h-[34px]">
+              <th className="px-1.5 py-1 text-left">{t("source")}</th>
+              <th className="px-1.5 py-1">{t("expected")}</th>
+              <th className="px-1.5 py-1">{t("received")}</th>
+              <th className="px-1.5 py-1">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
             {rendimentosApi.map((item) => (
-              <tr key={item.id} className="border-b border-slate-100">
-                <td className="p-1.5 font-semibold">{item.fonte}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
-                <td className="p-1.5 text-center">
+              <tr key={item.id} className="h-[34px] border-b border-slate-100 align-middle">
+                <td className="px-1.5 py-1 font-semibold">{item.fonte}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.orcamentado)}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.recebido)}</td>
+                <td className="px-1.5 py-1 text-center">
                   <div className="flex justify-center gap-1 whitespace-nowrap">
                     <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
                     <button onClick={() => apagarRendimento(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
@@ -2134,11 +2134,11 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("total.income")}</td>
-              <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
-              <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
-              <td className="p-1.5"></td>
+            <tr className="sticky bottom-0 z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("total.income")}</td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalOrcamentado)}</td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalRecebido)}</td>
+              <td className="px-1.5 py-1"></td>
             </tr>
           </tbody>
         </TableCard>
@@ -2173,24 +2173,24 @@ export default function App() {
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
-            <tr>
-              <th className="p-1.5 text-left">{t("type")}</th>
-              <th className="p-1.5">{t("benefit.target")}</th>
-              <th className="p-1.5">{t("benefit.value")}</th>
-              <th className="p-1.5">{t("benefit.used")}</th>
-              <th className="p-1.5">{t("benefit.available")}</th>
-              <th className="p-1.5">{t("action")}</th>
+            <tr className="h-[34px]">
+              <th className="px-1.5 py-1 text-left">{t("type")}</th>
+              <th className="px-1.5 py-1">{t("benefit.target")}</th>
+              <th className="px-1.5 py-1">{t("benefit.value")}</th>
+              <th className="px-1.5 py-1">{t("benefit.used")}</th>
+              <th className="px-1.5 py-1">{t("benefit.available")}</th>
+              <th className="px-1.5 py-1">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
             {beneficiosFinanceiros.map((item) => (
-              <tr key={item.id} className="border-b border-slate-100">
-                <td className="p-1.5 font-semibold">{item.tipo}</td>
-                <td className="p-1.5 text-center">{item.categoriaAlvo || "—"}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.valor)}</td>
-                <td className="p-1.5 text-center text-green-700 font-bold">{formatarEuro(item.usado)}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.disponivel)}</td>
-                <td className="p-1.5 text-center">
+              <tr key={item.id} className="h-[34px] border-b border-slate-100 align-middle">
+                <td className="px-1.5 py-1 font-semibold">{item.tipo}</td>
+                <td className="px-1.5 py-1 text-center">{item.categoriaAlvo || "—"}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.valor)}</td>
+                <td className="px-1.5 py-1 text-center text-green-700 font-bold">{formatarEuro(item.usado)}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.disponivel)}</td>
+                <td className="px-1.5 py-1 text-center">
                   <div className="flex justify-center gap-1 whitespace-nowrap">
                     <button onClick={() => iniciarEdicaoBeneficio(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
                     <button onClick={() => apagarBeneficio(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
@@ -2198,21 +2198,21 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-[30px] z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("benefit.totalUsed")}</td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5 text-center">{formatarEuro(totalBeneficios)}</td>
-              <td className="p-1.5 text-center">{formatarEuro(totalBeneficiosUsados)}</td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5"></td>
+            <tr className="sticky bottom-[34px] z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("benefit.totalUsed")}</td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalBeneficios)}</td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalBeneficiosUsados)}</td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1"></td>
             </tr>
-            <tr className="sticky bottom-0 z-30 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("benefit.totalAvailable")}</td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5 text-center">{formatarEuro(totalBeneficiosDisponivel)}</td>
-              <td className="p-1.5"></td>
+            <tr className="sticky bottom-0 z-30 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("benefit.totalAvailable")}</td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalBeneficiosDisponivel)}</td>
+              <td className="px-1.5 py-1"></td>
             </tr>
           </tbody>
         </TableCard>
@@ -2258,28 +2258,28 @@ export default function App() {
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
-            <tr>
-              <th className="p-1.5 text-left">{t("extra.description")}</th>
-              <th className="p-1.5">{t("extra.deductedIn")}</th>
-              <th className="p-1.5">{t("benefit.value")}</th>
-              <th className="p-1.5">{t("extra.date")}</th>
-              <th className="p-1.5">{t("extra.state")}</th>
-              <th className="p-1.5">{t("action")}</th>
+            <tr className="h-[34px]">
+              <th className="px-1.5 py-1 text-left">{t("extra.description")}</th>
+              <th className="px-1.5 py-1">{t("extra.deductedIn")}</th>
+              <th className="px-1.5 py-1">{t("benefit.value")}</th>
+              <th className="px-1.5 py-1">{t("extra.date")}</th>
+              <th className="px-1.5 py-1">{t("extra.state")}</th>
+              <th className="px-1.5 py-1">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
             {despesasExtrasFinanceiras.map((item) => (
-              <tr key={item.id} className="border-b border-slate-100">
-                <td className="p-1.5 font-semibold">{item.descricao}</td>
-                <td className="p-1.5 text-center">{item.poupancaId ? obterNomePoupanca(item.poupancaId) : "Sem abate"}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.valor)}</td>
-                <td className="p-1.5 text-center">{String(item.dia || 1).padStart(2, "0")}/{mesAtivo.slice(5, 7)}</td>
-                <td className="p-1.5 text-center">
+              <tr key={item.id} className="h-[34px] border-b border-slate-100 align-middle">
+                <td className="px-1.5 py-1 font-semibold">{item.descricao}</td>
+                <td className="px-1.5 py-1 text-center">{item.poupancaId ? obterNomePoupanca(item.poupancaId) : "Sem abate"}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.valor)}</td>
+                <td className="px-1.5 py-1 text-center">{String(item.dia || 1).padStart(2, "0")}/{mesAtivo.slice(5, 7)}</td>
+                <td className="px-1.5 py-1 text-center">
                   <span className={`${item.estado === "pendente" ? "bg-orange-100/85 text-orange-700" : "bg-green-100/85 text-green-700"} rounded px-2 py-1 text-[10px] font-black`}>
                     {item.estado === "pendente" ? "Pendente" : "Realizada"}
                   </span>
                 </td>
-                <td className="p-1.5 text-center">
+                <td className="px-1.5 py-1 text-center">
                   <div className="flex justify-center gap-1 whitespace-nowrap">
                     <button onClick={() => iniciarEdicaoDespesaExtra(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
                     <button onClick={() => apagarDespesaExtra(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
@@ -2287,13 +2287,13 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("extra.total")}</td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5 text-center">{formatarEuro(totalDespesasExtrasRealizadas)}</td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5"></td>
-              <td className="p-1.5"></td>
+            <tr className="sticky bottom-0 z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("extra.total")}</td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalDespesasExtrasRealizadas)}</td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1"></td>
+              <td className="px-1.5 py-1"></td>
             </tr>
           </tbody>
         </TableCard>
@@ -2333,24 +2333,24 @@ export default function App() {
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
-            <tr>
-              <th className="p-1.5 text-left">{t("category")}</th>
-              <th className="p-1.5">{t("expected")}</th>
-              <th className="p-1.5">{t("actual")}</th>
-              <th className="p-1.5">%</th>
-              <th className="p-1.5">{t("action")}</th>
+            <tr className="h-[34px]">
+              <th className="px-1.5 py-1 text-left">{t("category")}</th>
+              <th className="px-1.5 py-1">{t("expected")}</th>
+              <th className="px-1.5 py-1">{t("actual")}</th>
+              <th className="px-1.5 py-1">%</th>
+              <th className="px-1.5 py-1">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
             {despesasApi.map((item) => (
-              <tr key={item.id} className="border-b border-slate-100">
-                <td className="p-1.5 font-semibold">{item.categoria}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
-                <td className="p-1.5 text-center">{formatarEuro(item.realizado)}</td>
-                <td className="p-1.5 text-center text-blue-700 font-bold">
+              <tr key={item.id} className="h-[34px] border-b border-slate-100 align-middle">
+                <td className="px-1.5 py-1 font-semibold">{item.categoria}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.orcamentado)}</td>
+                <td className="px-1.5 py-1 text-center">{formatarEuro(item.realizado)}</td>
+                <td className="px-1.5 py-1 text-center text-blue-700 font-bold">
                   {totalRecebido > 0 ? formatarPercentagem((Number(item.realizado || 0) / totalRecebido) * 100) : item.percentagem}
                 </td>
-                <td className="p-1.5 text-center">
+                <td className="px-1.5 py-1 text-center">
                   <div className="flex justify-center gap-1 whitespace-nowrap">
                     <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
                     <button onClick={() => apagarDespesa(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
@@ -2358,12 +2358,12 @@ export default function App() {
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("total.income")}</td>
-              <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
-              <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
-              <td className="p-1.5 text-center">{formatarPercentagem(percentagemDespesasSalario)}</td>
-              <td className="p-1.5"></td>
+            <tr className="sticky bottom-0 z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("total.income")}</td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
+              <td className="px-1.5 py-1 text-center">{formatarEuro(totalDespesasRealizado)}</td>
+              <td className="px-1.5 py-1 text-center">{formatarPercentagem(percentagemDespesasSalario)}</td>
+              <td className="px-1.5 py-1"></td>
             </tr>
           </tbody>
         </TableCard>
@@ -2398,7 +2398,7 @@ export default function App() {
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
-            <tr>
+            <tr className="h-[34px]">
               <th className="p-1 text-left">{t("creditor")}</th>
               <th className="p-1">{t("balance")}</th>
               <th className="p-1">{t("installment")}</th>
@@ -2413,7 +2413,7 @@ export default function App() {
             {dividasApi.map((item) => {
               const pagamentoMes = obterPagamentoDividaDoMes(item.id)
               return (
-                <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+                <tr key={item.id} className="h-[34px] border-b border-slate-100 text-[10px] align-middle">
                   <td className="p-1 font-semibold">{item.credor}</td>
                   <td className="p-1 text-center">{formatarEuro(item.saldo)}</td>
                   <td className="p-1 text-center">{formatarEuro(item.prestacaoMensal)}</td>
@@ -2433,9 +2433,9 @@ export default function App() {
                 </tr>
               )
             })}
-            <tr className="sticky bottom-0 z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5 whitespace-nowrap">{t("total.debts")}</td>
-              <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
+            <tr className="sticky bottom-0 z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="px-1.5 py-1 whitespace-nowrap">{t("total.debts")}</td>
+              <td className="px-1.5 py-1 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
             </tr>
           </tbody>
         </TableCard>
@@ -2460,24 +2460,24 @@ export default function App() {
         </thead>
         <tbody>
           {pagamentoIdealDividas.map((item) => (
-            <tr key={item.id} className="border-b border-slate-100 text-[10px]">
+            <tr key={item.id} className="h-[34px] border-b border-slate-100 text-[10px] align-middle">
               <td className="p-1 font-semibold">{item.credor}</td>
               <td className="p-1 text-center">{formatarEuro(item.pagamento)}</td>
               <td className="p-1 text-center">{formatarPercentagem(item.percentagemDisponivel)}</td>
               <td className="p-1 text-center">{item.tempoMeses} {t("months")}</td>
             </tr>
           ))}
-          <tr className="sticky bottom-[30px] z-20 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-            <td className="p-1.5 whitespace-nowrap">{t("distributed.total")}</td>
-            <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
-            <td className="p-1.5 text-center">100%</td>
-            <td className="p-1.5"></td>
+          <tr className="sticky bottom-[34px] z-20 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <td className="px-1.5 py-1 whitespace-nowrap">{t("distributed.total")}</td>
+            <td className="px-1.5 py-1 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
+            <td className="px-1.5 py-1 text-center">100%</td>
+            <td className="px-1.5 py-1"></td>
           </tr>
-          <tr className="sticky bottom-0 z-30 h-[30px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-            <td className="p-1.5 whitespace-nowrap">{t("remaining")}</td>
-            <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
-            <td className="p-1.5"></td>
-            <td className="p-1.5"></td>
+          <tr className="sticky bottom-0 z-30 h-[34px] bg-blue-50/85 text-[10px] font-black leading-none shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <td className="px-1.5 py-1 whitespace-nowrap">{t("remaining")}</td>
+            <td className="px-1.5 py-1 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
+            <td className="px-1.5 py-1"></td>
+            <td className="px-1.5 py-1"></td>
           </tr>
         </tbody>
       </TableCard>
@@ -2495,7 +2495,7 @@ export default function App() {
     ]
 
     return (
-      <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] rounded-[16px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
+      <div className="h-[410px] rounded-[16px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
         <div className="bg-blue-50/85 px-3 py-1.5 text-center border-b border-blue-100">
           <h3 className="text-[10px] font-black uppercase text-blue-900">
             Acessos Rápidos
@@ -2509,12 +2509,12 @@ export default function App() {
                 key={atalho.id}
                 type="button"
                 onClick={() => abrirAtalho(atalho.id)}
-                className="min-h-[42px] rounded-xl border border-slate-100 bg-white p-1 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="min-h-[84px] rounded-xl border border-slate-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md flex flex-col items-center justify-center"
               >
-                <div className={`mx-auto mb-1 flex h-5 w-5 items-center justify-center rounded-lg ${atalho.bg} ${atalho.text} text-xs`}>
+                <div className={`mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-lg ${atalho.bg} ${atalho.text} text-xs`}>
                   {atalho.icon}
                 </div>
-                <div className="text-[7px] font-black leading-tight text-blue-950">
+                <div className="text-[8px] font-black leading-tight text-blue-950">
                   {atalho.label}
                 </div>
               </button>
@@ -2855,7 +2855,7 @@ export default function App() {
                 </thead>
                 <tbody>
                   {categoriasRelatorio.map((item) => (
-                    <tr key={item.categoria} className="border-b border-slate-100">
+                    <tr key={item.categoria} className="h-[34px] border-b border-slate-100 align-middle">
                       <td className="p-2 font-bold">{item.categoria}</td>
                       <td className="p-2 text-center">{formatarEuro(item.previsto)}</td>
                       <td className="p-2 text-center">{formatarEuro(item.realizado)}</td>
@@ -3077,10 +3077,10 @@ export default function App() {
             </div>
           </section>
           <div className="space-y-2 overflow-hidden">
-            <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] min-h-0">
+            <div className="h-[410px] min-h-0">
               {renderProximosPagamentos()}
             </div>
-            <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] min-h-0">
+            <div className="h-[410px] min-h-0">
               {renderAlertas()}
             </div>
           </div>
@@ -3463,7 +3463,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
 function TableCard({ title, color, action, children }) {
   return (
-    <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] w-full rounded-[16px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
+    <div className="h-[410px] w-full rounded-[16px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
       <div className={`${color} relative shrink-0 text-white text-center py-1.5 px-3 font-black text-[10px] uppercase`}>
         <span>{title}</span>
         {action && (
@@ -3474,7 +3474,7 @@ function TableCard({ title, color, action, children }) {
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-auto overscroll-contain">
-        <table className="min-w-full h-full text-[9px] leading-tight">{children}</table>
+        <table className="min-w-full h-full table-fixed text-[9px] leading-none">{children}</table>
       </div>
     </div>
   )
@@ -4818,7 +4818,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </p>
         </div>
 
-        <div className="mx-2 mb-1 rounded-[10px] border border-cyan-400/40 bg-[#062a57] shadow-inner p-1.5">
+        <div className="mx-2 mb-1 rounded-[10px] border border-cyan-400/40 bg-[#062a57] shadow-inner px-1.5 py-1">
           <label className="mb-0.5 block text-center text-[7px] font-black uppercase text-white/70">
             {t("month.active")}
           </label>
