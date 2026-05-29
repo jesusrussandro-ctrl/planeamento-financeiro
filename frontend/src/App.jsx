@@ -47,7 +47,7 @@ const TRADUCOES = {
     "app.title1": "Planeamento", "app.title2": "Financeiro", "app.subtitle": "Controlo Financeiro Familiar", "active.section": "Secção ativa", "month.active": "Mês ativo", "viewing": "A visualizar", "currency": "Moeda", "no.conversion": "Sem conversão cambial. Apenas formato visual.", "updated.at": "Atualizado em", "financial.health": "Saúde Financeira", "excellent": "Excelente",
     "kpi.health": "Índice de Saúde Financeira", "kpi.health.text": "A sua situação financeira está muito saudável!", "kpi.salary": "Salário Líquido", "kpi.salary.sub": "Total recebido no mês", "kpi.expenses": "Total Despesas", "kpi.availableDebts": "Disponível p/ Dívidas", "kpi.totalDebts": "Total Dívidas", "kpi.idealPayment": "Pagamento ideal", "kpi.daysLeft": "Dias Restantes", "until": "até", "of.salary": "do salário",
     "chart.expectedVsActual": "Previsto vs Realizado (Despesas)", "chart.distributionExpenses": "Distribuição das Despesas", "chart.distributionIncome": "Distribuição da Renda", "expected": "Previsto", "actual": "Realizado", "total": "Total",
-    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
+    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "linkedGoal": "Objetivo ligado", "noLinkedGoal": "Sem ligação", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
     "goals.title": "🎯 Objetivos Financeiros", "goals.new": "+ Novo", "goals.seeAll": "Ver todos os objetivos →", "goal.label": "Objetivo", "upcoming.payments": "Próximos Pagamentos", "alerts.title": "Alertas e Conselhos", "alerts.none": "Ainda não existem alertas para este mês.", "automatic": "Automático", "reports.title": "Relatórios", "reports.text": "Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.",
     "settings.general": "Definições Gerais", "settings.config": "Configuração", "settings.currencyDefault": "Moeda padrão", "settings.languageDefault": "Idioma padrão", "settings.monthActive": "Mês ativo", "settings.visualOnly": "Apenas muda o formato visual. Não faz conversão cambial.", "settings.languageHelp": "Altera o idioma visual da aplicação.", "settings.current": "Atual", "settings.rules": "Regras Financeiras", "settings.expenseLimit": "Limite despesas (%)", "settings.savingsGoal": "Meta poupança (%)", "settings.debtLimit": "Limite dívidas (%)", "settings.emergencyFund": "Fundo emergência (meses)", "settings.rulesHelp": "Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.", "settings.localData": "Dados Locais", "settings.export": "Exportar backup", "settings.import": "Importar backup", "settings.clear": "Limpar dados locais", "settings.localHelp": "Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.", "settings.localSummary": "Resumo Local", "settings.totalReceived": "Total recebido", "settings.totalExpenses": "Total despesas", "settings.savingsSaved": "Poupança guardada", "settings.manualAlerts": "Alertas manuais",
   },
@@ -56,7 +56,7 @@ const TRADUCOES = {
     "app.title1": "Financial", "app.title2": "Planning", "app.subtitle": "Family Financial Control", "active.section": "Active section", "month.active": "Active month", "viewing": "Viewing", "currency": "Currency", "no.conversion": "No exchange conversion. Visual format only.", "updated.at": "Updated at", "financial.health": "Financial Health", "excellent": "Excellent",
     "kpi.health": "Financial Health Index", "kpi.health.text": "Your financial situation is very healthy!", "kpi.salary": "Net Salary", "kpi.salary.sub": "Total received this month", "kpi.expenses": "Total Expenses", "kpi.availableDebts": "Available for Debts", "kpi.totalDebts": "Total Debts", "kpi.idealPayment": "Ideal payment", "kpi.daysLeft": "Days Left", "until": "until", "of.salary": "of salary",
     "chart.expectedVsActual": "Expected vs Actual (Expenses)", "chart.distributionExpenses": "Expense Distribution", "chart.distributionIncome": "Income Distribution", "expected": "Expected", "actual": "Actual", "total": "Total",
-    "table.income": "Income", "table.savings": "Savings / Reserve", "table.expenses": "Monthly Expenses", "table.debts": "Debts", "table.idealDebts": "Ideal Debt Payment", "add": "+ Add", "close": "Close", "edit": "Edit", "delete": "Delete", "action": "Action", "source": "Source", "received": "Received", "type": "Type", "saved": "Saved", "category": "Category", "percent": "%", "creditor": "Creditor", "balance": "Balance", "installment": "Inst.", "interest": "Interest", "priority": "Prior.", "status": "Status", "pay": "Pay", "paid": "Paid", "pending": "Pending", "payment": "Payment", "time": "Time", "months": "months", "distributed.total": "TOTAL DISTRIBUTED", "remaining": "REMAINING", "total.income": "TOTAL", "total.debts": "TOTAL DEBTS",
+    "table.income": "Income", "table.savings": "Savings / Reserve", "table.expenses": "Monthly Expenses", "table.debts": "Debts", "table.idealDebts": "Ideal Debt Payment", "add": "+ Add", "close": "Close", "edit": "Edit", "delete": "Delete", "action": "Action", "source": "Source", "received": "Received", "type": "Type", "linkedGoal": "Linked goal", "noLinkedGoal": "No link", "saved": "Saved", "category": "Category", "percent": "%", "creditor": "Creditor", "balance": "Balance", "installment": "Inst.", "interest": "Interest", "priority": "Prior.", "status": "Status", "pay": "Pay", "paid": "Paid", "pending": "Pending", "payment": "Payment", "time": "Time", "months": "months", "distributed.total": "TOTAL DISTRIBUTED", "remaining": "REMAINING", "total.income": "TOTAL", "total.debts": "TOTAL DEBTS",
     "goals.title": "🎯 Financial Goals", "goals.new": "+ New", "goals.seeAll": "See all goals →", "goal.label": "Goal", "upcoming.payments": "Upcoming Payments", "alerts.title": "Alerts and Advice", "alerts.none": "There are no alerts for this month yet.", "automatic": "Automatic", "reports.title": "Reports", "reports.text": "Next we will add monthly summaries, month comparison and export.",
     "settings.general": "General Settings", "settings.config": "Configuration", "settings.currencyDefault": "Default currency", "settings.languageDefault": "Default language", "settings.monthActive": "Active month", "settings.visualOnly": "Only changes the visual format. No exchange conversion.", "settings.languageHelp": "Changes the application display language.", "settings.current": "Current", "settings.rules": "Financial Rules", "settings.expenseLimit": "Expense limit (%)", "settings.savingsGoal": "Savings goal (%)", "settings.debtLimit": "Debt limit (%)", "settings.emergencyFund": "Emergency fund (months)", "settings.rulesHelp": "These rules feed automatic alerts and will be used to calculate financial health.", "settings.localData": "Local Data", "settings.export": "Export backup", "settings.import": "Import backup", "settings.clear": "Clear local data", "settings.localHelp": "These buttons only affect data saved in this browser, such as savings, goals, payments, alerts and settings.", "settings.localSummary": "Local Summary", "settings.totalReceived": "Total received", "settings.totalExpenses": "Total expenses", "settings.savingsSaved": "Savings saved", "settings.manualAlerts": "Manual alerts",
   },
@@ -206,8 +206,8 @@ const PAGAMENTOS_INICIAIS = [
 ]
 
 const POUPANCAS_INICIAIS = [
-  { id: 1, tipo: "Fundo de Emergência", previsto: 300, guardado: 200 },
-  { id: 2, tipo: "Reserva Mensal", previsto: 150, guardado: 150 },
+  { id: 1, tipo: "Fundo de Emergência", objetivoId: 1, previsto: 300, guardado: 200 },
+  { id: 2, tipo: "Reserva Mensal", objetivoId: "", previsto: 150, guardado: 150 },
 ]
 
 const ALERTAS_INICIAIS = []
@@ -667,6 +667,7 @@ export default function App() {
 
   const poupancasFinanceiras = poupancasUsuario.map((item) => ({
     ...item,
+    objetivoId: item.objetivoId || "",
     previsto: Number(item.previsto || 0),
     guardado: Number(item.guardado || 0),
   }))
@@ -682,14 +683,25 @@ export default function App() {
   )
 
 
-  const objetivosFinanceiros = objetivosUsuario.map((objetivo) => ({
-    ...objetivo,
-    objetivo: Number(objetivo.objetivo || 0),
-    atual: Number(objetivo.atual || 0),
-    percentagem: Number(objetivo.objetivo || 0) > 0
-      ? limitarPercentagem((Number(objetivo.atual || 0) / Number(objetivo.objetivo || 0)) * 100)
-      : 0,
-  }))
+  const objetivosFinanceiros = objetivosUsuario.map((objetivo) => {
+    const objetivoValor = Number(objetivo.objetivo || 0)
+    const valorBase = Number(objetivo.atual || 0)
+    const poupancaLigada = poupancasFinanceiras
+      .filter((poupanca) => String(poupanca.objetivoId || "") === String(objetivo.id))
+      .reduce((total, poupanca) => total + Number(poupanca.guardado || 0), 0)
+    const atualCalculado = valorBase + poupancaLigada
+
+    return {
+      ...objetivo,
+      objetivo: objetivoValor,
+      atualBase: valorBase,
+      poupancaLigada,
+      atual: atualCalculado,
+      percentagem: objetivoValor > 0
+        ? limitarPercentagem((atualCalculado / objetivoValor) * 100)
+        : 0,
+    }
+  })
 
   const pagamentosFinanceiros = pagamentosUsuario.map((pagamento) => {
     const [ano, mesNumero] = mesAtivo.split("-").map(Number)
@@ -935,6 +947,7 @@ export default function App() {
     const poupancaNormalizada = {
       id: poupancaEditando?.id || Date.now(),
       tipo: dadosPoupanca.tipo,
+      objetivoId: dadosPoupanca.objetivoId || "",
       previsto: Number(dadosPoupanca.previsto || 0),
       guardado: Number(dadosPoupanca.guardado || 0),
     }
@@ -1561,6 +1574,13 @@ export default function App() {
     )
   }
 
+  function obterNomeObjetivoLigado(objetivoId) {
+    if (!objetivoId) return t("noLinkedGoal")
+
+    const objetivo = objetivosFinanceiros.find((item) => String(item.id) === String(objetivoId))
+    return objetivo?.nome || t("noLinkedGoal")
+  }
+
   function renderPoupancas() {
     return (
       <div>
@@ -1587,6 +1607,7 @@ export default function App() {
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("type")}</th>
+              <th className="p-1.5">{t("linkedGoal")}</th>
               <th className="p-1.5">{t("expected")}</th>
               <th className="p-1.5">{t("saved")}</th>
               <th className="p-1.5">{t("action")}</th>
@@ -1596,6 +1617,7 @@ export default function App() {
             {poupancasFinanceiras.map((item) => (
               <tr key={item.id} className="border-b border-slate-100">
                 <td className="p-1.5 font-semibold">{item.tipo}</td>
+                <td className="p-1.5 text-center text-[9px] font-bold text-slate-600">{obterNomeObjetivoLigado(item.objetivoId)}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.previsto)}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
                 <td className="p-1.5 text-center">
@@ -1608,11 +1630,12 @@ export default function App() {
             ))}
             {poupancasFinanceiras.length < 6 && (
               <tr className="h-full">
-                <td colSpan="4"></td>
+                <td colSpan="5"></td>
               </tr>
             )}
             <tr className="sticky bottom-0 z-20 bg-teal-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
+              <td className="p-1.5"></td>
               <td className="p-1.5 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalPoupancaGuardado)}</td>
               <td className="p-1.5"></td>
@@ -1622,6 +1645,8 @@ export default function App() {
         {(mostrarFormularioPoupanca || poupancaEditando) && (
           <AddPoupancaForm
             poupancaEditando={poupancaEditando}
+            objetivosLista={objetivosFinanceiros}
+            t={t}
             onGuardar={guardarPoupanca}
             onCancelar={cancelarEdicaoPoupanca}
           />
@@ -3106,8 +3131,9 @@ function PagamentoDividaForm({
   )
 }
 
-function AddPoupancaForm({ poupancaEditando, onGuardar, onCancelar }) {
+function AddPoupancaForm({ poupancaEditando, objetivosLista = [], t = (chave) => chave, onGuardar, onCancelar }) {
   const [tipo, setTipo] = React.useState("")
+  const [objetivoId, setObjetivoId] = React.useState("")
   const [previsto, setPrevisto] = React.useState("")
   const [guardado, setGuardado] = React.useState("")
 
@@ -3116,10 +3142,12 @@ function AddPoupancaForm({ poupancaEditando, onGuardar, onCancelar }) {
   React.useEffect(() => {
     if (poupancaEditando) {
       setTipo(poupancaEditando.tipo || "")
+      setObjetivoId(poupancaEditando.objetivoId ? String(poupancaEditando.objetivoId) : "")
       setPrevisto(String(poupancaEditando.previsto || 0))
       setGuardado(String(poupancaEditando.guardado || 0))
     } else {
       setTipo("")
+      setObjetivoId("")
       setPrevisto("")
       setGuardado("")
     }
@@ -3134,12 +3162,14 @@ function AddPoupancaForm({ poupancaEditando, onGuardar, onCancelar }) {
 
     onGuardar({
       tipo,
+      objetivoId,
       previsto,
       guardado,
     })
 
     if (!modoEdicao) {
       setTipo("")
+      setObjetivoId("")
       setPrevisto("")
       setGuardado("")
     }
@@ -3157,6 +3187,19 @@ function AddPoupancaForm({ poupancaEditando, onGuardar, onCancelar }) {
         value={tipo}
         onChange={(e) => setTipo(e.target.value)}
       />
+
+      <select
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        value={objetivoId}
+        onChange={(e) => setObjetivoId(e.target.value)}
+      >
+        <option value="">{t("noLinkedGoal")}</option>
+        {objetivosLista.map((objetivo) => (
+          <option key={objetivo.id} value={objetivo.id}>
+            {objetivo.nome}
+          </option>
+        ))}
+      </select>
 
       <input
         className="w-full mb-2 rounded-lg border p-2 text-sm"
