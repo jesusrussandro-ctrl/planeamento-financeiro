@@ -837,23 +837,98 @@ export default function App() {
   ]
 
   function guardarObjetivo(dadosObjetivo) {
+    const objetivoId = objetivoEditando?.id || Date.now()
+    const valorAtualDesejado = Math.max(0, Number(dadosObjetivo.atual || 0))
+
     const objetivoNormalizado = {
-      id: objetivoEditando?.id || Date.now(),
+      id: objetivoId,
       icone: dadosObjetivo.icone || "🎯",
       nome: dadosObjetivo.nome,
       objetivo: Number(dadosObjetivo.objetivo || 0),
-      atual: Number(dadosObjetivo.atual || 0),
+      atual: 0,
       cor: dadosObjetivo.cor || "bg-green-500",
     }
 
     setObjetivosUsuario((listaAtual) => {
       if (objetivoEditando) {
         return listaAtual.map((item) =>
-          Number(item.id) === Number(objetivoEditando.id) ? objetivoNormalizado : item
+          Number(item.id) === Number(objetivoId) ? objetivoNormalizado : item
         )
       }
 
       return [...listaAtual, objetivoNormalizado]
+    })
+
+    setPoupancasUsuario((listaAtual) => {
+      const objetivoIdTexto = String(objetivoId)
+      const poupancasLigadas = listaAtual.filter(
+        (item) => String(item.objetivoId || "") === objetivoIdTexto
+      )
+
+      if (poupancasLigadas.length === 0) {
+        if (valorAtualDesejado <= 0) {
+          return listaAtual
+        }
+
+        return [
+          ...listaAtual,
+          {
+            id: Date.now() + 1,
+            tipo: dadosObjetivo.nome || "Poupança ligada ao objetivo",
+            objetivoId,
+            previsto: 0,
+            guardado: valorAtualDesejado,
+          },
+        ]
+      }
+
+      const totalGuardadoAtual = poupancasLigadas.reduce(
+        (total, item) => total + Number(item.guardado || 0),
+        0
+      )
+      const diferenca = valorAtualDesejado - totalGuardadoAtual
+
+      if (diferenca >= 0) {
+        let diferencaAplicada = false
+
+        return listaAtual.map((item) => {
+          if (String(item.objetivoId || "") !== objetivoIdTexto) {
+            return item
+          }
+
+          if (!diferencaAplicada) {
+            diferencaAplicada = true
+            return {
+              ...item,
+              tipo: item.tipo || dadosObjetivo.nome || "Poupança ligada ao objetivo",
+              guardado: Number(item.guardado || 0) + diferenca,
+            }
+          }
+
+          return item
+        })
+      }
+
+      let valorParaReduzir = Math.abs(diferenca)
+
+      return listaAtual.map((item) => {
+        if (String(item.objetivoId || "") !== objetivoIdTexto) {
+          return item
+        }
+
+        if (valorParaReduzir <= 0) {
+          return item
+        }
+
+        const guardadoAtual = Number(item.guardado || 0)
+        const reducao = Math.min(guardadoAtual, valorParaReduzir)
+        valorParaReduzir -= reducao
+
+        return {
+          ...item,
+          guardado: Math.max(0, guardadoAtual - reducao),
+        }
+      })
     })
 
     setObjetivoEditando(null)
