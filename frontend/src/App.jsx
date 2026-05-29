@@ -167,6 +167,11 @@ const PAGAMENTOS_INICIAIS = [
   { id: 4, dia: 12, nome: "Internet", valor: 35, categoria: "Despesa fixa", pago: false },
 ]
 
+const POUPANCAS_INICIAIS = [
+  { id: 1, tipo: "Fundo de Emergência", previsto: 300, guardado: 200 },
+  { id: 2, tipo: "Reserva Mensal", previsto: 150, guardado: 150 },
+]
+
 const ALERTAS_INICIAIS = []
 
 const CONFIGURACOES_INICIAIS = {
@@ -221,6 +226,13 @@ export default function App() {
   const [mostrarFormularioRendimento, setMostrarFormularioRendimento] = React.useState(false)
   const [mostrarFormularioDespesa, setMostrarFormularioDespesa] = React.useState(false)
   const [mostrarFormularioDivida, setMostrarFormularioDivida] = React.useState(false)
+  const [mostrarFormularioPoupanca, setMostrarFormularioPoupanca] = React.useState(false)
+
+  const [poupancasUsuario, setPoupancasUsuario] = React.useState(() =>
+    lerLocalStorage("poupancasUsuario", POUPANCAS_INICIAIS)
+  )
+  const [poupancaEditando, setPoupancaEditando] = React.useState(null)
+
 
   const [objetivosUsuario, setObjetivosUsuario] = React.useState(() =>
     lerLocalStorage("objetivosUsuario", OBJETIVOS_INICIAIS)
@@ -253,6 +265,14 @@ export default function App() {
   React.useEffect(() => {
     guardarLocalStorage("alertasUsuario", alertasUsuario)
   }, [alertasUsuario])
+
+  React.useEffect(() => {
+    guardarLocalStorage("poupancasUsuario", poupancasUsuario)
+  }, [poupancasUsuario])
+
+  React.useEffect(() => {
+    guardarLocalStorage("configuracoesUsuario", configuracoesUsuario)
+  }, [configuracoesUsuario])
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -593,6 +613,23 @@ export default function App() {
 
   const sobraPagamentoIdeal = Math.max(0, disponivelParaDividas) - totalPagamentoIdeal
 
+  const poupancasFinanceiras = poupancasUsuario.map((item) => ({
+    ...item,
+    previsto: Number(item.previsto || 0),
+    guardado: Number(item.guardado || 0),
+  }))
+
+  const totalPoupancaPrevisto = poupancasFinanceiras.reduce(
+    (total, item) => total + Number(item.previsto || 0),
+    0
+  )
+
+  const totalPoupancaGuardado = poupancasFinanceiras.reduce(
+    (total, item) => total + Number(item.guardado || 0),
+    0
+  )
+
+
   const objetivosFinanceiros = objetivosUsuario.map((objetivo) => ({
     ...objetivo,
     objetivo: Number(objetivo.objetivo || 0),
@@ -653,17 +690,13 @@ export default function App() {
       })
     }
 
-    const limiteDespesasConfigurado = Number(configuracoesUsuario.limiteDespesas || 60)
-    const metaPoupancaConfigurada = Number(configuracoesUsuario.metaPoupanca || 10)
-    const limiteDividasConfigurado = Number(configuracoesUsuario.limiteDividas || 30)
-
-    if (percentagemDespesasSalario > limiteDespesasConfigurado) {
+    if (percentagemDespesasSalario > Number(configuracoesUsuario.limiteDespesas || 60)) {
       alertas.push({
         id: "auto-despesas-altas",
         origem: "automatico",
         tipo: "urgente",
         titulo: "Despesas elevadas",
-        mensagem: `As despesas estão acima de ${formatarPercentagem(limiteDespesasConfigurado)} do salário. Reveja as categorias com maior peso.`,
+        mensagem: `As despesas estão acima de ${Number(configuracoesUsuario.limiteDespesas || 60)}% do salário. Reveja as categorias com maior peso.`,
       })
     } else if (totalDespesasRealizado > 0) {
       alertas.push({
@@ -672,34 +705,6 @@ export default function App() {
         tipo: "positivo",
         titulo: "Despesas controladas",
         mensagem: "As despesas estão controladas em relação ao salário deste mês.",
-      })
-    }
-
-    const percentagemPoupancaGuardada = totalRecebido > 0
-      ? (totalPoupancaGuardado / totalRecebido) * 100
-      : 0
-
-    if (totalRecebido > 0 && percentagemPoupancaGuardada < metaPoupancaConfigurada) {
-      alertas.push({
-        id: "auto-poupanca-baixa",
-        origem: "automatico",
-        tipo: "aviso",
-        titulo: "Poupança abaixo da meta",
-        mensagem: `A poupança guardada está abaixo da meta de ${formatarPercentagem(metaPoupancaConfigurada)} do salário.`,
-      })
-    }
-
-    const percentagemDividasSalario = totalRecebido > 0
-      ? (totalPagamentoIdeal / totalRecebido) * 100
-      : 0
-
-    if (totalRecebido > 0 && percentagemDividasSalario > limiteDividasConfigurado) {
-      alertas.push({
-        id: "auto-dividas-acima-limite",
-        origem: "automatico",
-        tipo: "urgente",
-        titulo: "Dívidas acima do recomendado",
-        mensagem: `Os pagamentos de dívidas estão acima do limite recomendado de ${formatarPercentagem(limiteDividasConfigurado)} do salário.`,
       })
     }
 
@@ -874,45 +879,83 @@ export default function App() {
     }
   }
 
-  function atualizarConfiguracao(campo, valor) {
-    const valorFinal = ["limiteDespesas", "metaPoupanca", "limiteDividas", "fundoEmergenciaMeses"].includes(campo)
-      ? Number(valor || 0)
-      : valor
+  function guardarPoupanca(dadosPoupanca) {
+    const poupancaNormalizada = {
+      id: poupancaEditando?.id || Date.now(),
+      tipo: dadosPoupanca.tipo,
+      previsto: Number(dadosPoupanca.previsto || 0),
+      guardado: Number(dadosPoupanca.guardado || 0),
+    }
 
+    setPoupancasUsuario((listaAtual) => {
+      if (poupancaEditando) {
+        return listaAtual.map((item) =>
+          Number(item.id) === Number(poupancaEditando.id) ? poupancaNormalizada : item
+        )
+      }
+
+      return [...listaAtual, poupancaNormalizada]
+    })
+
+    setPoupancaEditando(null)
+    setMostrarFormularioPoupanca(false)
+  }
+
+  function iniciarEdicaoPoupanca(item) {
+    setPoupancaEditando(item)
+    setMostrarFormularioPoupanca(true)
+  }
+
+  function cancelarEdicaoPoupanca() {
+    setPoupancaEditando(null)
+    setMostrarFormularioPoupanca(false)
+  }
+
+  function apagarPoupanca(id) {
+    setPoupancasUsuario((listaAtual) =>
+      listaAtual.filter((item) => Number(item.id) !== Number(id))
+    )
+
+    if (Number(poupancaEditando?.id) === Number(id)) {
+      setPoupancaEditando(null)
+      setMostrarFormularioPoupanca(false)
+    }
+  }
+
+
+  function atualizarConfiguracoes(campo, valor) {
     setConfiguracoesUsuario((configAtual) => ({
       ...configAtual,
-      [campo]: valorFinal,
+      [campo]: valor,
     }))
 
     if (campo === "moedaPadrao") {
       setMoedaAtiva(valor)
     }
-
-    setMensagemDefinicoes("Definição guardada com sucesso.")
   }
 
   function exportarBackupLocal() {
     const backup = {
-      versao: 1,
-      criadoEm: new Date().toISOString(),
-      mesAtivo,
-      moedaAtiva,
+      versao: "1.0",
+      exportadoEm: new Date().toISOString(),
       configuracoesUsuario,
+      poupancasUsuario,
       objetivosUsuario,
       pagamentosUsuario,
       alertasUsuario,
-      poupancasUsuario,
     }
 
-    const conteudo = JSON.stringify(backup, null, 2)
-    const blob = new Blob([conteudo], { type: "application/json" })
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {
+      type: "application/json",
+    })
+
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
     link.href = url
-    link.download = `backup-planeamento-financeiro-${mesAtivo}.json`
+    link.download = `backup-planeamento-financeiro-${new Date().toISOString().slice(0, 10)}.json`
     document.body.appendChild(link)
     link.click()
-    document.body.removeChild(link)
+    link.remove()
     URL.revokeObjectURL(url)
 
     setMensagemDefinicoes("Backup exportado com sucesso.")
@@ -920,10 +963,7 @@ export default function App() {
 
   function importarBackupLocal(evento) {
     const ficheiro = evento.target.files?.[0]
-
-    if (!ficheiro) {
-      return
-    }
+    if (!ficheiro) return
 
     const leitor = new FileReader()
 
@@ -931,69 +971,53 @@ export default function App() {
       try {
         const backup = JSON.parse(String(leitor.result || "{}"))
 
-        if (Array.isArray(backup.objetivosUsuario)) {
-          setObjetivosUsuario(backup.objetivosUsuario)
-        }
-
-        if (Array.isArray(backup.pagamentosUsuario)) {
-          setPagamentosUsuario(backup.pagamentosUsuario)
-        }
-
-        if (Array.isArray(backup.alertasUsuario)) {
-          setAlertasUsuario(backup.alertasUsuario)
-        }
-
-        if (Array.isArray(backup.poupancasUsuario)) {
-          setPoupancasUsuario(backup.poupancasUsuario)
-        }
-
-        if (backup.configuracoesUsuario && typeof backup.configuracoesUsuario === "object") {
+        if (backup.configuracoesUsuario) {
           setConfiguracoesUsuario({
             ...CONFIGURACOES_INICIAIS,
             ...backup.configuracoesUsuario,
           })
+
+          if (backup.configuracoesUsuario.moedaPadrao) {
+            setMoedaAtiva(backup.configuracoesUsuario.moedaPadrao)
+          }
         }
 
-        if (backup.moedaAtiva && MOEDAS[backup.moedaAtiva]) {
-          setMoedaAtiva(backup.moedaAtiva)
-        }
-
-        if (backup.mesAtivo) {
-          setMesAtivo(backup.mesAtivo)
-        }
+        if (Array.isArray(backup.poupancasUsuario)) setPoupancasUsuario(backup.poupancasUsuario)
+        if (Array.isArray(backup.objetivosUsuario)) setObjetivosUsuario(backup.objetivosUsuario)
+        if (Array.isArray(backup.pagamentosUsuario)) setPagamentosUsuario(backup.pagamentosUsuario)
+        if (Array.isArray(backup.alertasUsuario)) setAlertasUsuario(backup.alertasUsuario)
 
         setMensagemDefinicoes("Backup importado com sucesso.")
       } catch (erro) {
         console.error("Erro ao importar backup:", erro)
-        setMensagemDefinicoes("Não foi possível importar o backup. Verifique o ficheiro.")
-      } finally {
-        evento.target.value = ""
+        setMensagemDefinicoes("Não foi possível importar o backup. Verifica se o ficheiro é válido.")
       }
     }
 
     leitor.readAsText(ficheiro)
+    evento.target.value = ""
   }
 
   function limparDadosLocais() {
-    const confirmar = window.confirm("Tem a certeza que deseja limpar os dados locais? Esta ação não altera os dados do backend.")
+    const confirmar = window.confirm(
+      "Tem a certeza que quer limpar os dados locais? Esta ação remove poupanças, objetivos, pagamentos, alertas e definições guardadas neste navegador."
+    )
 
-    if (!confirmar) {
-      return
-    }
+    if (!confirmar) return
 
+    window.localStorage.removeItem("poupancasUsuario")
     window.localStorage.removeItem("objetivosUsuario")
     window.localStorage.removeItem("pagamentosUsuario")
     window.localStorage.removeItem("alertasUsuario")
-    window.localStorage.removeItem("poupancasUsuario")
     window.localStorage.removeItem("configuracoesUsuario")
 
+    setPoupancasUsuario(POUPANCAS_INICIAIS)
     setObjetivosUsuario(OBJETIVOS_INICIAIS)
     setPagamentosUsuario(PAGAMENTOS_INICIAIS)
     setAlertasUsuario(ALERTAS_INICIAIS)
-    setPoupancasUsuario(POUPANCAS_INICIAIS)
     setConfiguracoesUsuario(CONFIGURACOES_INICIAIS)
     setMoedaAtiva(CONFIGURACOES_INICIAIS.moedaPadrao)
-    setMensagemDefinicoes("Dados locais limpos e valores iniciais repostos.")
+    setMensagemDefinicoes("Dados locais limpos e valores padrão repostos.")
   }
 
   function renderGoalsPanel(mostrarAcoes = false) {
@@ -1479,6 +1503,75 @@ export default function App() {
     )
   }
 
+  function renderPoupancas() {
+    return (
+      <div>
+        <TableCard
+          title="Poupança / Reserva"
+          color="bg-teal-700"
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                if (mostrarFormularioPoupanca && !poupancaEditando) {
+                  setMostrarFormularioPoupanca(false)
+                } else {
+                  setPoupancaEditando(null)
+                  setMostrarFormularioPoupanca(true)
+                }
+              }}
+              className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
+            >
+              {mostrarFormularioPoupanca || poupancaEditando ? "Fechar" : "+ Adicionar"}
+            </button>
+          }
+        >
+          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+            <tr>
+              <th className="p-1.5 text-left">Tipo</th>
+              <th className="p-1.5">Previsto</th>
+              <th className="p-1.5">Guardado</th>
+              <th className="p-1.5">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {poupancasFinanceiras.map((item) => (
+              <tr key={item.id} className="border-b border-slate-100">
+                <td className="p-1.5 font-semibold">{item.tipo}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.previsto)}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
+                <td className="p-1.5 text-center">
+                  <div className="flex justify-center gap-1">
+                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
+                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {poupancasFinanceiras.length < 6 && (
+              <tr className="h-full">
+                <td colSpan="4"></td>
+              </tr>
+            )}
+            <tr className="sticky bottom-0 z-20 bg-teal-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalPoupancaGuardado)}</td>
+              <td className="p-1.5"></td>
+            </tr>
+          </tbody>
+        </TableCard>
+        {(mostrarFormularioPoupanca || poupancaEditando) && (
+          <AddPoupancaForm
+            poupancaEditando={poupancaEditando}
+            onGuardar={guardarPoupanca}
+            onCancelar={cancelarEdicaoPoupanca}
+          />
+        )}
+      </div>
+    )
+  }
+
   function renderRendimentos() {
     return (
       <div>
@@ -1853,10 +1946,28 @@ export default function App() {
     if (secaoAtiva === "Rendimentos") {
       return (
         <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
-          {renderRendimentos()}
+          <div className="space-y-4">
+            {renderRendimentos()}
+            {renderPoupancas()}
+          </div>
           <PlaceholderSection icon="⚖️" title="Resumo de Rendimentos">
             <p>Total previsto: <strong>{formatarEuro(totalOrcamentado)}</strong></p>
             <p>Total recebido: <strong>{formatarEuro(totalRecebido)}</strong></p>
+            <p>Total poupança prevista: <strong>{formatarEuro(totalPoupancaPrevisto)}</strong></p>
+            <p>Total guardado: <strong>{formatarEuro(totalPoupancaGuardado)}</strong></p>
+          </PlaceholderSection>
+        </section>
+      )
+    }
+
+    if (secaoAtiva === "Poupança") {
+      return (
+        <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
+          {renderPoupancas()}
+          <PlaceholderSection icon="💰" title="Resumo de Poupança / Reserva">
+            <p>Total previsto: <strong>{formatarEuro(totalPoupancaPrevisto)}</strong></p>
+            <p>Total guardado: <strong>{formatarEuro(totalPoupancaGuardado)}</strong></p>
+            <p>Diferença: <strong>{formatarEuro(totalPoupancaGuardado - totalPoupancaPrevisto)}</strong></p>
           </PlaceholderSection>
         </section>
       )
@@ -1926,25 +2037,27 @@ export default function App() {
       return (
         <DefinicoesPanel
           configuracoes={configuracoesUsuario}
-          onAtualizar={atualizarConfiguracao}
+          onAtualizar={atualizarConfiguracoes}
+          moedas={MOEDAS}
           mesAtivo={mesAtivo}
           setMesAtivo={setMesAtivo}
-          moedaAtiva={moedaAtiva}
-          setMoedaAtiva={setMoedaAtiva}
+          mesesFuturos={MESES_FUTUROS}
           formatarMesAtivo={formatarMesAtivo}
           formatarEuro={formatarEuro}
           mensagem={mensagemDefinicoes}
-          onExportar={exportarBackupLocal}
-          onImportar={importarBackupLocal}
-          onLimpar={limparDadosLocais}
-          totalRecebido={totalRecebido}
-          totalDespesasRealizado={totalDespesasRealizado}
-          totalPoupancaGuardado={totalPoupancaGuardado}
-          totalDividas={totalDividas}
-          objetivosCount={objetivosUsuario.length}
-          pagamentosCount={pagamentosUsuario.length}
-          alertasCount={alertasUsuario.length}
-          poupancasCount={poupancasUsuario.length}
+          exportarBackup={exportarBackupLocal}
+          importarBackup={importarBackupLocal}
+          limparDadosLocais={limparDadosLocais}
+          resumo={{
+            totalRecebido,
+            totalDespesasRealizado,
+            totalPoupancaGuardado,
+            totalDividas,
+            poupancasCount: poupancasUsuario.length,
+            objetivosCount: objetivosUsuario.length,
+            pagamentosCount: pagamentosUsuario.length,
+            alertasCount: alertasUsuario.length,
+          }}
         />
       )
     }
@@ -1960,7 +2073,10 @@ export default function App() {
 
         <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
           <section className="grid grid-cols-4 gap-4 items-stretch">
-            {renderRendimentos()}
+            <div className="space-y-4">
+              {renderRendimentos()}
+              {renderPoupancas()}
+            </div>
             {renderDespesas()}
             {renderDividas()}
             {renderPagamentoIdeal()}
@@ -2929,6 +3045,91 @@ function PagamentoDividaForm({
   )
 }
 
+function AddPoupancaForm({ poupancaEditando, onGuardar, onCancelar }) {
+  const [tipo, setTipo] = React.useState("")
+  const [previsto, setPrevisto] = React.useState("")
+  const [guardado, setGuardado] = React.useState("")
+
+  const modoEdicao = Boolean(poupancaEditando)
+
+  React.useEffect(() => {
+    if (poupancaEditando) {
+      setTipo(poupancaEditando.tipo || "")
+      setPrevisto(String(poupancaEditando.previsto || 0))
+      setGuardado(String(poupancaEditando.guardado || 0))
+    } else {
+      setTipo("")
+      setPrevisto("")
+      setGuardado("")
+    }
+  }, [poupancaEditando])
+
+  function guardar(e) {
+    e.preventDefault()
+
+    if (!tipo.trim()) {
+      return
+    }
+
+    onGuardar({
+      tipo,
+      previsto,
+      guardado,
+    })
+
+    if (!modoEdicao) {
+      setTipo("")
+      setPrevisto("")
+      setGuardado("")
+    }
+  }
+
+  return (
+    <form onSubmit={guardar} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-teal-700 mb-3">
+        {modoEdicao ? "Editar Poupança / Reserva" : "Adicionar Poupança / Reserva"}
+      </h3>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Tipo"
+        value={tipo}
+        onChange={(e) => setTipo(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Previsto"
+        type="number"
+        value={previsto}
+        onChange={(e) => setPrevisto(e.target.value)}
+      />
+
+      <input
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        placeholder="Guardado"
+        type="number"
+        value={guardado}
+        onChange={(e) => setGuardado(e.target.value)}
+      />
+
+      <button className="w-full rounded-lg bg-teal-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button
+          type="button"
+          onClick={onCancelar}
+          className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+        >
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
 function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
   const [icone, setIcone] = React.useState("🎯")
   const [nome, setNome] = React.useState("")
@@ -3148,229 +3349,153 @@ function AlertaManualForm({ alertaEditando, onGuardar, onCancelar }) {
 function DefinicoesPanel({
   configuracoes,
   onAtualizar,
+  moedas,
   mesAtivo,
   setMesAtivo,
-  moedaAtiva,
-  setMoedaAtiva,
+  mesesFuturos,
   formatarMesAtivo,
   formatarEuro,
   mensagem,
-  onExportar,
-  onImportar,
-  onLimpar,
-  totalRecebido,
-  totalDespesasRealizado,
-  totalPoupancaGuardado,
-  totalDividas,
-  objetivosCount,
-  pagamentosCount,
-  alertasCount,
-  poupancasCount,
+  exportarBackup,
+  importarBackup,
+  limparDadosLocais,
+  resumo,
 }) {
-  function atualizarMoeda(valor) {
-    setMoedaAtiva(valor)
-    onAtualizar("moedaPadrao", valor)
-  }
+  const inputClass = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold outline-none focus:border-blue-400"
+  const labelClass = "mb-1 block text-[11px] font-black uppercase text-slate-500"
 
   return (
-    <section className="space-y-4">
-      <div className="rounded-[24px] bg-white p-6 shadow-lg border border-slate-100">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] font-black uppercase text-slate-400">Configuração da aplicação</p>
-            <h3 className="text-2xl font-black text-blue-950">Definições</h3>
-            <p className="mt-2 max-w-3xl text-sm font-semibold text-slate-600">
-              Ajuste as preferências, regras financeiras e dados locais do seu planeamento.
-            </p>
+    <section className="grid grid-cols-[1fr_360px] gap-4 items-start">
+      <div className="space-y-4">
+        <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">⚙️</div>
+            <div>
+              <p className="text-[10px] font-black uppercase text-slate-400">Configuração</p>
+              <h3 className="text-xl font-black text-blue-950">Definições Gerais</h3>
+            </div>
           </div>
 
           {mensagem && (
-            <div className="rounded-2xl bg-green-50 px-4 py-3 text-xs font-black text-green-800">
+            <div className="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm font-bold text-green-800">
               {mensagem}
             </div>
           )}
-        </div>
-      </div>
 
-      <section className="grid grid-cols-2 gap-4">
-        <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-          <h4 className="mb-4 text-lg font-black text-blue-950">Preferências gerais</h4>
-
-          <div className="space-y-4">
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Moeda padrão</span>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelClass}>Moeda padrão</label>
               <select
-                value={moedaAtiva}
-                onChange={(e) => atualizarMoeda(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
+                className={inputClass}
+                value={configuracoes.moedaPadrao || "EUR"}
+                onChange={(e) => onAtualizar("moedaPadrao", e.target.value)}
               >
-                {Object.entries(MOEDAS).map(([codigo, moeda]) => (
-                  <option key={codigo} value={codigo}>
-                    {moeda.flag} {moeda.label}
-                  </option>
+                {Object.entries(moedas).map(([codigo, moeda]) => (
+                  <option key={codigo} value={codigo}>{moeda.flag} {moeda.label}</option>
                 ))}
               </select>
-            </label>
+              <p className="mt-2 text-[11px] font-semibold text-slate-500">
+                Apenas muda o formato visual. Não faz conversão cambial.
+              </p>
+            </div>
 
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Mês ativo</span>
+            <div>
+              <label className={labelClass}>Mês ativo</label>
               <select
+                className={inputClass}
                 value={mesAtivo}
                 onChange={(e) => setMesAtivo(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
               >
-                {MESES_FUTUROS.map((grupo) => (
+                {mesesFuturos.map((grupo) => (
                   <optgroup key={grupo.ano} label={String(grupo.ano)}>
                     {grupo.meses.map((mes) => (
-                      <option key={mes.valor} value={mes.valor}>
-                        {mes.label}
-                      </option>
+                      <option key={mes.valor} value={mes.valor}>{mes.label}</option>
                     ))}
                   </optgroup>
                 ))}
               </select>
-              <span className="mt-1 block text-xs font-semibold text-slate-500">
-                A visualizar: {formatarMesAtivo(mesAtivo)}
-              </span>
-            </label>
-
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Formato visual</span>
-              <select
-                value={configuracoes.formatoVisual || "arredondado"}
-                onChange={(e) => onAtualizar("formatoVisual", e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
-              >
-                <option value="arredondado">Cartões arredondados</option>
-                <option value="compacto">Compacto</option>
-              </select>
-              <span className="mt-1 block text-xs font-semibold text-slate-500">
-                Esta opção fica guardada e será usada para ajustes visuais futuros.
-              </span>
-            </label>
+              <p className="mt-2 text-[11px] font-semibold text-slate-500">
+                Atual: {formatarMesAtivo(mesAtivo)}
+              </p>
+            </div>
           </div>
         </div>
 
         <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-          <h4 className="mb-4 text-lg font-black text-blue-950">Regras financeiras</h4>
-
-          <div className="grid grid-cols-2 gap-3">
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Limite de despesas (%)</span>
-              <input
-                type="number"
-                value={configuracoes.limiteDespesas}
-                onChange={(e) => onAtualizar("limiteDespesas", e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Meta de poupança (%)</span>
-              <input
-                type="number"
-                value={configuracoes.metaPoupanca}
-                onChange={(e) => onAtualizar("metaPoupanca", e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Limite para dívidas (%)</span>
-              <input
-                type="number"
-                value={configuracoes.limiteDividas}
-                onChange={(e) => onAtualizar("limiteDividas", e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-1 block text-xs font-black uppercase text-slate-500">Fundo emergência (meses)</span>
-              <input
-                type="number"
-                value={configuracoes.fundoEmergenciaMeses}
-                onChange={(e) => onAtualizar("fundoEmergenciaMeses", e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none"
-              />
-            </label>
+          <h3 className="mb-4 text-lg font-black text-blue-950">Regras Financeiras</h3>
+          <div className="grid grid-cols-4 gap-3">
+            <NumberSetting label="Limite despesas (%)" value={configuracoes.limiteDespesas} onChange={(valor) => onAtualizar("limiteDespesas", Number(valor))} />
+            <NumberSetting label="Meta poupança (%)" value={configuracoes.metaPoupanca} onChange={(valor) => onAtualizar("metaPoupanca", Number(valor))} />
+            <NumberSetting label="Limite dívidas (%)" value={configuracoes.limiteDividas} onChange={(valor) => onAtualizar("limiteDividas", Number(valor))} />
+            <NumberSetting label="Fundo emergência (meses)" value={configuracoes.fundoEmergenciaMeses} onChange={(valor) => onAtualizar("fundoEmergenciaMeses", Number(valor))} />
           </div>
-
-          <div className="mt-4 rounded-2xl bg-blue-50 p-4 text-xs font-bold text-blue-950">
-            Estas regras já alimentam os alertas automáticos de despesas, poupança e dívidas.
-          </div>
-        </div>
-      </section>
-
-      <section className="grid grid-cols-[1fr_1fr] gap-4">
-        <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-          <h4 className="mb-4 text-lg font-black text-blue-950">Resumo dos dados locais</h4>
-
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <p className="text-xs font-black uppercase text-slate-400">Recebido</p>
-              <p className="text-lg font-black">{formatarEuro(totalRecebido)}</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <p className="text-xs font-black uppercase text-slate-400">Despesas</p>
-              <p className="text-lg font-black">{formatarEuro(totalDespesasRealizado)}</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <p className="text-xs font-black uppercase text-slate-400">Poupança guardada</p>
-              <p className="text-lg font-black">{formatarEuro(totalPoupancaGuardado)}</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <p className="text-xs font-black uppercase text-slate-400">Dívidas</p>
-              <p className="text-lg font-black">{formatarEuro(totalDividas)}</p>
-            </div>
-          </div>
-
-          <div className="mt-4 grid grid-cols-4 gap-2 text-center text-xs font-black">
-            <div className="rounded-xl bg-green-50 p-3 text-green-800">{poupancasCount}<br />poupanças</div>
-            <div className="rounded-xl bg-blue-50 p-3 text-blue-800">{objetivosCount}<br />objetivos</div>
-            <div className="rounded-xl bg-orange-50 p-3 text-orange-800">{pagamentosCount}<br />pagamentos</div>
-            <div className="rounded-xl bg-red-50 p-3 text-red-800">{alertasCount}<br />alertas</div>
-          </div>
+          <p className="mt-4 text-xs font-semibold text-slate-500">
+            Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.
+          </p>
         </div>
 
         <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-          <h4 className="mb-4 text-lg font-black text-blue-950">Dados locais e backup</h4>
-
-          <div className="space-y-3">
-            <button
-              type="button"
-              onClick={onExportar}
-              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white hover:bg-blue-700"
-            >
-              Exportar backup local
+          <h3 className="mb-4 text-lg font-black text-blue-950">Dados Locais</h3>
+          <div className="grid grid-cols-3 gap-3">
+            <button type="button" onClick={exportarBackup} className="rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white hover:bg-blue-700">
+              Exportar backup
             </button>
 
-            <label className="block w-full cursor-pointer rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-black text-white hover:bg-emerald-700">
-              Importar backup local
-              <input
-                type="file"
-                accept="application/json"
-                onChange={onImportar}
-                className="hidden"
-              />
+            <label className="cursor-pointer rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-black text-white hover:bg-emerald-700">
+              Importar backup
+              <input type="file" accept="application/json" onChange={importarBackup} className="hidden" />
             </label>
 
-            <button
-              type="button"
-              onClick={onLimpar}
-              className="w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-black text-white hover:bg-red-700"
-            >
+            <button type="button" onClick={limparDadosLocais} className="rounded-xl bg-red-600 px-4 py-3 text-sm font-black text-white hover:bg-red-700">
               Limpar dados locais
             </button>
           </div>
-
-          <div className="mt-4 rounded-2xl bg-orange-50 p-4 text-xs font-bold text-orange-900">
-            Esta área afeta apenas os dados guardados no navegador: objetivos, poupanças,
-            pagamentos, alertas e configurações. Os dados do backend/API não são apagados aqui.
-          </div>
+          <p className="mt-4 text-xs font-semibold text-slate-500">
+            Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.
+          </p>
         </div>
-      </section>
+      </div>
+
+      <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
+        <h3 className="mb-4 text-lg font-black text-blue-950">Resumo Local</h3>
+        <div className="space-y-3 text-sm font-bold">
+          <ResumoLinha label="Total recebido" value={formatarEuro(resumo.totalRecebido)} />
+          <ResumoLinha label="Total despesas" value={formatarEuro(resumo.totalDespesasRealizado)} />
+          <ResumoLinha label="Poupança guardada" value={formatarEuro(resumo.totalPoupancaGuardado)} />
+          <ResumoLinha label="Total dívidas" value={formatarEuro(resumo.totalDividas)} />
+        </div>
+
+        <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm font-bold text-slate-700">
+          <div className="mb-2 flex justify-between"><span>Poupanças</span><strong>{resumo.poupancasCount}</strong></div>
+          <div className="mb-2 flex justify-between"><span>Objetivos</span><strong>{resumo.objetivosCount}</strong></div>
+          <div className="mb-2 flex justify-between"><span>Pagamentos</span><strong>{resumo.pagamentosCount}</strong></div>
+          <div className="flex justify-between"><span>Alertas manuais</span><strong>{resumo.alertasCount}</strong></div>
+        </div>
+      </div>
     </section>
+  )
+}
+
+function NumberSetting({ label, value, onChange }) {
+  return (
+    <div>
+      <label className="mb-1 block text-[11px] font-black uppercase text-slate-500">{label}</label>
+      <input
+        type="number"
+        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold outline-none focus:border-blue-400"
+        value={value ?? 0}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  )
+}
+
+function ResumoLinha({ label, value }) {
+  return (
+    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+      <span className="text-slate-500">{label}</span>
+      <strong>{value}</strong>
+    </div>
   )
 }
 
@@ -3378,6 +3503,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
   const menuItems = [
     ["🏠", "Resumo"],
     ["⚖️", "Rendimentos"],
+    ["💰", "Poupança"],
     ["💸", "Despesas"],
     ["🪙", "Dívidas"],
     ["🎯", "Objetivos"],
