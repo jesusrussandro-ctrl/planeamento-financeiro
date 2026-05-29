@@ -2606,7 +2606,6 @@ export default function App() {
           <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
             <div className="space-y-4">
               {renderDespesas()}
-              {renderBeneficios()}
               {renderDespesasExtras()}
             </div>
             <PlaceholderSection icon="💸" title="Resumo de Despesas">
@@ -2626,7 +2625,10 @@ export default function App() {
       return (
         <>
           <section className="grid grid-cols-[1.4fr_0.9fr] gap-4 items-start">
-            {renderDividas()}
+            <div className="space-y-4">
+              {renderDividas()}
+              {renderBeneficios()}
+            </div>
             {renderPagamentoIdeal()}
           </section>
           {renderSimuladorDividas()}
@@ -2720,10 +2722,12 @@ export default function App() {
             </div>
             <div className="space-y-4">
               {renderDespesas()}
-              {renderBeneficios()}
               {renderDespesasExtras()}
             </div>
-            {renderDividas()}
+            <div className="space-y-4">
+              {renderDividas()}
+              {renderBeneficios()}
+            </div>
             {renderPagamentoIdeal()}
           </section>
           {renderProximosPagamentos()}
