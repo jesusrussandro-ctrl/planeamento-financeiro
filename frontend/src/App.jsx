@@ -31,6 +31,15 @@ const MOEDAS = {
   AED: { label: "AED - Dirham dos Emirados Árabes Unidos (د.إ)", locale: "ar-AE", currency: "AED", flag: "🇦🇪" },
 }
 
+
+const IDIOMAS = {
+  pt: { label: "Português", flag: "🇵🇹", direction: "ltr" },
+  en: { label: "English", flag: "🇬🇧", direction: "ltr" },
+  fr: { label: "Français", flag: "🇫🇷", direction: "ltr" },
+  es: { label: "Español", flag: "🇪🇸", direction: "ltr" },
+  ar: { label: "العربية", flag: "🇦🇪", direction: "rtl" },
+}
+
 const NOMES_MESES = [
   "Janeiro",
   "Fevereiro",
@@ -176,6 +185,7 @@ const ALERTAS_INICIAIS = []
 
 const CONFIGURACOES_INICIAIS = {
   moedaPadrao: "EUR",
+  idiomaPadrao: "pt",
   limiteDespesas: 60,
   metaPoupanca: 10,
   limiteDividas: 30,
@@ -273,6 +283,16 @@ export default function App() {
   React.useEffect(() => {
     guardarLocalStorage("configuracoesUsuario", configuracoesUsuario)
   }, [configuracoesUsuario])
+
+  React.useEffect(() => {
+    if (typeof document === "undefined") return
+
+    const codigoIdioma = configuracoesUsuario.idiomaPadrao || "pt"
+    const idioma = IDIOMAS[codigoIdioma] || IDIOMAS.pt
+
+    document.documentElement.lang = codigoIdioma
+    document.documentElement.dir = idioma.direction || "ltr"
+  }, [configuracoesUsuario.idiomaPadrao])
 
   React.useEffect(() => {
     fetch(`/api/rendimentos?mes=${mesAtivo}`)
@@ -931,6 +951,12 @@ export default function App() {
 
     if (campo === "moedaPadrao") {
       setMoedaAtiva(valor)
+    }
+
+    if (campo === "idiomaPadrao" && typeof document !== "undefined") {
+      const idioma = IDIOMAS[valor] || IDIOMAS.pt
+      document.documentElement.lang = valor
+      document.documentElement.dir = idioma.direction || "ltr"
     }
   }
 
@@ -2039,6 +2065,7 @@ export default function App() {
           configuracoes={configuracoesUsuario}
           onAtualizar={atualizarConfiguracoes}
           moedas={MOEDAS}
+          idiomas={IDIOMAS}
           mesAtivo={mesAtivo}
           setMesAtivo={setMesAtivo}
           mesesFuturos={MESES_FUTUROS}
@@ -3350,6 +3377,7 @@ function DefinicoesPanel({
   configuracoes,
   onAtualizar,
   moedas,
+  idiomas,
   mesAtivo,
   setMesAtivo,
   mesesFuturos,
@@ -3382,7 +3410,7 @@ function DefinicoesPanel({
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className={labelClass}>Moeda padrão</label>
               <select
@@ -3396,6 +3424,22 @@ function DefinicoesPanel({
               </select>
               <p className="mt-2 text-[11px] font-semibold text-slate-500">
                 Apenas muda o formato visual. Não faz conversão cambial.
+              </p>
+            </div>
+
+            <div>
+              <label className={labelClass}>Idioma padrão</label>
+              <select
+                className={inputClass}
+                value={configuracoes.idiomaPadrao || "pt"}
+                onChange={(e) => onAtualizar("idiomaPadrao", e.target.value)}
+              >
+                {Object.entries(idiomas).map(([codigo, idioma]) => (
+                  <option key={codigo} value={codigo}>{idioma.flag} {idioma.label}</option>
+                ))}
+              </select>
+              <p className="mt-2 text-[11px] font-semibold text-slate-500">
+                Guarda a preferência de idioma. A tradução completa será ativada por fases.
               </p>
             </div>
 
@@ -3458,6 +3502,16 @@ function DefinicoesPanel({
 
       <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
         <h3 className="mb-4 text-lg font-black text-blue-950">Resumo Local</h3>
+        <div className="mb-5 rounded-2xl bg-blue-50 p-4 text-sm font-bold text-blue-950">
+          <div className="mb-2 flex justify-between">
+            <span>Moeda</span>
+            <strong>{configuracoes.moedaPadrao || "EUR"}</strong>
+          </div>
+          <div className="flex justify-between">
+            <span>Idioma</span>
+            <strong>{idiomas[configuracoes.idiomaPadrao || "pt"]?.label || "Português"}</strong>
+          </div>
+        </div>
         <div className="space-y-3 text-sm font-bold">
           <ResumoLinha label="Total recebido" value={formatarEuro(resumo.totalRecebido)} />
           <ResumoLinha label="Total despesas" value={formatarEuro(resumo.totalDespesasRealizado)} />
