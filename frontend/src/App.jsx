@@ -18,7 +18,7 @@ import {
   ComposedChart,
 } from "recharts"
 
-const COLORS = ["#0e7490", "#0891b2", "#84cc16", "#7c3aed", "#2563eb", "#f59e0b"]
+const COLORS = ["rgba(14, 116, 144, 0.86)", "rgba(8, 145, 178, 0.84)", "rgba(132, 204, 22, 0.82)", "rgba(124, 58, 237, 0.82)", "rgba(37, 99, 235, 0.82)", "rgba(245, 158, 11, 0.82)"]
 
 const MOEDAS = {
   EUR: { label: "EUR - Euro (€)", locale: "pt-PT", currency: "EUR", flag: "🇪🇺" },
@@ -155,10 +155,10 @@ const distribuicao = [
 ]
 
 const renda = [
-  { name: "Despesas", value: 53, percent: "53,0%", color: "#f97316" },
-  { name: "Dívidas", value: 27, percent: "27,0%", color: "#15803d" },
-  { name: "Livre", value: 10, percent: "10,0%", color: "#2563eb" },
-  { name: "Reserva", value: 10, percent: "10,0%", color: "#0e7490" },
+  { name: "Despesas", value: 53, percent: "53,0%", color: "rgba(249, 115, 22, 0.82)" },
+  { name: "Dívidas", value: 27, percent: "27,0%", color: "rgba(21, 128, 61, 0.84)" },
+  { name: "Livre", value: 10, percent: "10,0%", color: "rgba(37, 99, 235, 0.82)" },
+  { name: "Reserva", value: 10, percent: "10,0%", color: "rgba(14, 116, 144, 0.84)" },
 ]
 
 const evolucao = [
@@ -177,10 +177,10 @@ const evolucao = [
 ]
 
 const objetivos = [
-  ["💵", "Fundo de Emergência", "Objetivo: € 3.000,00", "€ 2.100,00", 70, "bg-green-500"],
-  ["💳", "Quitar Cartão de Crédito", "Objetivo: € 5.000,00", "€ 1.000,00", 20, "bg-orange-500"],
-  ["🏠", "Entrada para Casa", "Objetivo: € 15.000,00", "€ 3.750,00", 25, "bg-blue-500"],
-  ["🚗", "Nova Viatura", "Objetivo: € 20.000,00", "€ 6.000,00", 30, "bg-purple-500"],
+  ["💵", "Fundo de Emergência", "Objetivo: € 3.000,00", "€ 2.100,00", 70, "bg-green-50/850"],
+  ["💳", "Quitar Cartão de Crédito", "Objetivo: € 5.000,00", "€ 1.000,00", 20, "bg-orange-50/850"],
+  ["🏠", "Entrada para Casa", "Objetivo: € 15.000,00", "€ 3.750,00", 25, "bg-blue-50/850"],
+  ["🚗", "Nova Viatura", "Objetivo: € 20.000,00", "€ 6.000,00", 30, "bg-purple-50/850"],
 ]
 
 const pagamentos = [
@@ -198,10 +198,10 @@ const dividas = [
 ]
 
 const OBJETIVOS_INICIAIS = [
-  { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-500" },
-  { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-500" },
-  { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-500" },
-  { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-500" },
+  { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-50/850" },
+  { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-50/850" },
+  { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-50/850" },
+  { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-50/850" },
 ]
 
 const PAGAMENTOS_INICIAIS = [
@@ -1010,7 +1010,7 @@ export default function App() {
       nome: dadosObjetivo.nome,
       objetivo: Number(dadosObjetivo.objetivo || 0),
       atual: 0,
-      cor: dadosObjetivo.cor || "bg-green-500",
+      cor: dadosObjetivo.cor || "bg-green-50/850",
     }
 
     setObjetivosUsuario((listaAtual) => {
@@ -1959,8 +1959,8 @@ export default function App() {
               <XAxis type="number" tick={{ fontSize: 10 }} />
               <YAxis dataKey="name" type="category" width={86} tick={{ fontSize: 11, fontWeight: 700 }} />
               <Tooltip />
-              <Bar dataKey="orcamentado" fill="#2563eb" radius={5} barSize={9} />
-              <Bar dataKey="realizado" fill="#22c55e" radius={5} barSize={9} />
+              <Bar dataKey="orcamentado" fill="rgba(37, 99, 235, 0.82)" radius={5} barSize={9} />
+              <Bar dataKey="realizado" fill="rgba(34, 197, 94, 0.82)" radius={5} barSize={9} />
             </BarChart>
           </ResponsiveContainer>
         </ChartBox>
@@ -2025,7 +2025,7 @@ export default function App() {
       <div id="card-poupanca">
         <TableCard
           title={t("table.savings")}
-          color="bg-teal-700"
+          color="bg-teal-700/90"
           action={
             <button
               type="button"
@@ -2043,7 +2043,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+          <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("type")}</th>
               <th className="p-1.5">{t("linkedGoal")}</th>
@@ -2061,13 +2061,13 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 bg-teal-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-0 z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5"></td>
               <td className="p-1.5 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
@@ -2094,7 +2094,7 @@ export default function App() {
       <div id="card-rendimentos">
         <TableCard
           title={t("table.income")}
-          color="bg-emerald-700"
+          color="bg-emerald-700/90"
           action={
             <button
               type="button"
@@ -2112,7 +2112,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+          <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("source")}</th>
               <th className="p-1.5">{t("expected")}</th>
@@ -2128,13 +2128,13 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 bg-emerald-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-0 z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
@@ -2154,7 +2154,7 @@ export default function App() {
       <div id="card-beneficios">
         <TableCard
           title={t("table.benefits")}
-          color="bg-cyan-700"
+          color="bg-cyan-700/90"
           action={
             <button
               type="button"
@@ -2172,7 +2172,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+          <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("type")}</th>
               <th className="p-1.5">{t("benefit.target")}</th>
@@ -2192,13 +2192,13 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.disponivel)}</td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoBeneficio(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarBeneficio(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                    <button onClick={() => iniciarEdicaoBeneficio(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarBeneficio(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-[26px] z-20 bg-cyan-100 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-[26px] z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("benefit.totalUsed")}</td>
               <td className="p-1.5"></td>
               <td className="p-1.5 text-center">{formatarEuro(totalBeneficios)}</td>
@@ -2206,7 +2206,7 @@ export default function App() {
               <td className="p-1.5"></td>
               <td className="p-1.5"></td>
             </tr>
-            <tr className="sticky bottom-0 z-30 bg-cyan-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-0 z-30 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("benefit.totalAvailable")}</td>
               <td className="p-1.5"></td>
               <td className="p-1.5"></td>
@@ -2239,7 +2239,7 @@ export default function App() {
       <div id="card-despesas-extras">
         <TableCard
           title={t("table.extraExpenses")}
-          color="bg-orange-700"
+          color="bg-orange-700/90"
           action={
             <button
               type="button"
@@ -2257,7 +2257,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+          <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("extra.description")}</th>
               <th className="p-1.5">{t("extra.deductedIn")}</th>
@@ -2275,19 +2275,19 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.valor)}</td>
                 <td className="p-1.5 text-center">{String(item.dia || 1).padStart(2, "0")}/{mesAtivo.slice(5, 7)}</td>
                 <td className="p-1.5 text-center">
-                  <span className={`${item.estado === "pendente" ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"} rounded px-2 py-1 text-[10px] font-black`}>
+                  <span className={`${item.estado === "pendente" ? "bg-orange-100/85 text-orange-700" : "bg-green-100/85 text-green-700"} rounded px-2 py-1 text-[10px] font-black`}>
                     {item.estado === "pendente" ? "Pendente" : "Realizada"}
                   </span>
                 </td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoDespesaExtra(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarDespesaExtra(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                    <button onClick={() => iniciarEdicaoDespesaExtra(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarDespesaExtra(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 bg-orange-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-0 z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("extra.total")}</td>
               <td className="p-1.5"></td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasExtrasRealizadas)}</td>
@@ -2314,7 +2314,7 @@ export default function App() {
       <div id="card-despesas">
         <TableCard
           title={t("table.expenses")}
-          color="bg-blue-700"
+          color="bg-blue-700/90"
           action={
             <button
               type="button"
@@ -2332,7 +2332,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+          <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("category")}</th>
               <th className="p-1.5">{t("expected")}</th>
@@ -2352,13 +2352,13 @@ export default function App() {
                 </td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr className="sticky bottom-0 z-20 bg-blue-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-0 z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
@@ -2379,7 +2379,7 @@ export default function App() {
       <div id="card-dividas">
         <TableCard
           title={t("table.debts")}
-          color="bg-purple-700"
+          color="bg-purple-700/90"
           action={
             <button
               type="button"
@@ -2397,7 +2397,7 @@ export default function App() {
             </button>
           }
         >
-          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+          <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1 text-left">{t("creditor")}</th>
               <th className="p-1">{t("balance")}</th>
@@ -2421,19 +2421,19 @@ export default function App() {
                   <td className="p-1 text-center">{formatarTipoJuros(item.tipoJuros)}</td>
                   <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
                   <td className="p-1 text-center">
-                    {pagamentoMes ? <span className="rounded bg-green-100 px-2 py-1 text-green-700 font-black">{t("paid")}</span> : <span className="rounded bg-orange-100 px-2 py-1 text-orange-700 font-black">{t("pending")}</span>}
+                    {pagamentoMes ? <span className="rounded bg-green-100/85 px-2 py-1 text-green-700 font-black">{t("paid")}</span> : <span className="rounded bg-orange-100/85 px-2 py-1 text-orange-700 font-black">{t("pending")}</span>}
                   </td>
                   <td className="p-1 text-center">
                     <div className="flex flex-col justify-center gap-1">
-                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold">{t("pay")}</button>
-                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                      <button onClick={() => apagarDivida(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600/90 hover:bg-emerald-700/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("pay")}</button>
+                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                      <button onClick={() => apagarDivida(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                     </div>
                   </td>
                 </tr>
               )
             })}
-            <tr className="sticky bottom-0 z-20 bg-purple-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+            <tr className="sticky bottom-0 z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
               <td className="p-1.5">{t("total.debts")}</td>
               <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
             </tr>
@@ -2449,8 +2449,8 @@ export default function App() {
 
   function renderPagamentoIdeal() {
     return (
-      <TableCard title={t("table.idealDebts")} color="bg-green-700">
-        <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+      <TableCard title={t("table.idealDebts")} color="bg-green-700/90">
+        <thead className="sticky top-0 z-20 bg-slate-50/85 text-slate-500 shadow-sm">
           <tr>
             <th className="p-1 text-left">{t("creditor")}</th>
             <th className="p-1">{t("payment")}</th>
@@ -2467,13 +2467,13 @@ export default function App() {
               <td className="p-1 text-center">{item.tempoMeses} {t("months")}</td>
             </tr>
           ))}
-          <tr className="sticky bottom-[26px] z-20 bg-green-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+          <tr className="sticky bottom-[26px] z-20 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
             <td className="p-1.5">{t("distributed.total")}</td>
             <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
             <td className="p-1.5 text-center">100%</td>
             <td className="p-1.5"></td>
           </tr>
-          <tr className="sticky bottom-0 z-30 bg-green-50 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+          <tr className="sticky bottom-0 z-30 bg-blue-50/85 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
             <td className="p-1.5">{t("remaining")}</td>
             <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
             <td className="p-1.5"></td>
@@ -2486,17 +2486,17 @@ export default function App() {
 
   function renderAcessosRapidos() {
     const atalhos = [
-      { id: "rendimento", label: "Adicionar Rendimento", icon: "➕", bg: "bg-green-100", text: "text-green-700" },
-      { id: "despesa", label: "Adicionar Despesa", icon: "📉", bg: "bg-red-100", text: "text-red-700" },
-      { id: "despesaExtra", label: "Adicionar Despesa Extra", icon: "📊", bg: "bg-blue-100", text: "text-blue-700" },
-      { id: "poupanca", label: "Adicionar Poupança", icon: "🐷", bg: "bg-green-100", text: "text-green-700" },
-      { id: "divida", label: "Adicionar Dívida", icon: "🏦", bg: "bg-purple-100", text: "text-purple-700" },
-      { id: "relatorios", label: "Ver Relatórios", icon: "📈", bg: "bg-blue-100", text: "text-blue-700" },
+      { id: "rendimento", label: "Adicionar Rendimento", icon: "➕", bg: "bg-green-100/85", text: "text-green-700" },
+      { id: "despesa", label: "Adicionar Despesa", icon: "📉", bg: "bg-red-100/85", text: "text-red-700" },
+      { id: "despesaExtra", label: "Adicionar Despesa Extra", icon: "📊", bg: "bg-blue-100/85", text: "text-blue-700" },
+      { id: "poupanca", label: "Adicionar Poupança", icon: "🐷", bg: "bg-green-100/85", text: "text-green-700" },
+      { id: "divida", label: "Adicionar Dívida", icon: "🏦", bg: "bg-purple-100/85", text: "text-purple-700" },
+      { id: "relatorios", label: "Ver Relatórios", icon: "📈", bg: "bg-blue-100/85", text: "text-blue-700" },
     ]
 
     return (
       <div className="h-[clamp(300px,calc((100vh-330px)/2),390px)] rounded-[16px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
-        <div className="bg-blue-50 px-3 py-1.5 text-center border-b border-blue-100">
+        <div className="bg-blue-50/85 px-3 py-1.5 text-center border-b border-blue-100">
           <h3 className="text-[10px] font-black uppercase text-blue-900">
             Acessos Rápidos
           </h3>
@@ -2524,7 +2524,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => abrirAtalho("calendario")}
-            className="mt-2 w-full shrink-0 rounded-xl border border-blue-100 bg-blue-50 py-1.5 text-[9px] font-black text-blue-700 transition hover:bg-blue-100"
+            className="mt-2 w-full shrink-0 rounded-xl border border-blue-100 bg-blue-50/85 py-1.5 text-[9px] font-black text-blue-700 transition hover:bg-blue-100/85"
           >
             Ir para Calendário
           </button>
@@ -2538,12 +2538,12 @@ export default function App() {
       <Panel title={t("upcoming.payments")} className="h-full min-h-0" bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain">
         {pagamentosFinanceiros.map((pagamento) => {
           const badgeClass = pagamento.estado === "pago"
-            ? "bg-green-100 text-green-700"
+            ? "bg-green-100/85 text-green-700"
             : pagamento.estado === "vencido" || pagamento.estado === "vence-hoje"
-              ? "bg-red-100 text-red-700"
+              ? "bg-red-100/85 text-red-700"
               : pagamento.estado === "urgente"
-                ? "bg-orange-100 text-orange-700"
-                : "bg-blue-50 text-blue-700"
+                ? "bg-orange-100/85 text-orange-700"
+                : "bg-blue-50/85 text-blue-700"
 
           return (
             <div key={pagamento.id} className={`grid ${mostrarAcoes ? "grid-cols-[44px_1fr_74px_64px_104px]" : "grid-cols-[42px_1fr_78px_76px]"} items-center text-xs border-b border-slate-100 py-2 gap-1`}>
@@ -2559,21 +2559,21 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => alternarPagamentoPago(pagamento.id)}
-                    className="rounded bg-green-100 px-2 py-1 text-[9px] font-black text-green-700"
+                    className="rounded bg-green-100/85 px-2 py-1 text-[9px] font-black text-green-700"
                   >
                     {pagamento.pago ? "Reabrir" : "Pago"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setPagamentoEditando(pagamento)}
-                    className="rounded bg-blue-100 px-2 py-1 text-[9px] font-black text-blue-700"
+                    className="rounded bg-blue-100/85 px-2 py-1 text-[9px] font-black text-blue-700"
                   >
                     Editar
                   </button>
                   <button
                     type="button"
                     onClick={() => apagarPagamentoFinanceiro(pagamento.id)}
-                    className="rounded bg-red-100 px-2 py-1 text-[9px] font-black text-red-700"
+                    className="rounded bg-red-100/85 px-2 py-1 text-[9px] font-black text-red-700"
                   >
                     X
                   </button>
@@ -2588,10 +2588,10 @@ export default function App() {
 
   function renderAlertas(mostrarAcoes = false) {
     const estiloPorTipo = {
-      positivo: "bg-green-50 text-green-800",
-      conselho: "bg-orange-50 text-orange-800",
-      aviso: "bg-yellow-50 text-yellow-800",
-      urgente: "bg-red-50 text-red-800",
+      positivo: "bg-green-50/85 text-green-800",
+      conselho: "bg-orange-50/85 text-orange-800",
+      aviso: "bg-yellow-50/85 text-yellow-800",
+      urgente: "bg-red-50/85 text-red-800",
     }
 
     return (
@@ -2601,7 +2601,7 @@ export default function App() {
         bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain"
       >
         {alertasFinanceiros.length === 0 && (
-          <div className="bg-slate-50 text-slate-600 rounded-xl p-3 text-xs mb-3">
+          <div className="bg-slate-50/85 text-slate-600 rounded-xl p-3 text-xs mb-3">
             {t("alerts.none")}
           </div>
         )}
@@ -2779,7 +2779,7 @@ export default function App() {
         <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">📊</div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50/85 text-2xl">📊</div>
               <div>
                 <p className="text-[10px] font-black uppercase text-slate-400">Relatório mensal</p>
                 <h3 className="text-xl font-black text-blue-950">{formatarMesAtivo(mesAtivo)}</h3>
@@ -2834,7 +2834,7 @@ export default function App() {
                 </optgroup>
               ))}
             </select>
-            <div className="rounded-2xl bg-yellow-50 p-4 text-sm font-bold text-yellow-800">
+            <div className="rounded-2xl bg-yellow-50/85 p-4 text-sm font-bold text-yellow-800">
               A comparação detalhada com {formatarMesAtivo(mesComparacaoRelatorio)} fica preparada aqui. Quando os dados históricos forem guardados na base de dados, este bloco vai mostrar aumentos e reduções reais entre meses.
             </div>
           </div>
@@ -2845,7 +2845,7 @@ export default function App() {
             <h3 className="mb-4 text-lg font-black text-blue-950">Análise por categoria</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-500">
+                <thead className="bg-slate-50/85 text-slate-500">
                   <tr>
                     <th className="p-2 text-left">Categoria</th>
                     <th className="p-2 text-center">Previsto</th>
@@ -2876,7 +2876,7 @@ export default function App() {
             <h3 className="mb-4 text-lg font-black text-blue-950">Conclusão automática</h3>
             <div className="space-y-3">
               {conclusoes.map((texto) => (
-                <div key={texto} className="rounded-2xl bg-blue-50 p-3 text-sm font-bold text-blue-900">
+                <div key={texto} className="rounded-2xl bg-blue-50/85 p-3 text-sm font-bold text-blue-900">
                   {texto}
                 </div>
               ))}
@@ -3110,7 +3110,7 @@ export default function App() {
               <p className="text-[8px] font-black uppercase text-slate-400">{t("active.section")}</p>
               <h2 className="text-[14px] font-black text-blue-950">{t(`menu.${secaoAtiva}`)}</h2>
             </div>
-            <div className="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-black text-blue-700">
+            <div className="rounded-full bg-blue-50/85 px-2 py-0.5 text-[9px] font-black text-blue-700">
               {formatarMesAtivo(mesAtivo)}
             </div>
           </section>
@@ -3145,7 +3145,7 @@ function SimulatorCard({
             <span className="text-[8px] font-bold text-slate-700">
               Valor disponível mensal para dívidas
             </span>
-            <div className="w-[110px] h-8 bg-green-50 rounded-lg flex items-center justify-center text-[11px] font-black text-green-900">
+            <div className="w-[110px] h-8 bg-green-50/85 rounded-lg flex items-center justify-center text-[11px] font-black text-green-900">
               {formatarEuro(valorDisponivel)}
             </div>
           </div>
@@ -3158,7 +3158,7 @@ function SimulatorCard({
             <select
               value={considerarJuros ? "sim" : "nao"}
               onChange={(e) => setConsiderarJuros(e.target.value === "sim")}
-              className="w-[76px] h-6 bg-green-50 rounded-lg text-center text-[9px] font-black text-green-900 outline-none"
+              className="w-[76px] h-6 bg-green-50/85 rounded-lg text-center text-[9px] font-black text-green-900 outline-none"
             >
               <option value="sim">Sim</option>
               <option value="nao">Não</option>
@@ -3231,14 +3231,14 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
               type="monotone"
               dataKey="sombra"
               stroke="none"
-              fill="#ddd6fe"
+              fill="rgba(221, 214, 254, 0.70)"
               fillOpacity={0.9}
             />
 
             <Line
               type="monotone"
               dataKey="divida"
-              stroke="#4f46e5"
+              stroke="rgba(79, 70, 229, 0.86)"
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2, fill: "white" }}
             />
@@ -3246,7 +3246,7 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
             <Line
               type="monotone"
               dataKey="projecao"
-              stroke="#6d28d9"
+              stroke="rgba(109, 40, 217, 0.78)"
               strokeWidth={2}
               strokeDasharray="4 4"
               dot={{ r: 3, strokeWidth: 1, fill: "white" }}
@@ -3308,11 +3308,11 @@ function HealthCard({ t = (chave) => chave }) {
 
 function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPercent = 0 }) {
   const colors = {
-    blue: "bg-blue-100",
-    red: "bg-red-100",
-    green: "bg-green-100",
-    purple: "bg-purple-100",
-    orange: "bg-orange-100",
+    blue: "bg-blue-100/85",
+    red: "bg-red-100/85",
+    green: "bg-green-100/85",
+    purple: "bg-purple-100/85",
+    orange: "bg-orange-100/85",
   }
 
   return (
@@ -3326,9 +3326,9 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPerc
           {value}
         </p>
         {showBar && (
-          <div className="w-[70px] h-1.5 rounded-full bg-blue-100 mt-1 overflow-hidden">
+          <div className="w-[70px] h-1.5 rounded-full bg-blue-100/85 mt-1 overflow-hidden">
             <div
-              className="h-2 rounded-full bg-blue-500 transition-all"
+              className="h-2 rounded-full bg-blue-50/850 transition-all"
               style={{ width: `${Math.max(0, Math.min(100, Number(barPercent || 0)))}%` }}
             />
           </div>
@@ -3383,7 +3383,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
           <button
             type="button"
             onClick={onNovo}
-            className="bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full"
+            className="bg-green-100/85 text-green-800 text-[10px] font-black px-3 py-1 rounded-full"
           >
             + Novo
           </button>
@@ -3403,7 +3403,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
           return (
             <div key={objetivo.id || objetivo.nome} className="grid grid-cols-[28px_1fr] gap-2 mb-2">
-              <div className="w-7 h-7 rounded-xl bg-green-100 flex items-center justify-center text-sm">
+              <div className="w-7 h-7 rounded-xl bg-green-100/85 flex items-center justify-center text-sm">
                 {objetivo.icone}
               </div>
               <div>
@@ -3431,14 +3431,14 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
                     <button
                       type="button"
                       onClick={() => onEditar?.(objetivo)}
-                      className="rounded bg-blue-100 px-2 py-1 text-[10px] font-black text-blue-700"
+                      className="rounded bg-blue-100/85 px-2 py-1 text-[10px] font-black text-blue-700"
                     >
                       Editar
                     </button>
                     <button
                       type="button"
                       onClick={() => onApagar?.(objetivo.id)}
-                      className="rounded bg-red-100 px-2 py-1 text-[10px] font-black text-red-700"
+                      className="rounded bg-red-100/85 px-2 py-1 text-[10px] font-black text-red-700"
                     >
                       Apagar
                     </button>
@@ -3453,7 +3453,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       <button
         type="button"
         onClick={onNovo}
-        className="shrink-0 w-full bg-orange-50 text-center py-1.5 text-[9px] font-black"
+        className="shrink-0 w-full bg-orange-50/85 text-center py-1.5 text-[9px] font-black"
       >
         Ver todos os objetivos →
       </button>
@@ -3494,7 +3494,7 @@ function PlaceholderSection({ icon, title, children }) {
   return (
     <div className="rounded-[24px] bg-white p-6 shadow-lg border border-slate-100 min-h-[260px]">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50/85 text-2xl">
           {icon}
         </div>
         <div>
@@ -3954,7 +3954,7 @@ function AddDividaForm({
         <option value="Baixa">Baixa</option>
       </select>
 
-      <button className="w-full rounded-lg bg-purple-600 py-2 text-white font-bold">
+      <button className="w-full rounded-lg bg-purple-600/90 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
@@ -4005,14 +4005,14 @@ function PagamentoDividaForm({
         Registar Pagamento
       </h3>
 
-      <div className="mb-3 rounded-xl bg-purple-50 p-3 text-xs font-bold text-purple-900">
+      <div className="mb-3 rounded-xl bg-purple-50/85 p-3 text-xs font-bold text-purple-900">
         <div>{dividaSelecionada.credor}</div>
         <div>Saldo atual: {formatarEuro(dividaSelecionada.saldo)}</div>
         <div>Prestação prevista: {formatarEuro(dividaSelecionada.prestacaoMensal)}</div>
       </div>
 
       {pagamentoAtual && (
-        <div className="mb-3 rounded-xl bg-green-50 p-3 text-[11px] font-bold text-green-900">
+        <div className="mb-3 rounded-xl bg-green-50/85 p-3 text-[11px] font-bold text-green-900">
           <div>Pagamento já registado neste mês.</div>
           <div>Valor pago: {formatarEuro(pagamentoAtual.valorPago)}</div>
           <div>Juros pagos: {formatarEuro(pagamentoAtual.jurosPago)}</div>
@@ -4146,7 +4146,7 @@ function AddDespesaExtraForm({ despesaExtraEditando, poupancas = [], onGuardar, 
         <option value="pendente">Pendente</option>
       </select>
 
-      <button className="w-full rounded-lg bg-orange-600 py-2 text-white font-bold">
+      <button className="w-full rounded-lg bg-orange-600/90 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
@@ -4241,7 +4241,7 @@ function AddBeneficioForm({ beneficioEditando, despesasLista = [], t = (chave) =
         onChange={(e) => setValor(e.target.value)}
       />
 
-      <button className="w-full rounded-lg bg-cyan-600 py-2 text-white font-bold">
+      <button className="w-full rounded-lg bg-cyan-600/90 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
@@ -4344,7 +4344,7 @@ function AddPoupancaForm({ poupancaEditando, objetivosLista = [], t = (chave) =>
         onChange={(e) => setGuardado(e.target.value)}
       />
 
-      <button className="w-full rounded-lg bg-teal-600 py-2 text-white font-bold">
+      <button className="w-full rounded-lg bg-teal-600/90 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
@@ -4366,7 +4366,7 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
   const [nome, setNome] = React.useState("")
   const [objetivo, setObjetivo] = React.useState("")
   const [atual, setAtual] = React.useState("")
-  const [cor, setCor] = React.useState("bg-green-500")
+  const [cor, setCor] = React.useState("bg-green-50/850")
 
   const modoEdicao = Boolean(objetivoEditando)
 
@@ -4376,13 +4376,13 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
       setNome(objetivoEditando.nome || "")
       setObjetivo(String(objetivoEditando.objetivo || 0))
       setAtual(String(objetivoEditando.atual || 0))
-      setCor(objetivoEditando.cor || "bg-green-500")
+      setCor(objetivoEditando.cor || "bg-green-50/850")
     } else {
       setIcone("🎯")
       setNome("")
       setObjetivo("")
       setAtual("")
-      setCor("bg-green-500")
+      setCor("bg-green-50/850")
     }
   }, [objetivoEditando])
 
@@ -4400,7 +4400,7 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
       setNome("")
       setObjetivo("")
       setAtual("")
-      setCor("bg-green-500")
+      setCor("bg-green-50/850")
     }
   }
 
@@ -4416,11 +4416,11 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
       <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Valor atual" type="number" value={atual} onChange={(e) => setAtual(e.target.value)} />
 
       <select className="w-full mb-3 rounded-lg border p-2 text-sm" value={cor} onChange={(e) => setCor(e.target.value)}>
-        <option value="bg-green-500">Verde</option>
-        <option value="bg-orange-500">Laranja</option>
-        <option value="bg-blue-500">Azul</option>
-        <option value="bg-purple-500">Roxo</option>
-        <option value="bg-red-500">Vermelho</option>
+        <option value="bg-green-50/850">Verde</option>
+        <option value="bg-orange-50/850">Laranja</option>
+        <option value="bg-blue-50/850">Azul</option>
+        <option value="bg-purple-50/850">Roxo</option>
+        <option value="bg-red-50/850">Vermelho</option>
       </select>
 
       <button className="w-full rounded-lg bg-blue-600 py-2 text-white font-bold">
@@ -4495,7 +4495,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
         Marcar como pago
       </label>
 
-      <button className="w-full rounded-lg bg-orange-600 py-2 text-white font-bold">
+      <button className="w-full rounded-lg bg-orange-600/90 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
@@ -4563,7 +4563,7 @@ function AlertaManualForm({ alertaEditando, onGuardar, onCancelar }) {
         <option value="positivo">Positivo</option>
       </select>
 
-      <button className="w-full rounded-lg bg-orange-600 py-2 text-white font-bold">
+      <button className="w-full rounded-lg bg-orange-600/90 py-2 text-white font-bold">
         {modoEdicao ? "Guardar Alterações" : "Adicionar"}
       </button>
 
@@ -4602,7 +4602,7 @@ function DefinicoesPanel({
       <div className="space-y-4">
         <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">⚙️</div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50/85 text-2xl">⚙️</div>
             <div>
               <p className="text-[10px] font-black uppercase text-slate-400">{t("settings.config")}</p>
               <h3 className="text-xl font-black text-blue-950">{t("settings.general")}</h3>
@@ -4610,7 +4610,7 @@ function DefinicoesPanel({
           </div>
 
           {mensagem && (
-            <div className="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm font-bold text-green-800">
+            <div className="mb-4 rounded-xl bg-green-50/85 px-4 py-3 text-sm font-bold text-green-800">
               {mensagem}
             </div>
           )}
@@ -4695,7 +4695,7 @@ function DefinicoesPanel({
               <input type="file" accept="application/json" onChange={importarBackup} className="hidden" />
             </label>
 
-            <button type="button" onClick={limparDadosLocais} className="rounded-xl bg-red-600 px-4 py-3 text-sm font-black text-white hover:bg-red-700">
+            <button type="button" onClick={limparDadosLocais} className="rounded-xl bg-red-600/90 px-4 py-3 text-sm font-black text-white hover:bg-red-700">
               {t("settings.clear")}
             </button>
           </div>
@@ -4707,7 +4707,7 @@ function DefinicoesPanel({
 
       <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
         <h3 className="mb-4 text-lg font-black text-blue-950">{t("settings.localSummary")}</h3>
-        <div className="mb-5 rounded-2xl bg-blue-50 p-4 text-sm font-bold text-blue-950">
+        <div className="mb-5 rounded-2xl bg-blue-50/85 p-4 text-sm font-bold text-blue-950">
           <div className="mb-2 flex justify-between">
             <span>Moeda</span>
             <strong>{configuracoes.moedaPadrao || "EUR"}</strong>
@@ -4727,7 +4727,7 @@ function DefinicoesPanel({
           <ResumoLinha label={t("kpi.totalDebts")} value={formatarEuro(resumo.totalDividas)} />
         </div>
 
-        <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm font-bold text-slate-700">
+        <div className="mt-5 rounded-2xl bg-slate-50/85 p-4 text-sm font-bold text-slate-700">
           <div className="mb-2 flex justify-between"><span>{t("menu.Poupança")}</span><strong>{resumo.poupancasCount}</strong></div>
           <div className="mb-2 flex justify-between"><span>{t("menu.Benefícios")}</span><strong>{resumo.beneficiosCount}</strong></div>
           <div className="mb-2 flex justify-between"><span>{t("menu.Despesas Extras")}</span><strong>{resumo.despesasExtrasCount || 0}</strong></div>
