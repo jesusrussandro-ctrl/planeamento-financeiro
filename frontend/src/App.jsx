@@ -47,7 +47,7 @@ const TRADUCOES = {
     "app.title1": "Planeamento", "app.title2": "Financeiro", "app.subtitle": "Controlo Financeiro Familiar", "active.section": "Secção ativa", "month.active": "Mês ativo", "viewing": "A visualizar", "currency": "Moeda", "no.conversion": "Sem conversão cambial. Apenas formato visual.", "updated.at": "Atualizado em", "financial.health": "Saúde Financeira", "excellent": "Excelente",
     "kpi.health": "Índice de Saúde Financeira", "kpi.health.text": "A sua situação financeira está muito saudável!", "kpi.salary": "Salário Líquido", "kpi.salary.sub": "Total recebido no mês", "kpi.expenses": "Total Despesas", "kpi.savings": "Total Poupado", "kpi.savings.sub": "Guardado no mês", "kpi.availableDebts": "Disponível p/ Dívidas", "kpi.totalDebts": "Total Dívidas", "kpi.idealPayment": "Pagamento ideal", "kpi.daysLeft": "Dias Restantes", "until": "até", "of.salary": "do salário",
     "chart.expectedVsActual": "Previsto vs Realizado (Despesas)", "chart.distributionExpenses": "Distribuição das Despesas", "chart.distributionIncome": "Distribuição da Renda", "expected": "Previsto", "actual": "Realizado", "total": "Total",
-    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.benefits": "Benefícios / Cartões", "table.extraExpenses": "Despesas Extras", "extra.description": "Descrição", "extra.date": "Data", "extra.state": "Estado", "extra.total": "TOTAL EXTRAS", "benefit.target": "Abate em", "benefit.value": "Valor", "benefit.used": "Usado", "benefit.available": "Disponível", "benefit.totalUsed": "TOTAL USADO", "benefit.totalAvailable": "TOTAL DISPONÍVEL", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "linkedGoal": "Objetivo ligado", "noLinkedGoal": "Sem ligação", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
+    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.benefits": "Benefícios / Cartões", "table.extraExpenses": "Despesas Extras", "extra.description": "Descrição", "extra.deductedIn": "Abatido em", "extra.date": "Data", "extra.state": "Estado", "extra.total": "TOTAL EXTRAS", "benefit.target": "Abate em", "benefit.value": "Valor", "benefit.used": "Usado", "benefit.available": "Disponível", "benefit.totalUsed": "TOTAL USADO", "benefit.totalAvailable": "TOTAL DISPONÍVEL", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "linkedGoal": "Objetivo ligado", "noLinkedGoal": "Sem ligação", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
     "goals.title": "🎯 Objetivos Financeiros", "goals.new": "+ Novo", "goals.seeAll": "Ver todos os objetivos →", "goal.label": "Objetivo", "upcoming.payments": "Próximos Pagamentos", "alerts.title": "Alertas e Conselhos", "alerts.none": "Ainda não existem alertas para este mês.", "automatic": "Automático", "reports.title": "Relatórios", "reports.text": "Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.",
     "settings.general": "Definições Gerais", "settings.config": "Configuração", "settings.currencyDefault": "Moeda padrão", "settings.languageDefault": "Idioma padrão", "settings.monthActive": "Mês ativo", "settings.visualOnly": "Apenas muda o formato visual. Não faz conversão cambial.", "settings.languageHelp": "Altera o idioma visual da aplicação.", "settings.current": "Atual", "settings.rules": "Regras Financeiras", "settings.expenseLimit": "Limite despesas (%)", "settings.savingsGoal": "Meta poupança (%)", "settings.debtLimit": "Limite dívidas (%)", "settings.emergencyFund": "Fundo emergência (meses)", "settings.rulesHelp": "Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.", "settings.localData": "Dados Locais", "settings.export": "Exportar backup", "settings.import": "Importar backup", "settings.clear": "Limpar dados locais", "settings.localHelp": "Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.", "settings.localSummary": "Resumo Local", "settings.totalReceived": "Total recebido", "settings.totalExpenses": "Total despesas", "settings.savingsSaved": "Poupança guardada", "settings.benefitsUsed": "Benefícios usados", "settings.extraExpenses": "Despesas extras", "settings.cashExpenses": "Despesas em dinheiro", "settings.manualAlerts": "Alertas manuais",
   },
@@ -657,7 +657,7 @@ export default function App() {
   const despesasExtrasFinanceiras = despesasExtrasUsuario.map((item) => ({
     ...item,
     descricao: item.descricao || "",
-    categoria: item.categoria || "",
+    poupancaId: item.poupancaId || "",
     valor: Number(item.valor || 0),
     dia: Number(item.dia || 1),
     estado: item.estado || "realizada",
@@ -673,7 +673,25 @@ export default function App() {
     0
   )
 
-  const totalDespesasComExtras = totalDespesasRealizado + totalDespesasExtrasRealizadas
+  const extrasAbatidasPorPoupanca = despesasExtrasFinanceiras.reduce((mapa, item) => {
+    if (item.estado !== "pendente" && item.poupancaId) {
+      const chave = String(item.poupancaId)
+      mapa[chave] = (mapa[chave] || 0) + Number(item.valor || 0)
+    }
+    return mapa
+  }, {})
+
+  const totalDespesasExtrasAbatidasPoupanca = Object.values(extrasAbatidasPorPoupanca).reduce(
+    (total, valor) => total + Number(valor || 0),
+    0
+  )
+
+  const totalDespesasExtrasPagasComRendimento = Math.max(
+    0,
+    totalDespesasExtrasRealizadas - totalDespesasExtrasAbatidasPoupanca
+  )
+
+  const totalDespesasComExtras = totalDespesasRealizado + totalDespesasExtrasPagasComRendimento
 
   const beneficiosFinanceiros = (() => {
     const despesaDisponivelPorCategoria = despesasApi.reduce((mapa, despesa) => {
@@ -681,13 +699,6 @@ export default function App() {
       mapa[chave] = (mapa[chave] || 0) + Number(despesa.realizado || 0)
       return mapa
     }, {})
-
-    despesasExtrasFinanceiras
-      .filter((despesa) => despesa.estado !== "pendente")
-      .forEach((despesa) => {
-        const chave = String(despesa.categoria || "").trim().toLowerCase()
-        despesaDisponivelPorCategoria[chave] = (despesaDisponivelPorCategoria[chave] || 0) + Number(despesa.valor || 0)
-      })
 
     return beneficiosUsuario.map((item) => {
       const categoriaAlvo = item.categoriaAlvo || ""
@@ -728,12 +739,18 @@ export default function App() {
     ? (totalDespesasEmDinheiro / totalRecebido) * 100
     : 0
 
-  const poupancasFinanceiras = poupancasUsuario.map((item) => ({
-    ...item,
-    objetivoId: item.objetivoId || "",
-    previsto: Number(item.previsto || 0),
-    guardado: Number(item.guardado || 0),
-  }))
+  const poupancasFinanceiras = poupancasUsuario.map((item) => {
+    const guardadoBruto = Number(item.guardado || 0)
+    const abatidoExtras = Number(extrasAbatidasPorPoupanca[String(item.id)] || 0)
+    return {
+      ...item,
+      objetivoId: item.objetivoId || "",
+      previsto: Number(item.previsto || 0),
+      guardadoBruto,
+      abatidoExtras,
+      guardado: Math.max(0, guardadoBruto - abatidoExtras),
+    }
+  })
 
   const totalPoupancaPrevisto = poupancasFinanceiras.reduce(
     (total, item) => total + Number(item.previsto || 0),
@@ -1249,7 +1266,7 @@ export default function App() {
     const despesaExtraNormalizada = {
       id: despesaExtraEditando?.id || Date.now(),
       descricao: dadosDespesaExtra.descricao,
-      categoria: dadosDespesaExtra.categoria || "",
+      poupancaId: dadosDespesaExtra.poupancaId || "",
       valor: Number(dadosDespesaExtra.valor || 0),
       dia: Number(dadosDespesaExtra.dia || 1),
       estado: dadosDespesaExtra.estado || "realizada",
@@ -2152,9 +2169,10 @@ export default function App() {
   }
 
   function renderDespesasExtras() {
-    const categoriasDespesas = Array.from(new Set(
-      despesasApi.map((item) => String(item.categoria || "").trim()).filter(Boolean)
-    ))
+    function obterNomePoupanca(id) {
+      const poupanca = poupancasFinanceiras.find((item) => String(item.id) === String(id))
+      return poupanca?.tipo || "Sem abate"
+    }
 
     return (
       <div>
@@ -2181,7 +2199,7 @@ export default function App() {
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
               <th className="p-1.5 text-left">{t("extra.description")}</th>
-              <th className="p-1.5">{t("category")}</th>
+              <th className="p-1.5">{t("extra.deductedIn")}</th>
               <th className="p-1.5">{t("benefit.value")}</th>
               <th className="p-1.5">{t("extra.date")}</th>
               <th className="p-1.5">{t("extra.state")}</th>
@@ -2192,7 +2210,7 @@ export default function App() {
             {despesasExtrasFinanceiras.map((item) => (
               <tr key={item.id} className="border-b border-slate-100">
                 <td className="p-1.5 font-semibold">{item.descricao}</td>
-                <td className="p-1.5 text-center">{item.categoria || "—"}</td>
+                <td className="p-1.5 text-center">{item.poupancaId ? obterNomePoupanca(item.poupancaId) : "Sem abate"}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.valor)}</td>
                 <td className="p-1.5 text-center">{String(item.dia || 1).padStart(2, "0")}/{mesAtivo.slice(5, 7)}</td>
                 <td className="p-1.5 text-center">
@@ -2226,7 +2244,7 @@ export default function App() {
         {(mostrarFormularioDespesaExtra || despesaExtraEditando) && (
           <AddDespesaExtraForm
             despesaExtraEditando={despesaExtraEditando}
-            categorias={categoriasDespesas}
+            poupancas={poupancasFinanceiras}
             onGuardar={guardarDespesaExtra}
             onCancelar={cancelarEdicaoDespesaExtra}
           />
@@ -3294,7 +3312,7 @@ function AddDespesaForm({
   onCancelarEdicao,
   mesAtivo,
 }) {
-  const [categoria, setCategoria] = React.useState("")
+  const [poupancaId, setPoupancaId] = React.useState("")
   const [orcamentado, setOrcamentado] = React.useState("")
   const [realizado, setRealizado] = React.useState("")
 
@@ -3695,9 +3713,9 @@ function PagamentoDividaForm({
   )
 }
 
-function AddDespesaExtraForm({ despesaExtraEditando, categorias = [], onGuardar, onCancelar }) {
+function AddDespesaExtraForm({ despesaExtraEditando, poupancas = [], onGuardar, onCancelar }) {
   const [descricao, setDescricao] = React.useState("")
-  const [categoria, setCategoria] = React.useState("")
+  const [poupancaId, setPoupancaId] = React.useState("")
   const [valor, setValor] = React.useState("")
   const [dia, setDia] = React.useState("")
   const [estado, setEstado] = React.useState("realizada")
@@ -3707,13 +3725,13 @@ function AddDespesaExtraForm({ despesaExtraEditando, categorias = [], onGuardar,
   React.useEffect(() => {
     if (despesaExtraEditando) {
       setDescricao(despesaExtraEditando.descricao || "")
-      setCategoria(despesaExtraEditando.categoria || "")
+      setPoupancaId(despesaExtraEditando.poupancaId || "")
       setValor(String(despesaExtraEditando.valor || 0))
       setDia(String(despesaExtraEditando.dia || 1))
       setEstado(despesaExtraEditando.estado || "realizada")
     } else {
       setDescricao("")
-      setCategoria("")
+      setPoupancaId("")
       setValor("")
       setDia("")
       setEstado("realizada")
@@ -3723,13 +3741,13 @@ function AddDespesaExtraForm({ despesaExtraEditando, categorias = [], onGuardar,
   function guardar(e) {
     e.preventDefault()
 
-    if (!descricao.trim() || !categoria) {
+    if (!descricao.trim()) {
       return
     }
 
     onGuardar({
       descricao,
-      categoria,
+      poupancaId,
       valor,
       dia,
       estado,
@@ -3737,7 +3755,7 @@ function AddDespesaExtraForm({ despesaExtraEditando, categorias = [], onGuardar,
 
     if (!modoEdicao) {
       setDescricao("")
-      setCategoria("")
+      setPoupancaId("")
       setValor("")
       setDia("")
       setEstado("realizada")
@@ -3759,12 +3777,12 @@ function AddDespesaExtraForm({ despesaExtraEditando, categorias = [], onGuardar,
 
       <select
         className="w-full mb-2 rounded-lg border p-2 text-sm"
-        value={categoria}
-        onChange={(e) => setCategoria(e.target.value)}
+        value={poupancaId}
+        onChange={(e) => setPoupancaId(e.target.value)}
       >
-        <option value="">Selecionar categoria das despesas</option>
-        {categorias.map((item) => (
-          <option key={item} value={item}>{item}</option>
+        <option value="">Sem abate na poupança</option>
+        {poupancas.map((item) => (
+          <option key={item.id} value={item.id}>{item.tipo}</option>
         ))}
       </select>
 
@@ -4090,7 +4108,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
   const [dia, setDia] = React.useState("")
   const [nome, setNome] = React.useState("")
   const [valor, setValor] = React.useState("")
-  const [categoria, setCategoria] = React.useState("")
+  const [poupancaId, setPoupancaId] = React.useState("")
   const [pago, setPago] = React.useState(false)
 
   const modoEdicao = Boolean(pagamentoEditando)
@@ -4106,7 +4124,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
       setDia("")
       setNome("")
       setValor("")
-      setCategoria("")
+      setPoupancaId("")
       setPago(false)
     }
   }, [pagamentoEditando])
@@ -4124,7 +4142,7 @@ function PagamentoFinanceiroForm({ pagamentoEditando, onGuardar, onCancelar }) {
       setDia("")
       setNome("")
       setValor("")
-      setCategoria("")
+      setPoupancaId("")
       setPago(false)
     }
   }
