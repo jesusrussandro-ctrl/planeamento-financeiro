@@ -177,10 +177,10 @@ const evolucao = [
 ]
 
 const objetivos = [
-  ["💵", "Fundo de Emergência", "Objetivo: € 3.000,00", "€ 2.100,00", 70, "bg-green-50/850"],
-  ["💳", "Quitar Cartão de Crédito", "Objetivo: € 5.000,00", "€ 1.000,00", 20, "bg-orange-50/850"],
-  ["🏠", "Entrada para Casa", "Objetivo: € 15.000,00", "€ 3.750,00", 25, "bg-blue-50/850"],
-  ["🚗", "Nova Viatura", "Objetivo: € 20.000,00", "€ 6.000,00", 30, "bg-purple-50/850"],
+  ["💵", "Fundo de Emergência", "Objetivo: € 3.000,00", "€ 2.100,00", 70, "bg-green-500/85"],
+  ["💳", "Quitar Cartão de Crédito", "Objetivo: € 5.000,00", "€ 1.000,00", 20, "bg-orange-500/85"],
+  ["🏠", "Entrada para Casa", "Objetivo: € 15.000,00", "€ 3.750,00", 25, "bg-blue-500/85"],
+  ["🚗", "Nova Viatura", "Objetivo: € 20.000,00", "€ 6.000,00", 30, "bg-purple-500/85"],
 ]
 
 const pagamentos = [
@@ -198,10 +198,10 @@ const dividas = [
 ]
 
 const OBJETIVOS_INICIAIS = [
-  { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-50/850" },
-  { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-50/850" },
-  { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-50/850" },
-  { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-50/850" },
+  { id: 1, icone: "💵", nome: "Fundo de Emergência", objetivo: 3000, atual: 2100, cor: "bg-green-500/85" },
+  { id: 2, icone: "💳", nome: "Quitar Cartão de Crédito", objetivo: 5000, atual: 1000, cor: "bg-orange-500/85" },
+  { id: 3, icone: "🏠", nome: "Entrada para Casa", objetivo: 15000, atual: 3750, cor: "bg-blue-500/85" },
+  { id: 4, icone: "🚗", nome: "Nova Viatura", objetivo: 20000, atual: 6000, cor: "bg-purple-500/85" },
 ]
 
 const PAGAMENTOS_INICIAIS = [
@@ -1010,7 +1010,7 @@ export default function App() {
       nome: dadosObjetivo.nome,
       objetivo: Number(dadosObjetivo.objetivo || 0),
       atual: 0,
-      cor: dadosObjetivo.cor || "bg-green-50/850",
+      cor: dadosObjetivo.cor || "bg-green-500/85",
     }
 
     setObjetivosUsuario((listaAtual) => {
@@ -2060,9 +2060,9 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.previsto)}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
                 <td className="p-1.5 text-center">
-                  <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                  <div className="flex justify-center gap-1 whitespace-nowrap">
+                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
+                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -2127,9 +2127,9 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.orcamentado)}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
                 <td className="p-1.5 text-center">
-                  <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                  <div className="flex justify-center gap-1 whitespace-nowrap">
+                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
+                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -2191,9 +2191,9 @@ export default function App() {
                 <td className="p-1.5 text-center text-green-700 font-bold">{formatarEuro(item.usado)}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.disponivel)}</td>
                 <td className="p-1.5 text-center">
-                  <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoBeneficio(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarBeneficio(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                  <div className="flex justify-center gap-1 whitespace-nowrap">
+                    <button onClick={() => iniciarEdicaoBeneficio(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
+                    <button onClick={() => apagarBeneficio(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -2280,9 +2280,9 @@ export default function App() {
                   </span>
                 </td>
                 <td className="p-1.5 text-center">
-                  <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoDespesaExtra(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarDespesaExtra(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                  <div className="flex justify-center gap-1 whitespace-nowrap">
+                    <button onClick={() => iniciarEdicaoDespesaExtra(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
+                    <button onClick={() => apagarDespesaExtra(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -2351,9 +2351,9 @@ export default function App() {
                   {totalRecebido > 0 ? formatarPercentagem((Number(item.realizado || 0) / totalRecebido) * 100) : item.percentagem}
                 </td>
                 <td className="p-1.5 text-center">
-                  <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                  <div className="flex justify-center gap-1 whitespace-nowrap">
+                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
+                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -2425,9 +2425,9 @@ export default function App() {
                   </td>
                   <td className="p-1 text-center">
                     <div className="flex flex-col justify-center gap-1">
-                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600/90 hover:bg-emerald-700/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("pay")}</button>
-                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-50/850/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
-                      <button onClick={() => apagarDivida(item.id)} className="bg-red-50/850/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600/90 hover:bg-emerald-700/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("pay")}</button>
+                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-500/90 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("edit")}</button>
+                      <button onClick={() => apagarDivida(item.id)} className="bg-red-500/90 hover:bg-red-600/90 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm">{t("delete")}</button>
                     </div>
                   </td>
                 </tr>
@@ -3328,7 +3328,7 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPerc
         {showBar && (
           <div className="w-[70px] h-1.5 rounded-full bg-blue-100/85 mt-1 overflow-hidden">
             <div
-              className="h-2 rounded-full bg-blue-50/850 transition-all"
+              className="h-2 rounded-full bg-blue-500/85 transition-all"
               style={{ width: `${Math.max(0, Math.min(100, Number(barPercent || 0)))}%` }}
             />
           </div>
@@ -4366,7 +4366,7 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
   const [nome, setNome] = React.useState("")
   const [objetivo, setObjetivo] = React.useState("")
   const [atual, setAtual] = React.useState("")
-  const [cor, setCor] = React.useState("bg-green-50/850")
+  const [cor, setCor] = React.useState("bg-green-500/85")
 
   const modoEdicao = Boolean(objetivoEditando)
 
@@ -4376,13 +4376,13 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
       setNome(objetivoEditando.nome || "")
       setObjetivo(String(objetivoEditando.objetivo || 0))
       setAtual(String(objetivoEditando.atual || 0))
-      setCor(objetivoEditando.cor || "bg-green-50/850")
+      setCor(objetivoEditando.cor || "bg-green-500/85")
     } else {
       setIcone("🎯")
       setNome("")
       setObjetivo("")
       setAtual("")
-      setCor("bg-green-50/850")
+      setCor("bg-green-500/85")
     }
   }, [objetivoEditando])
 
@@ -4400,7 +4400,7 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
       setNome("")
       setObjetivo("")
       setAtual("")
-      setCor("bg-green-50/850")
+      setCor("bg-green-500/85")
     }
   }
 
@@ -4416,11 +4416,11 @@ function ObjetivoForm({ objetivoEditando, onGuardar, onCancelar }) {
       <input className="w-full mb-2 rounded-lg border p-2 text-sm" placeholder="Valor atual" type="number" value={atual} onChange={(e) => setAtual(e.target.value)} />
 
       <select className="w-full mb-3 rounded-lg border p-2 text-sm" value={cor} onChange={(e) => setCor(e.target.value)}>
-        <option value="bg-green-50/850">Verde</option>
-        <option value="bg-orange-50/850">Laranja</option>
-        <option value="bg-blue-50/850">Azul</option>
-        <option value="bg-purple-50/850">Roxo</option>
-        <option value="bg-red-50/850">Vermelho</option>
+        <option value="bg-green-500/85">Verde</option>
+        <option value="bg-orange-500/85">Laranja</option>
+        <option value="bg-blue-500/85">Azul</option>
+        <option value="bg-purple-500/85">Roxo</option>
+        <option value="bg-red-500/85">Vermelho</option>
       </select>
 
       <button className="w-full rounded-lg bg-blue-600 py-2 text-white font-bold">
