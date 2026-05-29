@@ -1492,7 +1492,7 @@ export default function App() {
 
   function renderSimuladorDividas() {
     return (
-      <section className="grid grid-cols-[330px_1fr] gap-3">
+      <section className="grid grid-cols-[220px_1fr] gap-2 h-[150px]">
         <SimulatorCard
           valorDisponivel={Math.max(0, disponivelParaDividas)}
           considerarJuros={considerarJurosSimulador}
@@ -1884,7 +1884,7 @@ export default function App() {
       : 0
 
     return (
-      <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-3">
+      <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-2 h-[78px]">
         <HealthCard t={t} />
         <KpiCard
           icon="💼"
@@ -1948,13 +1948,13 @@ export default function App() {
 
   function renderGraficos() {
     return (
-      <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
+      <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-2 h-[160px]">
         <ChartBox title={t("chart.expectedVsActual")}>
           <div className="flex justify-center gap-5 text-[10px] font-bold mb-1">
             <span className="text-blue-700">■ {t("expected")}</span>
             <span className="text-green-600">■ {t("actual")}</span>
           </div>
-          <ResponsiveContainer width="100%" height={205}>
+          <ResponsiveContainer width="100%" height={118}>
             <BarChart data={despesasGrafico} layout="vertical" barGap={2}>
               <XAxis type="number" tick={{ fontSize: 10 }} />
               <YAxis dataKey="name" type="category" width={86} tick={{ fontSize: 11, fontWeight: 700 }} />
@@ -1967,10 +1967,10 @@ export default function App() {
 
         <ChartBox title={t("chart.distributionExpenses")}>
           <div className="grid grid-cols-[1fr_120px] items-center">
-            <div className="relative h-[210px]">
+            <div className="relative h-[118px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={distribuicaoDespesas} dataKey="value" innerRadius={56} outerRadius={86}>
+                  <Pie data={distribuicaoDespesas} dataKey="value" innerRadius={34} outerRadius={55}>
                     {distribuicaoDespesas.map((entry, index) => (
                       <Cell key={entry.name} fill={COLORS[index]} />
                     ))}
@@ -1991,10 +1991,10 @@ export default function App() {
 
         <ChartBox title={t("chart.distributionIncome")}>
           <div className="grid grid-cols-[1fr_120px] items-center">
-            <div className="relative h-[210px]">
+            <div className="relative h-[118px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={renda} dataKey="value" innerRadius={56} outerRadius={86}>
+                  <Pie data={renda} dataKey="value" innerRadius={34} outerRadius={55}>
                     {renda.map((entry) => (
                       <Cell key={entry.name} fill={entry.color} />
                     ))}
@@ -2530,26 +2530,26 @@ export default function App() {
     ]
 
     return (
-      <div className="rounded-[24px] bg-white shadow-lg border border-slate-100 overflow-hidden">
-        <div className="bg-blue-50 px-4 py-3 text-center border-b border-blue-100">
-          <h3 className="text-[15px] font-black uppercase text-blue-900">
+      <div className="h-[150px] rounded-[16px] bg-white shadow-lg border border-slate-100 overflow-hidden">
+        <div className="bg-blue-50 px-3 py-1.5 text-center border-b border-blue-100">
+          <h3 className="text-[10px] font-black uppercase text-blue-900">
             Acessos Rápidos
           </h3>
         </div>
 
-        <div className="p-3">
-          <div className="grid grid-cols-3 gap-2">
+        <div className="p-2">
+          <div className="grid grid-cols-3 gap-1.5">
             {atalhos.map((atalho) => (
               <button
                 key={atalho.id}
                 type="button"
                 onClick={() => abrirAtalho(atalho.id)}
-                className="min-h-[78px] rounded-2xl border border-slate-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="min-h-[42px] rounded-xl border border-slate-100 bg-white p-1 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
-                <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-2xl ${atalho.bg} ${atalho.text} text-xl`}>
+                <div className={`mx-auto mb-1 flex h-5 w-5 items-center justify-center rounded-lg ${atalho.bg} ${atalho.text} text-xs`}>
                   {atalho.icon}
                 </div>
-                <div className="text-[10px] font-black leading-tight text-blue-950">
+                <div className="text-[7px] font-black leading-tight text-blue-950">
                   {atalho.label}
                 </div>
               </button>
@@ -2559,7 +2559,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => abrirAtalho("calendario")}
-            className="mt-3 w-full rounded-2xl border-2 border-blue-100 bg-blue-50 py-3 text-[13px] font-black text-blue-700 transition hover:bg-blue-100"
+            className="mt-2 w-full rounded-xl border border-blue-100 bg-blue-50 py-1.5 text-[9px] font-black text-blue-700 transition hover:bg-blue-100"
           >
             Ir para Calendário
           </button>
@@ -2570,7 +2570,7 @@ export default function App() {
 
   function renderProximosPagamentos(mostrarAcoes = false) {
     return (
-      <Panel title={t("upcoming.payments")} className="h-full min-h-[320px]" bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain">
+      <Panel title={t("upcoming.payments")} className="h-full min-h-0" bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain">
         {pagamentosFinanceiros.map((pagamento) => {
           const badgeClass = pagamento.estado === "pago"
             ? "bg-green-100 text-green-700"
@@ -2632,7 +2632,7 @@ export default function App() {
     return (
       <Panel
         title={t("alerts.title")}
-        className={mostrarAcoes ? "min-h-[420px]" : "h-full min-h-[205px]"}
+        className={mostrarAcoes ? "min-h-[420px]" : "h-full min-h-0"}
         bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain"
       >
         {alertasFinanceiros.length === 0 && (
@@ -2986,7 +2986,7 @@ export default function App() {
         <>
           {renderGraficos()}
           <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderDespesas()}
               {renderDespesasExtras()}
             </div>
@@ -3007,7 +3007,7 @@ export default function App() {
       return (
         <>
           <section className="grid grid-cols-[1.4fr_0.9fr] gap-4 items-start">
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderDividas()}
               {renderBeneficios()}
             </div>
@@ -3087,26 +3087,26 @@ export default function App() {
       <>
         {renderKpis()}
 
-        <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
+        <section className="grid grid-cols-[1fr_220px] gap-2 items-stretch h-[160px]">
           {renderGraficos()}
           {renderGoalsPanel()}
         </section>
 
-        <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
-          <section className="grid grid-cols-4 gap-4 items-stretch">
-            <div className="space-y-4">
+        <section className="grid grid-cols-[1fr_220px] gap-2 items-stretch h-[318px]">
+          <section className="grid grid-cols-4 gap-2 items-stretch">
+            <div className="space-y-2">
               {renderRendimentos()}
               {renderPoupancas()}
             </div>
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderDespesas()}
               {renderDespesasExtras()}
             </div>
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderDividas()}
               {renderBeneficios()}
             </div>
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderPagamentoIdeal()}
               {renderAcessosRapidos()}
             </div>
@@ -3114,7 +3114,7 @@ export default function App() {
           {renderProximosPagamentos()}
         </section>
 
-        <section className="grid grid-cols-[1fr_286px] gap-4 items-stretch">
+        <section className="grid grid-cols-[1fr_220px] gap-2 items-stretch h-[150px]">
           {renderSimuladorDividas()}
           {renderAlertas()}
         </section>
@@ -3123,7 +3123,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#edf4ff] text-[#0f172a]">
+    <div className="h-screen overflow-hidden bg-[#edf4ff] text-[#0f172a]">
       <Sidebar
         mesAtivo={mesAtivo}
         setMesAtivo={setMesAtivo}
@@ -3134,14 +3134,14 @@ export default function App() {
         t={t}
       />
 
-      <div className="ml-[242px] p-4 grid grid-cols-1 gap-4">
-        <main className="space-y-4">
-          <section className="rounded-[14px] bg-white px-4 py-3 shadow-lg border border-slate-100 flex items-center justify-between">
+      <div className="ml-[158px] h-screen overflow-hidden p-2 grid grid-cols-1 gap-2">
+        <main className="h-full overflow-hidden space-y-2">
+          <section className="h-[38px] rounded-[12px] bg-white px-3 py-1.5 shadow-lg border border-slate-100 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-black uppercase text-slate-400">{t("active.section")}</p>
-              <h2 className="text-[18px] font-black text-blue-950">{t(`menu.${secaoAtiva}`)}</h2>
+              <p className="text-[8px] font-black uppercase text-slate-400">{t("active.section")}</p>
+              <h2 className="text-[14px] font-black text-blue-950">{t(`menu.${secaoAtiva}`)}</h2>
             </div>
-            <div className="rounded-full bg-blue-50 px-3 py-1 text-[11px] font-black text-blue-700">
+            <div className="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-black text-blue-700">
               {formatarMesAtivo(mesAtivo)}
             </div>
           </section>
@@ -3165,15 +3165,15 @@ function SimulatorCard({
   const jurosEstimados = Number(simulacao?.jurosEstimados || 0)
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden min-h-[205px]">
-      <div className="p-4">
-        <h3 className="font-black text-[12px] uppercase text-blue-900 mb-3">
+    <div className="h-full rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden">
+      <div className="p-2">
+        <h3 className="font-black text-[9px] uppercase text-blue-900 mb-1">
           Simulador: quanto tempo para ficar sem dívidas?
         </h3>
 
         <div className="space-y-2 mb-3">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[11px] font-bold text-slate-700">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[8px] font-bold text-slate-700">
               Valor disponível mensal para dívidas
             </span>
             <div className="w-[110px] h-8 bg-green-50 rounded-lg flex items-center justify-center text-[11px] font-black text-green-900">
@@ -3181,15 +3181,15 @@ function SimulatorCard({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[11px] font-bold text-slate-700">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[8px] font-bold text-slate-700">
               Considerar juros na simulação?
             </span>
 
             <select
               value={considerarJuros ? "sim" : "nao"}
               onChange={(e) => setConsiderarJuros(e.target.value === "sim")}
-              className="w-[110px] h-8 bg-green-50 rounded-lg text-center text-[11px] font-black text-green-900 outline-none"
+              className="w-[76px] h-6 bg-green-50 rounded-lg text-center text-[9px] font-black text-green-900 outline-none"
             >
               <option value="sim">Sim</option>
               <option value="nao">Não</option>
@@ -3197,26 +3197,26 @@ function SimulatorCard({
           </div>
         </div>
 
-        <div className="rounded-[14px] bg-gradient-to-br from-[#eef2ff] to-white p-3">
+        <div className="rounded-[12px] bg-gradient-to-br from-[#eef2ff] to-white p-2">
           <h4 className="text-[11px] font-black uppercase text-blue-800 mb-2">
             Tempo estimado para ficar sem dívidas
           </h4>
 
           <div className="grid grid-cols-[1fr_1fr] gap-3 items-center">
             <div className="flex items-center gap-3">
-              <div className="text-3xl">📅</div>
+              <div className="text-xl">📅</div>
               <div>
-                <div className="text-[38px] leading-none font-black text-blue-800">
+                <div className="text-[24px] leading-none font-black text-blue-800">
                   {meses}
                 </div>
-                <div className="text-[12px] font-black text-blue-900 uppercase">
+                <div className="text-[9px] font-black text-blue-900 uppercase">
                   {meses === 1 ? "Mês" : "Meses"}
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl bg-white p-3 shadow-sm">
-              <div className="text-[10px] font-black uppercase text-blue-900 mb-1">
+            <div className="rounded-xl bg-white p-2 shadow-sm">
+              <div className="text-[8px] font-black uppercase text-blue-900 mb-1">
                 Estratégia recomendada
               </div>
               <div className="flex items-center gap-2 text-[12px] font-black">
@@ -3245,13 +3245,13 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
     : [{ mes: "Mês 0", divida: 0, projecao: 0, sombra: 0 }]
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[205px] p-4 grid grid-cols-[1fr_105px] gap-3">
+    <div className="h-full rounded-[14px] bg-white shadow-lg border border-slate-100 p-2 grid grid-cols-[1fr_82px] gap-2">
       <div>
-        <h3 className="text-center font-black text-[13px] uppercase text-blue-950 mb-2">
+        <h3 className="text-center font-black text-[10px] uppercase text-blue-950 mb-1">
           Evolução da Dívida ao Longo dos Meses
         </h3>
 
-        <ResponsiveContainer width="100%" height={170}>
+        <ResponsiveContainer width="100%" height={105}>
           <ComposedChart data={dadosGrafico} margin={{ top: 6, right: 8, left: -8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis dataKey="mes" tick={{ fontSize: 10, fontWeight: 700 }} />
@@ -3285,7 +3285,7 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
           </ComposedChart>
         </ResponsiveContainer>
 
-        <div className="flex justify-center gap-7 text-[10px] font-black mt-1">
+        <div className="flex justify-center gap-4 text-[8px] font-black mt-0.5">
           <span className="text-[#4f46e5]">━ Dívida Real</span>
           <span className="text-[#6d28d9]">-- Projeção</span>
           <span className="text-green-600">✦ Meta: {formatarEuro(0)}</span>
@@ -3293,9 +3293,9 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
       </div>
 
       <div className="flex items-center justify-center">
-        <div className="w-full rounded-[14px] bg-[#f3efff] border border-purple-200 p-3 text-center shadow-sm">
+        <div className="w-full rounded-[14px] bg-[#f3efff] border border-purple-200 p-2 text-center shadow-sm">
           <div className="text-[12px] font-black text-purple-700">Faltam</div>
-          <div className="text-[42px] leading-none font-black text-purple-700">
+          <div className="text-[28px] leading-none font-black text-purple-700">
             {Number(meses || 0)}
           </div>
           <div className="text-[12px] font-black text-purple-700">
@@ -3312,15 +3312,15 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
 
 function HealthCard({ t = (chave) => chave }) {
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-3 flex gap-3 items-center">
+    <div className="h-full rounded-[12px] bg-white shadow-lg border border-slate-100 p-2 flex gap-2 items-center overflow-hidden">
       <div>
-        <h3 className="text-[12px] uppercase font-black text-blue-950 mb-2">Índice de {t("financial.health")}</h3>
+        <h3 className="text-[8px] uppercase font-black text-blue-950 mb-1">Índice de {t("financial.health")}</h3>
         <div
-          className="relative w-[92px] h-[92px] rounded-full flex items-center justify-center"
+          className="relative w-[52px] h-[52px] rounded-full flex items-center justify-center"
           style={{ background: "conic-gradient(#0d9488 0 20%, #22c55e 20% 85%, #e5eef8 85% 100%)" }}
         >
-          <div className="w-[66px] h-[66px] bg-white rounded-full flex flex-col items-center justify-center font-black shadow-inner">
-            <span className="text-[28px] leading-none">85</span>
+          <div className="w-[38px] h-[38px] bg-white rounded-full flex flex-col items-center justify-center font-black shadow-inner">
+            <span className="text-[18px] leading-none">85</span>
             <span className="text-[10px]">/100</span>
           </div>
         </div>
@@ -3347,24 +3347,24 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPerc
   }
 
   return (
-    <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-4 flex items-center gap-4">
-      <div className={`w-14 h-14 rounded-full ${colors[accent]} flex items-center justify-center text-3xl`}>
+    <div className="h-full rounded-[12px] bg-white shadow-lg border border-slate-100 p-2 flex items-center gap-2 overflow-hidden">
+      <div className={`w-9 h-9 rounded-full ${colors[accent]} flex items-center justify-center text-xl shrink-0`}>
         {icon}
       </div>
       <div className="flex-1">
-        <h3 className="text-[12px] uppercase font-black text-blue-950">{title}</h3>
-        <p className={`text-[24px] font-black mt-2 ${green ? "text-green-800" : "text-black"}`}>
+        <h3 className="text-[8px] uppercase font-black text-blue-950 leading-tight">{title}</h3>
+        <p className={`text-[15px] font-black mt-1 ${green ? "text-green-800" : "text-black"}`}>
           {value}
         </p>
         {showBar && (
-          <div className="w-[90px] h-2 rounded-full bg-blue-100 mt-3 overflow-hidden">
+          <div className="w-[70px] h-1.5 rounded-full bg-blue-100 mt-1 overflow-hidden">
             <div
               className="h-2 rounded-full bg-blue-500 transition-all"
               style={{ width: `${Math.max(0, Math.min(100, Number(barPercent || 0)))}%` }}
             />
           </div>
         )}
-        {subtitle && <p className="text-[11px] font-bold text-blue-950 mt-2">{subtitle}</p>}
+        {subtitle && <p className="text-[8px] font-bold text-blue-950 mt-1 leading-tight">{subtitle}</p>}
       </div>
     </div>
   )
@@ -3372,8 +3372,8 @@ function KpiCard({ icon, title, value, subtitle, accent, showBar, green, barPerc
 
 function ChartBox({ title, children }) {
   return (
-    <div className="rounded-[14px] bg-white p-4 shadow-lg border border-slate-100 min-h-[245px]">
-      <h3 className="text-center font-black text-[13px] uppercase text-blue-950 mb-2">{title}</h3>
+    <div className="h-full rounded-[14px] bg-white p-2 shadow-lg border border-slate-100 min-h-0 overflow-hidden">
+      <h3 className="text-center font-black text-[10px] uppercase text-blue-950 mb-1">{title}</h3>
       {children}
     </div>
   )
@@ -3381,7 +3381,7 @@ function ChartBox({ title, children }) {
 
 function LegendList({ items, colors }) {
   return (
-    <div className="space-y-3 text-[11px] font-bold">
+    <div className="space-y-1 text-[8px] font-bold">
       {items.map((item, index) => (
         <div key={item.name} className="grid grid-cols-[14px_1fr_40px] gap-2 items-center">
           <span className="w-3 h-3 rounded-full" style={{ background: colors[index] }} />
@@ -3407,10 +3407,10 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       }))
 
   return (
-    <div className="h-full min-h-[245px] rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
-      <div className="shrink-0 p-3 pb-2">
+    <div className="h-full min-h-0 rounded-[14px] bg-white shadow-lg border border-slate-100 overflow-hidden flex flex-col">
+      <div className="shrink-0 p-2 pb-1">
         <div className="flex justify-between items-center">
-          <h3 className="font-black text-[14px] uppercase">🎯 Objetivos Financeiros</h3>
+          <h3 className="font-black text-[10px] uppercase">🎯 Objetivos Financeiros</h3>
           <button
             type="button"
             onClick={onNovo}
@@ -3422,7 +3422,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pr-2">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 pr-1">
         {objetivosParaMostrar.map((objetivo) => {
           const valorObjetivo = typeof objetivo.objetivo === "number"
             ? formatarEuro(objetivo.objetivo)
@@ -3433,16 +3433,16 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
             : objetivo.atual
 
           return (
-            <div key={objetivo.id || objetivo.nome} className="grid grid-cols-[38px_1fr] gap-3 mb-3">
-              <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center text-xl">
+            <div key={objetivo.id || objetivo.nome} className="grid grid-cols-[28px_1fr] gap-2 mb-2">
+              <div className="w-7 h-7 rounded-xl bg-green-100 flex items-center justify-center text-sm">
                 {objetivo.icone}
               </div>
               <div>
-                <div className="flex justify-between gap-2 text-[11px] font-black">
+                <div className="flex justify-between gap-1 text-[8px] font-black">
                   <span>{objetivo.nome}</span>
                   <span>{valorAtual}</span>
                 </div>
-                <p className="text-[10px] text-slate-600 font-bold mb-1">
+                <p className="text-[8px] text-slate-600 font-bold mb-0.5">
                   Objetivo: {valorObjetivo}
                 </p>
                 <div className="flex items-center gap-2">
@@ -3484,7 +3484,7 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
       <button
         type="button"
         onClick={onNovo}
-        className="shrink-0 w-full bg-orange-50 text-center py-2.5 text-[12px] font-black"
+        className="shrink-0 w-full bg-orange-50 text-center py-1.5 text-[9px] font-black"
       >
         Ver todos os objetivos →
       </button>
@@ -3494,8 +3494,8 @@ function GoalsPanel({ objetivosLista = [], formatarEuro = (valor) => `€ ${Numb
 
 function TableCard({ title, color, action, children }) {
   return (
-    <div className="h-[320px] w-full rounded-[24px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
-      <div className={`${color} relative shrink-0 text-white text-center py-2.5 px-4 font-black text-xs uppercase`}>
+    <div className="h-[150px] w-full rounded-[16px] bg-white shadow-lg overflow-hidden border border-slate-100 flex flex-col">
+      <div className={`${color} relative shrink-0 text-white text-center py-1.5 px-3 font-black text-[10px] uppercase`}>
         <span>{title}</span>
         {action && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -3505,7 +3505,7 @@ function TableCard({ title, color, action, children }) {
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-auto overscroll-contain">
-        <table className="min-w-full h-full text-[10px] leading-tight">{children}</table>
+        <table className="min-w-full h-full text-[8px] leading-tight">{children}</table>
       </div>
     </div>
   )
@@ -3513,8 +3513,8 @@ function TableCard({ title, color, action, children }) {
 
 function Panel({ title, children, className = "", bodyClassName = "" }) {
   return (
-    <div className={`rounded-[24px] bg-white p-5 shadow-lg border border-slate-100 flex flex-col ${className}`}>
-      <h3 className="shrink-0 font-black text-orange-700 mb-4">{title}</h3>
+    <div className={`rounded-[16px] bg-white p-3 shadow-lg border border-slate-100 flex flex-col ${className}`}>
+      <h3 className="shrink-0 font-black text-orange-700 mb-2 text-[13px]">{title}</h3>
       <div className={`flex-1 ${bodyClassName}`}>
         {children}
       </div>
@@ -4831,33 +4831,33 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
   ]
 
   return (
-    <aside className="fixed left-0 top-0 z-20 w-[226px] min-h-screen p-[6px]">
-      <div className="min-h-[calc(100vh-12px)] rounded-[22px] bg-gradient-to-b from-[#061b3f] via-[#03152f] to-[#020d22] text-white shadow-2xl border border-white/20 overflow-hidden">
-        <div className="px-4 pt-4 pb-3 text-center">
-          <div className="mx-auto mb-2 flex h-[70px] w-[92px] items-center justify-center text-[56px] leading-none text-[#ffb000]">
+    <aside className="fixed left-0 top-0 z-20 w-[150px] h-screen p-[4px] overflow-hidden">
+      <div className="h-[calc(100vh-8px)] rounded-[16px] bg-gradient-to-b from-[#061b3f] via-[#03152f] to-[#020d22] text-white shadow-2xl border border-white/20 overflow-hidden">
+        <div className="px-2 pt-2 pb-1 text-center">
+          <div className="mx-auto mb-1 flex h-[42px] w-[60px] items-center justify-center text-[34px] leading-none text-[#ffb000]">
             📊€
           </div>
 
-          <h1 className="text-[25px] font-black leading-[1.05] tracking-tight">
+          <h1 className="text-[17px] font-black leading-[1.05] tracking-tight">
             {t("app.title1")}
             <br />
             {t("app.title2")}
           </h1>
 
-          <p className="mt-2 text-[12px] font-semibold text-white/90">
+          <p className="mt-1 text-[8px] font-semibold text-white/90">
             {t("app.subtitle")}
           </p>
         </div>
 
-        <div className="mx-3 mb-3 rounded-[12px] border border-cyan-400/40 bg-[#062a57] shadow-inner p-2">
-          <label className="mb-1 block text-center text-[9px] font-black uppercase text-white/70">
+        <div className="mx-2 mb-1 rounded-[10px] border border-cyan-400/40 bg-[#062a57] shadow-inner p-1.5">
+          <label className="mb-0.5 block text-center text-[7px] font-black uppercase text-white/70">
             {t("month.active")}
           </label>
 
           <select
             value={mesAtivo}
             onChange={(e) => setMesAtivo(e.target.value)}
-            className="w-full rounded-[9px] border border-cyan-400/30 bg-[#061b3f] px-2 py-2 text-center text-[12px] font-black text-yellow-300 outline-none"
+            className="w-full rounded-[8px] border border-cyan-400/30 bg-[#061b3f] px-1 py-1 text-center text-[9px] font-black text-yellow-300 outline-none"
           >
             {MESES_FUTUROS.map((grupo) => (
               <optgroup key={grupo.ano} label={String(grupo.ano)}>
@@ -4870,37 +4870,37 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
             ))}
           </select>
 
-          <div className="mt-2 rounded-lg bg-cyan-400/10 px-2 py-1 text-center text-[10px] font-bold text-cyan-100">
+          <div className="mt-1 rounded-lg bg-cyan-400/10 px-1 py-0.5 text-center text-[7px] font-bold text-cyan-100">
             {t("viewing")}: {formatarMesAtivo(mesAtivo)}
           </div>
         </div>
 
-        <nav className="px-3 space-y-[5px]">
+        <nav className="px-2 space-y-[2px]">
           {menuItems.map(([icon, label]) => (
             <button
               key={label}
               type="button"
               onClick={() => setSecaoAtiva(label)}
-              className={`w-full flex items-center gap-3 rounded-[11px] px-3 py-[7px] text-[13px] font-black transition-all text-left ${secaoAtiva === label
+              className={`w-full flex items-center gap-1.5 rounded-[8px] px-2 py-[4px] text-[9px] font-black transition-all text-left ${secaoAtiva === label
                   ? "bg-gradient-to-r from-[#0b7cff] to-[#1d4ed8] shadow-[0_0_18px_rgba(59,130,246,0.65)]"
                   : "hover:bg-white/10"
                 }`}
             >
-              <span className="w-4 text-center text-[15px]">{icon}</span>
+              <span className="w-3 text-center text-[10px]">{icon}</span>
               <span>{t(`menu.${label}`)}</span>
             </button>
           ))}
         </nav>
 
-        <div className="mx-3 mt-4 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
-          <div className="mb-2 text-center text-[9px] font-black uppercase text-white/80">
+        <div className="mx-2 mt-2 rounded-[10px] border border-cyan-400/35 bg-[#061b3f]/80 p-2 shadow-inner">
+          <div className="mb-1 text-center text-[7px] font-black uppercase text-white/80">
             {t("currency")}
           </div>
 
           <select
             value={moedaAtiva}
             onChange={(e) => setMoedaAtiva(e.target.value)}
-            className="w-full rounded-[9px] border border-cyan-400/30 bg-[#062a57] px-2 py-2 text-center text-[11px] font-black text-white outline-none"
+            className="w-full rounded-[8px] border border-cyan-400/30 bg-[#062a57] px-1 py-1 text-center text-[8px] font-black text-white outline-none"
           >
             {Object.entries(MOEDAS).map(([codigo, moeda]) => (
               <option key={codigo} value={codigo}>
@@ -4909,39 +4909,39 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
             ))}
           </select>
 
-          <div className="mt-2 rounded-lg bg-cyan-400/10 px-2 py-1 text-center text-[9px] font-bold text-cyan-100">
+          <div className="mt-1 rounded-lg bg-cyan-400/10 px-1 py-0.5 text-center text-[7px] font-bold text-cyan-100">
             {t("no.conversion")}
           </div>
 
-          <div className="mt-3 text-center">
-            <p className="text-[8px] font-black uppercase text-white/70">{t("updated.at")}</p>
-            <p className="text-[11px] font-black">{new Date().toLocaleString("pt-PT")}</p>
+          <div className="mt-1 text-center">
+            <p className="text-[6px] font-black uppercase text-white/70">{t("updated.at")}</p>
+            <p className="text-[8px] font-black">{new Date().toLocaleString("pt-PT")}</p>
           </div>
         </div>
 
-        <div className="mx-3 mt-3 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
-          <h3 className="mb-2 text-center text-[12px] font-black uppercase">{t("financial.health")}</h3>
+        <div className="mx-2 mt-2 rounded-[10px] border border-cyan-400/35 bg-[#061b3f]/80 p-2 shadow-inner">
+          <h3 className="mb-1 text-center text-[8px] font-black uppercase">{t("financial.health")}</h3>
 
           <div
-            className="mx-auto flex h-[92px] w-[92px] items-center justify-center rounded-full"
+            className="mx-auto flex h-[54px] w-[54px] items-center justify-center rounded-full"
             style={{
               background:
                 "conic-gradient(#84cc16 0 18%, #22c55e 18% 44%, #14b8a6 44% 76%, #0ea5e9 76% 85%, rgba(255,255,255,0.12) 85% 100%)",
             }}
           >
-            <div className="flex h-[64px] w-[64px] flex-col items-center justify-center rounded-full bg-[#071b3a] font-black shadow-inner">
-              <span className="text-[30px] leading-none">85</span>
+            <div className="flex h-[38px] w-[38px] flex-col items-center justify-center rounded-full bg-[#071b3a] font-black shadow-inner">
+              <span className="text-[18px] leading-none">85</span>
               <span className="text-[10px]">/100</span>
             </div>
           </div>
 
-          <div className="mx-auto mt-2 w-[112px] rounded-full bg-gradient-to-r from-[#16a34a] to-[#059669] py-1 text-center text-[11px] font-black shadow-lg">
+          <div className="mx-auto mt-1 w-[80px] rounded-full bg-gradient-to-r from-[#16a34a] to-[#059669] py-0.5 text-center text-[8px] font-black shadow-lg">
             {t("excellent")}
           </div>
 
-          <div className="mt-3 space-y-[6px]">
+          <div className="mt-1 space-y-[2px] hidden 2xl:block">
             {scores.map(([icon, label, value]) => (
-              <div key={label} className="flex items-center justify-between text-[10px] font-bold">
+              <div key={label} className="flex items-center justify-between text-[7px] font-bold">
                 <span className="flex items-center gap-2">
                   <span>{icon}</span>
                   {label}
