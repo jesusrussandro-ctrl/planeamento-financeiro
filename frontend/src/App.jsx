@@ -3111,7 +3111,14 @@ export default function App() {
               {renderAcessosRapidos()}
             </div>
           </section>
-          {renderProximosPagamentos()}
+          <div className="h-full min-h-0 space-y-2 overflow-hidden">
+            <div className="h-[155px] min-h-0">
+              {renderProximosPagamentos()}
+            </div>
+            <div className="h-[155px] min-h-0">
+              {renderAlertas()}
+            </div>
+          </div>
         </section>
 
         {/* Simulador removido do Resumo. Continua disponível pelo menu lateral em “Simulador”. */}
