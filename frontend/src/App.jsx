@@ -43,26 +43,26 @@ const IDIOMAS = {
 
 const TRADUCOES = {
   pt: {
-    "menu.Resumo": "Resumo", "menu.Rendimentos": "Rendimentos", "menu.Poupança": "Poupança", "menu.Despesas": "Despesas", "menu.Dívidas": "Dívidas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendário", "menu.Pagamentos": "Pagamentos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Relatórios", "menu.Definições": "Definições",
+    "menu.Resumo": "Resumo", "menu.Rendimentos": "Rendimentos", "menu.Poupança": "Poupança", "menu.Benefícios": "Benefícios", "menu.Despesas": "Despesas", "menu.Dívidas": "Dívidas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendário", "menu.Pagamentos": "Pagamentos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Relatórios", "menu.Definições": "Definições",
     "app.title1": "Planeamento", "app.title2": "Financeiro", "app.subtitle": "Controlo Financeiro Familiar", "active.section": "Secção ativa", "month.active": "Mês ativo", "viewing": "A visualizar", "currency": "Moeda", "no.conversion": "Sem conversão cambial. Apenas formato visual.", "updated.at": "Atualizado em", "financial.health": "Saúde Financeira", "excellent": "Excelente",
     "kpi.health": "Índice de Saúde Financeira", "kpi.health.text": "A sua situação financeira está muito saudável!", "kpi.salary": "Salário Líquido", "kpi.salary.sub": "Total recebido no mês", "kpi.expenses": "Total Despesas", "kpi.savings": "Total Poupado", "kpi.savings.sub": "Guardado no mês", "kpi.availableDebts": "Disponível p/ Dívidas", "kpi.totalDebts": "Total Dívidas", "kpi.idealPayment": "Pagamento ideal", "kpi.daysLeft": "Dias Restantes", "until": "até", "of.salary": "do salário",
     "chart.expectedVsActual": "Previsto vs Realizado (Despesas)", "chart.distributionExpenses": "Distribuição das Despesas", "chart.distributionIncome": "Distribuição da Renda", "expected": "Previsto", "actual": "Realizado", "total": "Total",
-    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "linkedGoal": "Objetivo ligado", "noLinkedGoal": "Sem ligação", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
+    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.benefits": "Benefícios / Cartões", "benefit.target": "Abate em", "benefit.value": "Valor", "benefit.used": "Usado", "benefit.available": "Disponível", "benefit.totalUsed": "TOTAL USADO", "benefit.totalAvailable": "TOTAL DISPONÍVEL", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "linkedGoal": "Objetivo ligado", "noLinkedGoal": "Sem ligação", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
     "goals.title": "🎯 Objetivos Financeiros", "goals.new": "+ Novo", "goals.seeAll": "Ver todos os objetivos →", "goal.label": "Objetivo", "upcoming.payments": "Próximos Pagamentos", "alerts.title": "Alertas e Conselhos", "alerts.none": "Ainda não existem alertas para este mês.", "automatic": "Automático", "reports.title": "Relatórios", "reports.text": "Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.",
-    "settings.general": "Definições Gerais", "settings.config": "Configuração", "settings.currencyDefault": "Moeda padrão", "settings.languageDefault": "Idioma padrão", "settings.monthActive": "Mês ativo", "settings.visualOnly": "Apenas muda o formato visual. Não faz conversão cambial.", "settings.languageHelp": "Altera o idioma visual da aplicação.", "settings.current": "Atual", "settings.rules": "Regras Financeiras", "settings.expenseLimit": "Limite despesas (%)", "settings.savingsGoal": "Meta poupança (%)", "settings.debtLimit": "Limite dívidas (%)", "settings.emergencyFund": "Fundo emergência (meses)", "settings.rulesHelp": "Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.", "settings.localData": "Dados Locais", "settings.export": "Exportar backup", "settings.import": "Importar backup", "settings.clear": "Limpar dados locais", "settings.localHelp": "Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.", "settings.localSummary": "Resumo Local", "settings.totalReceived": "Total recebido", "settings.totalExpenses": "Total despesas", "settings.savingsSaved": "Poupança guardada", "settings.manualAlerts": "Alertas manuais",
+    "settings.general": "Definições Gerais", "settings.config": "Configuração", "settings.currencyDefault": "Moeda padrão", "settings.languageDefault": "Idioma padrão", "settings.monthActive": "Mês ativo", "settings.visualOnly": "Apenas muda o formato visual. Não faz conversão cambial.", "settings.languageHelp": "Altera o idioma visual da aplicação.", "settings.current": "Atual", "settings.rules": "Regras Financeiras", "settings.expenseLimit": "Limite despesas (%)", "settings.savingsGoal": "Meta poupança (%)", "settings.debtLimit": "Limite dívidas (%)", "settings.emergencyFund": "Fundo emergência (meses)", "settings.rulesHelp": "Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.", "settings.localData": "Dados Locais", "settings.export": "Exportar backup", "settings.import": "Importar backup", "settings.clear": "Limpar dados locais", "settings.localHelp": "Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.", "settings.localSummary": "Resumo Local", "settings.totalReceived": "Total recebido", "settings.totalExpenses": "Total despesas", "settings.savingsSaved": "Poupança guardada", "settings.benefitsUsed": "Benefícios usados", "settings.cashExpenses": "Despesas em dinheiro", "settings.manualAlerts": "Alertas manuais",
   },
   en: {
-    "menu.Resumo": "Summary", "menu.Rendimentos": "Income", "menu.Poupança": "Savings", "menu.Despesas": "Expenses", "menu.Dívidas": "Debts", "menu.Objetivos": "Goals", "menu.Calendário": "Calendar", "menu.Pagamentos": "Payments", "menu.Simulador": "Simulator", "menu.Alertas": "Alerts", "menu.Relatórios": "Reports", "menu.Definições": "Settings",
+    "menu.Resumo": "Summary", "menu.Rendimentos": "Income", "menu.Poupança": "Savings", "menu.Benefícios": "Benefits", "menu.Despesas": "Expenses", "menu.Dívidas": "Debts", "menu.Objetivos": "Goals", "menu.Calendário": "Calendar", "menu.Pagamentos": "Payments", "menu.Simulador": "Simulator", "menu.Alertas": "Alerts", "menu.Relatórios": "Reports", "menu.Definições": "Settings",
     "app.title1": "Financial", "app.title2": "Planning", "app.subtitle": "Family Financial Control", "active.section": "Active section", "month.active": "Active month", "viewing": "Viewing", "currency": "Currency", "no.conversion": "No exchange conversion. Visual format only.", "updated.at": "Updated at", "financial.health": "Financial Health", "excellent": "Excellent",
     "kpi.health": "Financial Health Index", "kpi.health.text": "Your financial situation is very healthy!", "kpi.salary": "Net Salary", "kpi.salary.sub": "Total received this month", "kpi.expenses": "Total Expenses", "kpi.savings": "Total Saved", "kpi.savings.sub": "Saved this month", "kpi.availableDebts": "Available for Debts", "kpi.totalDebts": "Total Debts", "kpi.idealPayment": "Ideal payment", "kpi.daysLeft": "Days Left", "until": "until", "of.salary": "of salary",
     "chart.expectedVsActual": "Expected vs Actual (Expenses)", "chart.distributionExpenses": "Expense Distribution", "chart.distributionIncome": "Income Distribution", "expected": "Expected", "actual": "Actual", "total": "Total",
-    "table.income": "Income", "table.savings": "Savings / Reserve", "table.expenses": "Monthly Expenses", "table.debts": "Debts", "table.idealDebts": "Ideal Debt Payment", "add": "+ Add", "close": "Close", "edit": "Edit", "delete": "Delete", "action": "Action", "source": "Source", "received": "Received", "type": "Type", "linkedGoal": "Linked goal", "noLinkedGoal": "No link", "saved": "Saved", "category": "Category", "percent": "%", "creditor": "Creditor", "balance": "Balance", "installment": "Inst.", "interest": "Interest", "priority": "Prior.", "status": "Status", "pay": "Pay", "paid": "Paid", "pending": "Pending", "payment": "Payment", "time": "Time", "months": "months", "distributed.total": "TOTAL DISTRIBUTED", "remaining": "REMAINING", "total.income": "TOTAL", "total.debts": "TOTAL DEBTS",
+    "table.income": "Income", "table.savings": "Savings / Reserve", "table.benefits": "Benefits / Cards", "benefit.target": "Used for", "benefit.value": "Value", "benefit.used": "Used", "benefit.available": "Available", "benefit.totalUsed": "TOTAL USED", "benefit.totalAvailable": "TOTAL AVAILABLE", "table.expenses": "Monthly Expenses", "table.debts": "Debts", "table.idealDebts": "Ideal Debt Payment", "add": "+ Add", "close": "Close", "edit": "Edit", "delete": "Delete", "action": "Action", "source": "Source", "received": "Received", "type": "Type", "linkedGoal": "Linked goal", "noLinkedGoal": "No link", "saved": "Saved", "category": "Category", "percent": "%", "creditor": "Creditor", "balance": "Balance", "installment": "Inst.", "interest": "Interest", "priority": "Prior.", "status": "Status", "pay": "Pay", "paid": "Paid", "pending": "Pending", "payment": "Payment", "time": "Time", "months": "months", "distributed.total": "TOTAL DISTRIBUTED", "remaining": "REMAINING", "total.income": "TOTAL", "total.debts": "TOTAL DEBTS",
     "goals.title": "🎯 Financial Goals", "goals.new": "+ New", "goals.seeAll": "See all goals →", "goal.label": "Goal", "upcoming.payments": "Upcoming Payments", "alerts.title": "Alerts and Advice", "alerts.none": "There are no alerts for this month yet.", "automatic": "Automatic", "reports.title": "Reports", "reports.text": "Next we will add monthly summaries, month comparison and export.",
-    "settings.general": "General Settings", "settings.config": "Configuration", "settings.currencyDefault": "Default currency", "settings.languageDefault": "Default language", "settings.monthActive": "Active month", "settings.visualOnly": "Only changes the visual format. No exchange conversion.", "settings.languageHelp": "Changes the application display language.", "settings.current": "Current", "settings.rules": "Financial Rules", "settings.expenseLimit": "Expense limit (%)", "settings.savingsGoal": "Savings goal (%)", "settings.debtLimit": "Debt limit (%)", "settings.emergencyFund": "Emergency fund (months)", "settings.rulesHelp": "These rules feed automatic alerts and will be used to calculate financial health.", "settings.localData": "Local Data", "settings.export": "Export backup", "settings.import": "Import backup", "settings.clear": "Clear local data", "settings.localHelp": "These buttons only affect data saved in this browser, such as savings, goals, payments, alerts and settings.", "settings.localSummary": "Local Summary", "settings.totalReceived": "Total received", "settings.totalExpenses": "Total expenses", "settings.savingsSaved": "Savings saved", "settings.manualAlerts": "Manual alerts",
+    "settings.general": "General Settings", "settings.config": "Configuration", "settings.currencyDefault": "Default currency", "settings.languageDefault": "Default language", "settings.monthActive": "Active month", "settings.visualOnly": "Only changes the visual format. No exchange conversion.", "settings.languageHelp": "Changes the application display language.", "settings.current": "Current", "settings.rules": "Financial Rules", "settings.expenseLimit": "Expense limit (%)", "settings.savingsGoal": "Savings goal (%)", "settings.debtLimit": "Debt limit (%)", "settings.emergencyFund": "Emergency fund (months)", "settings.rulesHelp": "These rules feed automatic alerts and will be used to calculate financial health.", "settings.localData": "Local Data", "settings.export": "Export backup", "settings.import": "Import backup", "settings.clear": "Clear local data", "settings.localHelp": "These buttons only affect data saved in this browser, such as savings, goals, payments, alerts and settings.", "settings.localSummary": "Local Summary", "settings.totalReceived": "Total received", "settings.totalExpenses": "Total expenses", "settings.savingsSaved": "Savings saved", "settings.benefitsUsed": "Benefits used", "settings.cashExpenses": "Cash expenses", "settings.manualAlerts": "Manual alerts",
   },
-  fr: { "menu.Resumo": "Résumé", "menu.Rendimentos": "Revenus", "menu.Poupança": "Épargne", "menu.Despesas": "Dépenses", "menu.Dívidas": "Dettes", "menu.Objetivos": "Objectifs", "menu.Calendário": "Calendrier", "menu.Pagamentos": "Paiements", "menu.Simulador": "Simulateur", "menu.Alertas": "Alertes", "menu.Relatórios": "Rapports", "menu.Definições": "Paramètres", "settings.languageHelp": "Change la langue visuelle de l'application." },
-  es: { "menu.Resumo": "Resumen", "menu.Rendimentos": "Ingresos", "menu.Poupança": "Ahorro", "menu.Despesas": "Gastos", "menu.Dívidas": "Deudas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendario", "menu.Pagamentos": "Pagos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Informes", "menu.Definições": "Configuración", "settings.languageHelp": "Cambia el idioma visual de la aplicación." },
-  ar: { "menu.Resumo": "الملخص", "menu.Rendimentos": "الدخل", "menu.Poupança": "الادخار", "menu.Despesas": "المصاريف", "menu.Dívidas": "الديون", "menu.Objetivos": "الأهداف", "menu.Calendário": "التقويم", "menu.Pagamentos": "المدفوعات", "menu.Simulador": "المحاكي", "menu.Alertas": "التنبيهات", "menu.Relatórios": "التقارير", "menu.Definições": "الإعدادات", "settings.languageHelp": "يغير لغة عرض التطبيق." },
+  fr: { "menu.Resumo": "Résumé", "menu.Rendimentos": "Revenus", "menu.Poupança": "Épargne", "menu.Benefícios": "Avantages", "menu.Despesas": "Dépenses", "menu.Dívidas": "Dettes", "menu.Objetivos": "Objectifs", "menu.Calendário": "Calendrier", "menu.Pagamentos": "Paiements", "menu.Simulador": "Simulateur", "menu.Alertas": "Alertes", "menu.Relatórios": "Rapports", "menu.Definições": "Paramètres", "settings.languageHelp": "Change la langue visuelle de l'application." },
+  es: { "menu.Resumo": "Resumen", "menu.Rendimentos": "Ingresos", "menu.Poupança": "Ahorro", "menu.Benefícios": "Beneficios", "menu.Despesas": "Gastos", "menu.Dívidas": "Deudas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendario", "menu.Pagamentos": "Pagos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Informes", "menu.Definições": "Configuración", "settings.languageHelp": "Cambia el idioma visual de la aplicación." },
+  ar: { "menu.Resumo": "الملخص", "menu.Rendimentos": "الدخل", "menu.Poupança": "الادخار", "menu.Benefícios": "المزايا", "menu.Despesas": "المصاريف", "menu.Dívidas": "الديون", "menu.Objetivos": "الأهداف", "menu.Calendário": "التقويم", "menu.Pagamentos": "المدفوعات", "menu.Simulador": "المحاكي", "menu.Alertas": "التنبيهات", "menu.Relatórios": "التقارير", "menu.Definições": "الإعدادات", "settings.languageHelp": "يغير لغة عرض التطبيق." },
 }
 
 function traduzirTexto(idioma, chave) {
@@ -210,6 +210,10 @@ const POUPANCAS_INICIAIS = [
   { id: 2, tipo: "Reserva Mensal", objetivoId: "", previsto: 150, guardado: 150 },
 ]
 
+const BENEFICIOS_INICIAIS = [
+  { id: 1, tipo: "Cartão Refeição", categoriaAlvo: "Alimentação", valor: 180 },
+]
+
 const ALERTAS_INICIAIS = []
 
 const CONFIGURACOES_INICIAIS = {
@@ -272,6 +276,12 @@ export default function App() {
   )
   const [poupancaEditando, setPoupancaEditando] = React.useState(null)
 
+  const [beneficiosUsuario, setBeneficiosUsuario] = React.useState(() =>
+    lerLocalStorage("beneficiosUsuario", BENEFICIOS_INICIAIS)
+  )
+  const [beneficioEditando, setBeneficioEditando] = React.useState(null)
+  const [mostrarFormularioBeneficio, setMostrarFormularioBeneficio] = React.useState(false)
+
 
   const [objetivosUsuario, setObjetivosUsuario] = React.useState(() =>
     lerLocalStorage("objetivosUsuario", OBJETIVOS_INICIAIS)
@@ -311,6 +321,10 @@ export default function App() {
   React.useEffect(() => {
     guardarLocalStorage("poupancasUsuario", poupancasUsuario)
   }, [poupancasUsuario])
+
+  React.useEffect(() => {
+    guardarLocalStorage("beneficiosUsuario", beneficiosUsuario)
+  }, [beneficiosUsuario])
 
   React.useEffect(() => {
     guardarLocalStorage("configuracoesUsuario", configuracoesUsuario)
@@ -628,8 +642,50 @@ export default function App() {
     0
   )
 
+  const beneficiosFinanceiros = (() => {
+    const despesaDisponivelPorCategoria = despesasApi.reduce((mapa, despesa) => {
+      const chave = String(despesa.categoria || "").trim().toLowerCase()
+      mapa[chave] = (mapa[chave] || 0) + Number(despesa.realizado || 0)
+      return mapa
+    }, {})
+
+    return beneficiosUsuario.map((item) => {
+      const categoriaAlvo = item.categoriaAlvo || "Alimentação"
+      const chave = String(categoriaAlvo || "").trim().toLowerCase()
+      const valor = Number(item.valor || 0)
+      const valorUsado = Math.min(valor, Math.max(0, despesaDisponivelPorCategoria[chave] || 0))
+
+      despesaDisponivelPorCategoria[chave] = Math.max(0, (despesaDisponivelPorCategoria[chave] || 0) - valorUsado)
+
+      return {
+        ...item,
+        categoriaAlvo,
+        valor,
+        usado: valorUsado,
+        disponivel: Math.max(0, valor - valorUsado),
+      }
+    })
+  })()
+
+  const totalBeneficios = beneficiosFinanceiros.reduce(
+    (total, item) => total + Number(item.valor || 0),
+    0
+  )
+
+  const totalBeneficiosUsados = beneficiosFinanceiros.reduce(
+    (total, item) => total + Number(item.usado || 0),
+    0
+  )
+
+  const totalBeneficiosDisponivel = beneficiosFinanceiros.reduce(
+    (total, item) => total + Number(item.disponivel || 0),
+    0
+  )
+
+  const totalDespesasEmDinheiro = Math.max(0, totalDespesasRealizado - totalBeneficiosUsados)
+
   const percentagemDespesasSalario = totalRecebido > 0
-    ? (totalDespesasRealizado / totalRecebido) * 100
+    ? (totalDespesasEmDinheiro / totalRecebido) * 100
     : 0
 
   const poupancasFinanceiras = poupancasUsuario.map((item) => ({
@@ -653,7 +709,7 @@ export default function App() {
     ? (totalPoupancaGuardado / totalRecebido) * 100
     : 0
 
-  const disponivelParaDividas = totalRecebido - totalDespesasRealizado - totalPoupancaGuardado
+  const disponivelParaDividas = totalRecebido - totalDespesasEmDinheiro - totalPoupancaGuardado
 
   const totalDividas = dividasApi.reduce(
     (total, item) => total + Number(item.saldo || 0),
@@ -777,6 +833,16 @@ export default function App() {
 
     const metaPoupancaPercentual = Number(configuracoesUsuario.metaPoupanca || 10)
     const poupancaRecomendada = totalRecebido * (metaPoupancaPercentual / 100)
+
+    if (totalBeneficiosUsados > 0) {
+      alertas.push({
+        id: "auto-beneficios-usados",
+        origem: "automatico",
+        tipo: "positivo",
+        titulo: "Benefícios aplicados",
+        mensagem: `Foram usados ${formatarEuro(totalBeneficiosUsados)} em benefícios para reduzir despesas em dinheiro.`,
+      })
+    }
 
     if (totalRecebido > 0 && totalPoupancaGuardado > totalRecebido) {
       alertas.push({
@@ -1086,6 +1152,49 @@ export default function App() {
     }
   }
 
+  function guardarBeneficio(dadosBeneficio) {
+    const beneficioNormalizado = {
+      id: beneficioEditando?.id || Date.now(),
+      tipo: dadosBeneficio.tipo,
+      categoriaAlvo: dadosBeneficio.categoriaAlvo || "Alimentação",
+      valor: Number(dadosBeneficio.valor || 0),
+    }
+
+    setBeneficiosUsuario((listaAtual) => {
+      if (beneficioEditando) {
+        return listaAtual.map((item) =>
+          Number(item.id) === Number(beneficioEditando.id) ? beneficioNormalizado : item
+        )
+      }
+
+      return [...listaAtual, beneficioNormalizado]
+    })
+
+    setBeneficioEditando(null)
+    setMostrarFormularioBeneficio(false)
+  }
+
+  function iniciarEdicaoBeneficio(item) {
+    setBeneficioEditando(item)
+    setMostrarFormularioBeneficio(true)
+  }
+
+  function cancelarEdicaoBeneficio() {
+    setBeneficioEditando(null)
+    setMostrarFormularioBeneficio(false)
+  }
+
+  function apagarBeneficio(id) {
+    setBeneficiosUsuario((listaAtual) =>
+      listaAtual.filter((item) => Number(item.id) !== Number(id))
+    )
+
+    if (Number(beneficioEditando?.id) === Number(id)) {
+      setBeneficioEditando(null)
+      setMostrarFormularioBeneficio(false)
+    }
+  }
+
 
   function atualizarConfiguracoes(campo, valor) {
     setConfiguracoesUsuario((configAtual) => ({
@@ -1110,6 +1219,7 @@ export default function App() {
       exportadoEm: new Date().toISOString(),
       configuracoesUsuario,
       poupancasUsuario,
+      beneficiosUsuario,
       objetivosUsuario,
       pagamentosUsuario,
       alertasUsuario,
@@ -1153,6 +1263,7 @@ export default function App() {
         }
 
         if (Array.isArray(backup.poupancasUsuario)) setPoupancasUsuario(backup.poupancasUsuario)
+        if (Array.isArray(backup.beneficiosUsuario)) setBeneficiosUsuario(backup.beneficiosUsuario)
         if (Array.isArray(backup.objetivosUsuario)) setObjetivosUsuario(backup.objetivosUsuario)
         if (Array.isArray(backup.pagamentosUsuario)) setPagamentosUsuario(backup.pagamentosUsuario)
         if (Array.isArray(backup.alertasUsuario)) setAlertasUsuario(backup.alertasUsuario)
@@ -1176,12 +1287,14 @@ export default function App() {
     if (!confirmar) return
 
     window.localStorage.removeItem("poupancasUsuario")
+    window.localStorage.removeItem("beneficiosUsuario")
     window.localStorage.removeItem("objetivosUsuario")
     window.localStorage.removeItem("pagamentosUsuario")
     window.localStorage.removeItem("alertasUsuario")
     window.localStorage.removeItem("configuracoesUsuario")
 
     setPoupancasUsuario(POUPANCAS_INICIAIS)
+    setBeneficiosUsuario(BENEFICIOS_INICIAIS)
     setObjetivosUsuario(OBJETIVOS_INICIAIS)
     setPagamentosUsuario(PAGAMENTOS_INICIAIS)
     setAlertasUsuario(ALERTAS_INICIAIS)
@@ -1569,7 +1682,7 @@ export default function App() {
           icon="🧾"
           title={t("kpi.expenses")}
           value={formatarEuro(totalDespesasRealizado)}
-          subtitle={`${formatarPercentagem(percentagemDespesasSalario)} ${t("of.salary")}`}
+          subtitle={`${formatarPercentagem(percentagemDespesasSalario)} ${t("of.salary")} • ${formatarEuro(totalDespesasEmDinheiro)} em dinheiro`}
           accent="red"
           showBar
           barPercent={limitarPercentagem(percentagemDespesasSalario)}
@@ -1824,6 +1937,91 @@ export default function App() {
         </TableCard>
         {(mostrarFormularioRendimento || rendimentoEditando) && (
           <AddRendimentoForm onAdicionar={adicionarRendimentoNaTabela} rendimentoEditando={rendimentoEditando} onAtualizar={atualizarRendimentoNaTabela} onCancelarEdicao={cancelarEdicaoRendimento} mesAtivo={mesAtivo} />
+        )}
+      </div>
+    )
+  }
+
+  function renderBeneficios() {
+    return (
+      <div>
+        <TableCard
+          title={t("table.benefits")}
+          color="bg-cyan-700"
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                if (mostrarFormularioBeneficio && !beneficioEditando) {
+                  setMostrarFormularioBeneficio(false)
+                } else {
+                  setBeneficioEditando(null)
+                  setMostrarFormularioBeneficio(true)
+                }
+              }}
+              className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
+            >
+              {mostrarFormularioBeneficio || beneficioEditando ? t("close") : t("add")}
+            </button>
+          }
+        >
+          <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
+            <tr>
+              <th className="p-1.5 text-left">{t("type")}</th>
+              <th className="p-1.5">{t("benefit.target")}</th>
+              <th className="p-1.5">{t("benefit.value")}</th>
+              <th className="p-1.5">{t("benefit.used")}</th>
+              <th className="p-1.5">{t("benefit.available")}</th>
+              <th className="p-1.5">{t("action")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {beneficiosFinanceiros.map((item) => (
+              <tr key={item.id} className="border-b border-slate-100">
+                <td className="p-1.5 font-semibold">{item.tipo}</td>
+                <td className="p-1.5 text-center">{item.categoriaAlvo}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.valor)}</td>
+                <td className="p-1.5 text-center text-green-700 font-bold">{formatarEuro(item.usado)}</td>
+                <td className="p-1.5 text-center">{formatarEuro(item.disponivel)}</td>
+                <td className="p-1.5 text-center">
+                  <div className="flex justify-center gap-1">
+                    <button onClick={() => iniciarEdicaoBeneficio(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarBeneficio(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {beneficiosFinanceiros.length < 6 && (
+              <tr className="h-full">
+                <td colSpan="6"></td>
+              </tr>
+            )}
+            <tr className="sticky bottom-[26px] z-20 bg-cyan-100 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="p-1.5">{t("benefit.totalUsed")}</td>
+              <td className="p-1.5"></td>
+              <td className="p-1.5 text-center">{formatarEuro(totalBeneficios)}</td>
+              <td className="p-1.5 text-center">{formatarEuro(totalBeneficiosUsados)}</td>
+              <td className="p-1.5"></td>
+              <td className="p-1.5"></td>
+            </tr>
+            <tr className="sticky bottom-0 z-30 bg-cyan-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
+              <td className="p-1.5">{t("benefit.totalAvailable")}</td>
+              <td className="p-1.5"></td>
+              <td className="p-1.5"></td>
+              <td className="p-1.5"></td>
+              <td className="p-1.5 text-center">{formatarEuro(totalBeneficiosDisponivel)}</td>
+              <td className="p-1.5"></td>
+            </tr>
+          </tbody>
+        </TableCard>
+        {(mostrarFormularioBeneficio || beneficioEditando) && (
+          <AddBeneficioForm
+            beneficioEditando={beneficioEditando}
+            despesasLista={despesasApi}
+            t={t}
+            onGuardar={guardarBeneficio}
+            onCancelar={cancelarEdicaoBeneficio}
+          />
         )}
       </div>
     )
@@ -2165,14 +2363,33 @@ export default function App() {
       )
     }
 
+    if (secaoAtiva === "Benefícios") {
+      return (
+        <section className="grid grid-cols-[520px_1fr] gap-4 items-start">
+          {renderBeneficios()}
+          <PlaceholderSection icon="🎟️" title="Resumo de Benefícios / Cartões">
+            <p>Total em benefícios: <strong>{formatarEuro(totalBeneficios)}</strong></p>
+            <p>Usado para abater despesas: <strong>{formatarEuro(totalBeneficiosUsados)}</strong></p>
+            <p>Ainda disponível: <strong>{formatarEuro(totalBeneficiosDisponivel)}</strong></p>
+            <p>Despesas em dinheiro: <strong>{formatarEuro(totalDespesasEmDinheiro)}</strong></p>
+          </PlaceholderSection>
+        </section>
+      )
+    }
+
     if (secaoAtiva === "Despesas") {
       return (
         <>
           {renderGraficos()}
           <section className="grid grid-cols-[430px_1fr] gap-4 items-start">
-            {renderDespesas()}
+            <div className="space-y-4">
+              {renderDespesas()}
+              {renderBeneficios()}
+            </div>
             <PlaceholderSection icon="💸" title="Resumo de Despesas">
               <p>Total realizado: <strong>{formatarEuro(totalDespesasRealizado)}</strong></p>
+              <p>Benefícios usados: <strong>{formatarEuro(totalBeneficiosUsados)}</strong></p>
+              <p>Despesas em dinheiro: <strong>{formatarEuro(totalDespesasEmDinheiro)}</strong></p>
               <p>Peso no salário: <strong>{formatarPercentagem(percentagemDespesasSalario)}</strong></p>
             </PlaceholderSection>
           </section>
@@ -2245,9 +2462,12 @@ export default function App() {
           resumo={{
             totalRecebido,
             totalDespesasRealizado,
+            totalBeneficiosUsados,
+            totalDespesasEmDinheiro,
             totalPoupancaGuardado,
             totalDividas,
             poupancasCount: poupancasUsuario.length,
+            beneficiosCount: beneficiosUsuario.length,
             objetivosCount: objetivosUsuario.length,
             pagamentosCount: pagamentosUsuario.length,
             alertasCount: alertasUsuario.length,
@@ -2271,7 +2491,10 @@ export default function App() {
               {renderRendimentos()}
               {renderPoupancas()}
             </div>
-            {renderDespesas()}
+            <div className="space-y-4">
+              {renderDespesas()}
+              {renderBeneficios()}
+            </div>
             {renderDividas()}
             {renderPagamentoIdeal()}
           </section>
@@ -3240,6 +3463,101 @@ function PagamentoDividaForm({
   )
 }
 
+function AddBeneficioForm({ beneficioEditando, despesasLista = [], t = (chave) => chave, onGuardar, onCancelar }) {
+  const [tipo, setTipo] = React.useState("")
+  const [categoriaAlvo, setCategoriaAlvo] = React.useState("Alimentação")
+  const [valor, setValor] = React.useState("")
+
+  const modoEdicao = Boolean(beneficioEditando)
+  const categorias = Array.from(new Set([
+    "Alimentação",
+    "Transportes",
+    "Saúde",
+    ...despesasLista.map((item) => item.categoria).filter(Boolean),
+  ]))
+
+  React.useEffect(() => {
+    if (beneficioEditando) {
+      setTipo(beneficioEditando.tipo || "")
+      setCategoriaAlvo(beneficioEditando.categoriaAlvo || "Alimentação")
+      setValor(String(beneficioEditando.valor || 0))
+    } else {
+      setTipo("")
+      setCategoriaAlvo("Alimentação")
+      setValor("")
+    }
+  }, [beneficioEditando])
+
+  function guardar(e) {
+    e.preventDefault()
+
+    if (!tipo.trim()) {
+      return
+    }
+
+    onGuardar({
+      tipo,
+      categoriaAlvo,
+      valor,
+    })
+
+    if (!modoEdicao) {
+      setTipo("")
+      setCategoriaAlvo("Alimentação")
+      setValor("")
+    }
+  }
+
+  return (
+    <form onSubmit={guardar} className="mt-4 rounded-2xl bg-white p-4 shadow-lg border border-slate-100">
+      <h3 className="font-black text-cyan-700 mb-3">
+        {modoEdicao ? "Editar Benefício / Cartão" : "Adicionar Benefício / Cartão"}
+      </h3>
+
+      <input
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        placeholder="Tipo, ex: Cartão Refeição"
+        value={tipo}
+        onChange={(e) => setTipo(e.target.value)}
+      />
+
+      <select
+        className="w-full mb-2 rounded-lg border p-2 text-sm"
+        value={categoriaAlvo}
+        onChange={(e) => setCategoriaAlvo(e.target.value)}
+      >
+        {categorias.map((categoria) => (
+          <option key={categoria} value={categoria}>
+            {categoria}
+          </option>
+        ))}
+      </select>
+
+      <input
+        className="w-full mb-3 rounded-lg border p-2 text-sm"
+        placeholder="Valor disponível"
+        type="number"
+        value={valor}
+        onChange={(e) => setValor(e.target.value)}
+      />
+
+      <button className="w-full rounded-lg bg-cyan-600 py-2 text-white font-bold">
+        {modoEdicao ? "Guardar Alterações" : "Adicionar"}
+      </button>
+
+      {modoEdicao && (
+        <button
+          type="button"
+          onClick={onCancelar}
+          className="mt-2 w-full rounded-lg bg-slate-200 py-2 text-slate-700 font-bold"
+        >
+          Cancelar edição
+        </button>
+      )}
+    </form>
+  )
+}
+
 function AddPoupancaForm({ poupancaEditando, objetivosLista = [], t = (chave) => chave, onGuardar, onCancelar }) {
   const [tipo, setTipo] = React.useState("")
   const [objetivoId, setObjetivoId] = React.useState("")
@@ -3702,12 +4020,15 @@ function DefinicoesPanel({
         <div className="space-y-3 text-sm font-bold">
           <ResumoLinha label={t("settings.totalReceived")} value={formatarEuro(resumo.totalRecebido)} />
           <ResumoLinha label={t("settings.totalExpenses")} value={formatarEuro(resumo.totalDespesasRealizado)} />
+          <ResumoLinha label={t("settings.benefitsUsed")} value={formatarEuro(resumo.totalBeneficiosUsados)} />
+          <ResumoLinha label={t("settings.cashExpenses")} value={formatarEuro(resumo.totalDespesasEmDinheiro)} />
           <ResumoLinha label={t("settings.savingsSaved")} value={formatarEuro(resumo.totalPoupancaGuardado)} />
           <ResumoLinha label={t("kpi.totalDebts")} value={formatarEuro(resumo.totalDividas)} />
         </div>
 
         <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm font-bold text-slate-700">
           <div className="mb-2 flex justify-between"><span>{t("menu.Poupança")}</span><strong>{resumo.poupancasCount}</strong></div>
+          <div className="mb-2 flex justify-between"><span>{t("menu.Benefícios")}</span><strong>{resumo.beneficiosCount}</strong></div>
           <div className="mb-2 flex justify-between"><span>{t("menu.Objetivos")}</span><strong>{resumo.objetivosCount}</strong></div>
           <div className="mb-2 flex justify-between"><span>{t("menu.Pagamentos")}</span><strong>{resumo.pagamentosCount}</strong></div>
           <div className="flex justify-between"><span>{t("settings.manualAlerts")}</span><strong>{resumo.alertasCount}</strong></div>
@@ -3745,6 +4066,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
     ["🏠", "Resumo"],
     ["⚖️", "Rendimentos"],
     ["💰", "Poupança"],
+    ["🎟️", "Benefícios"],
     ["💸", "Despesas"],
     ["🪙", "Dívidas"],
     ["🎯", "Objetivos"],
