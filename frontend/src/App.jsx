@@ -650,7 +650,7 @@ export default function App() {
     }, {})
 
     return beneficiosUsuario.map((item) => {
-      const categoriaAlvo = item.categoriaAlvo || "Alimentação"
+      const categoriaAlvo = item.categoriaAlvo || ""
       const chave = String(categoriaAlvo || "").trim().toLowerCase()
       const valor = Number(item.valor || 0)
       const valorUsado = Math.min(valor, Math.max(0, despesaDisponivelPorCategoria[chave] || 0))
@@ -1156,7 +1156,7 @@ export default function App() {
     const beneficioNormalizado = {
       id: beneficioEditando?.id || Date.now(),
       tipo: dadosBeneficio.tipo,
-      categoriaAlvo: dadosBeneficio.categoriaAlvo || "Alimentação",
+      categoriaAlvo: dadosBeneficio.categoriaAlvo || "",
       valor: Number(dadosBeneficio.valor || 0),
     }
 
@@ -1979,7 +1979,7 @@ export default function App() {
             {beneficiosFinanceiros.map((item) => (
               <tr key={item.id} className="border-b border-slate-100">
                 <td className="p-1.5 font-semibold">{item.tipo}</td>
-                <td className="p-1.5 text-center">{item.categoriaAlvo}</td>
+                <td className="p-1.5 text-center">{item.categoriaAlvo || "—"}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.valor)}</td>
                 <td className="p-1.5 text-center text-green-700 font-bold">{formatarEuro(item.usado)}</td>
                 <td className="p-1.5 text-center">{formatarEuro(item.disponivel)}</td>
@@ -3465,25 +3465,24 @@ function PagamentoDividaForm({
 
 function AddBeneficioForm({ beneficioEditando, despesasLista = [], t = (chave) => chave, onGuardar, onCancelar }) {
   const [tipo, setTipo] = React.useState("")
-  const [categoriaAlvo, setCategoriaAlvo] = React.useState("Alimentação")
+  const [categoriaAlvo, setCategoriaAlvo] = React.useState("")
   const [valor, setValor] = React.useState("")
 
   const modoEdicao = Boolean(beneficioEditando)
-  const categorias = Array.from(new Set([
-    "Alimentação",
-    "Transportes",
-    "Saúde",
-    ...despesasLista.map((item) => item.categoria).filter(Boolean),
-  ]))
+  const categorias = Array.from(new Set(
+    despesasLista
+      .map((item) => String(item.categoria || "").trim())
+      .filter(Boolean)
+  ))
 
   React.useEffect(() => {
     if (beneficioEditando) {
       setTipo(beneficioEditando.tipo || "")
-      setCategoriaAlvo(beneficioEditando.categoriaAlvo || "Alimentação")
+      setCategoriaAlvo(beneficioEditando.categoriaAlvo || "")
       setValor(String(beneficioEditando.valor || 0))
     } else {
       setTipo("")
-      setCategoriaAlvo("Alimentação")
+      setCategoriaAlvo("")
       setValor("")
     }
   }, [beneficioEditando])
@@ -3491,7 +3490,7 @@ function AddBeneficioForm({ beneficioEditando, despesasLista = [], t = (chave) =
   function guardar(e) {
     e.preventDefault()
 
-    if (!tipo.trim()) {
+    if (!tipo.trim() || !categoriaAlvo) {
       return
     }
 
@@ -3503,7 +3502,7 @@ function AddBeneficioForm({ beneficioEditando, despesasLista = [], t = (chave) =
 
     if (!modoEdicao) {
       setTipo("")
-      setCategoriaAlvo("Alimentação")
+      setCategoriaAlvo("")
       setValor("")
     }
   }
@@ -3526,6 +3525,7 @@ function AddBeneficioForm({ beneficioEditando, despesasLista = [], t = (chave) =
         value={categoriaAlvo}
         onChange={(e) => setCategoriaAlvo(e.target.value)}
       >
+        <option value="">Selecionar categoria das despesas</option>
         {categorias.map((categoria) => (
           <option key={categoria} value={categoria}>
             {categoria}
