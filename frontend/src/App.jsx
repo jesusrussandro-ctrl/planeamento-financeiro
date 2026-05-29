@@ -40,6 +40,35 @@ const IDIOMAS = {
   ar: { label: "العربية", flag: "🇦🇪", direction: "rtl" },
 }
 
+
+const TRADUCOES = {
+  pt: {
+    "menu.Resumo": "Resumo", "menu.Rendimentos": "Rendimentos", "menu.Poupança": "Poupança", "menu.Despesas": "Despesas", "menu.Dívidas": "Dívidas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendário", "menu.Pagamentos": "Pagamentos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Relatórios", "menu.Definições": "Definições",
+    "app.title1": "Planeamento", "app.title2": "Financeiro", "app.subtitle": "Controlo Financeiro Familiar", "active.section": "Secção ativa", "month.active": "Mês ativo", "viewing": "A visualizar", "currency": "Moeda", "no.conversion": "Sem conversão cambial. Apenas formato visual.", "updated.at": "Atualizado em", "financial.health": "Saúde Financeira", "excellent": "Excelente",
+    "kpi.health": "Índice de Saúde Financeira", "kpi.health.text": "A sua situação financeira está muito saudável!", "kpi.salary": "Salário Líquido", "kpi.salary.sub": "Total recebido no mês", "kpi.expenses": "Total Despesas", "kpi.availableDebts": "Disponível p/ Dívidas", "kpi.totalDebts": "Total Dívidas", "kpi.idealPayment": "Pagamento ideal", "kpi.daysLeft": "Dias Restantes", "until": "até", "of.salary": "do salário",
+    "chart.expectedVsActual": "Previsto vs Realizado (Despesas)", "chart.distributionExpenses": "Distribuição das Despesas", "chart.distributionIncome": "Distribuição da Renda", "expected": "Previsto", "actual": "Realizado", "total": "Total",
+    "table.income": "Rendimentos", "table.savings": "Poupança / Reserva", "table.expenses": "Despesas Mensais", "table.debts": "Dívidas", "table.idealDebts": "Pagamento Ideal das Dívidas", "add": "+ Adicionar", "close": "Fechar", "edit": "Editar", "delete": "Apagar", "action": "Ação", "source": "Fonte", "received": "Recebido", "type": "Tipo", "saved": "Guardado", "category": "Categoria", "percent": "%", "creditor": "Credor", "balance": "Saldo", "installment": "Prest.", "interest": "Juros", "priority": "Prior.", "status": "Estado", "pay": "Pagar", "paid": "Pago", "pending": "Pendente", "payment": "Pagamento", "time": "Tempo", "months": "meses", "distributed.total": "TOTAL DISTRIBUÍDO", "remaining": "SOBRA / FOLGA", "total.income": "TOTAL", "total.debts": "TOTAL DAS DÍVIDAS",
+    "goals.title": "🎯 Objetivos Financeiros", "goals.new": "+ Novo", "goals.seeAll": "Ver todos os objetivos →", "goal.label": "Objetivo", "upcoming.payments": "Próximos Pagamentos", "alerts.title": "Alertas e Conselhos", "alerts.none": "Ainda não existem alertas para este mês.", "automatic": "Automático", "reports.title": "Relatórios", "reports.text": "Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.",
+    "settings.general": "Definições Gerais", "settings.config": "Configuração", "settings.currencyDefault": "Moeda padrão", "settings.languageDefault": "Idioma padrão", "settings.monthActive": "Mês ativo", "settings.visualOnly": "Apenas muda o formato visual. Não faz conversão cambial.", "settings.languageHelp": "Altera o idioma visual da aplicação.", "settings.current": "Atual", "settings.rules": "Regras Financeiras", "settings.expenseLimit": "Limite despesas (%)", "settings.savingsGoal": "Meta poupança (%)", "settings.debtLimit": "Limite dívidas (%)", "settings.emergencyFund": "Fundo emergência (meses)", "settings.rulesHelp": "Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.", "settings.localData": "Dados Locais", "settings.export": "Exportar backup", "settings.import": "Importar backup", "settings.clear": "Limpar dados locais", "settings.localHelp": "Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.", "settings.localSummary": "Resumo Local", "settings.totalReceived": "Total recebido", "settings.totalExpenses": "Total despesas", "settings.savingsSaved": "Poupança guardada", "settings.manualAlerts": "Alertas manuais",
+  },
+  en: {
+    "menu.Resumo": "Summary", "menu.Rendimentos": "Income", "menu.Poupança": "Savings", "menu.Despesas": "Expenses", "menu.Dívidas": "Debts", "menu.Objetivos": "Goals", "menu.Calendário": "Calendar", "menu.Pagamentos": "Payments", "menu.Simulador": "Simulator", "menu.Alertas": "Alerts", "menu.Relatórios": "Reports", "menu.Definições": "Settings",
+    "app.title1": "Financial", "app.title2": "Planning", "app.subtitle": "Family Financial Control", "active.section": "Active section", "month.active": "Active month", "viewing": "Viewing", "currency": "Currency", "no.conversion": "No exchange conversion. Visual format only.", "updated.at": "Updated at", "financial.health": "Financial Health", "excellent": "Excellent",
+    "kpi.health": "Financial Health Index", "kpi.health.text": "Your financial situation is very healthy!", "kpi.salary": "Net Salary", "kpi.salary.sub": "Total received this month", "kpi.expenses": "Total Expenses", "kpi.availableDebts": "Available for Debts", "kpi.totalDebts": "Total Debts", "kpi.idealPayment": "Ideal payment", "kpi.daysLeft": "Days Left", "until": "until", "of.salary": "of salary",
+    "chart.expectedVsActual": "Expected vs Actual (Expenses)", "chart.distributionExpenses": "Expense Distribution", "chart.distributionIncome": "Income Distribution", "expected": "Expected", "actual": "Actual", "total": "Total",
+    "table.income": "Income", "table.savings": "Savings / Reserve", "table.expenses": "Monthly Expenses", "table.debts": "Debts", "table.idealDebts": "Ideal Debt Payment", "add": "+ Add", "close": "Close", "edit": "Edit", "delete": "Delete", "action": "Action", "source": "Source", "received": "Received", "type": "Type", "saved": "Saved", "category": "Category", "percent": "%", "creditor": "Creditor", "balance": "Balance", "installment": "Inst.", "interest": "Interest", "priority": "Prior.", "status": "Status", "pay": "Pay", "paid": "Paid", "pending": "Pending", "payment": "Payment", "time": "Time", "months": "months", "distributed.total": "TOTAL DISTRIBUTED", "remaining": "REMAINING", "total.income": "TOTAL", "total.debts": "TOTAL DEBTS",
+    "goals.title": "🎯 Financial Goals", "goals.new": "+ New", "goals.seeAll": "See all goals →", "goal.label": "Goal", "upcoming.payments": "Upcoming Payments", "alerts.title": "Alerts and Advice", "alerts.none": "There are no alerts for this month yet.", "automatic": "Automatic", "reports.title": "Reports", "reports.text": "Next we will add monthly summaries, month comparison and export.",
+    "settings.general": "General Settings", "settings.config": "Configuration", "settings.currencyDefault": "Default currency", "settings.languageDefault": "Default language", "settings.monthActive": "Active month", "settings.visualOnly": "Only changes the visual format. No exchange conversion.", "settings.languageHelp": "Changes the application display language.", "settings.current": "Current", "settings.rules": "Financial Rules", "settings.expenseLimit": "Expense limit (%)", "settings.savingsGoal": "Savings goal (%)", "settings.debtLimit": "Debt limit (%)", "settings.emergencyFund": "Emergency fund (months)", "settings.rulesHelp": "These rules feed automatic alerts and will be used to calculate financial health.", "settings.localData": "Local Data", "settings.export": "Export backup", "settings.import": "Import backup", "settings.clear": "Clear local data", "settings.localHelp": "These buttons only affect data saved in this browser, such as savings, goals, payments, alerts and settings.", "settings.localSummary": "Local Summary", "settings.totalReceived": "Total received", "settings.totalExpenses": "Total expenses", "settings.savingsSaved": "Savings saved", "settings.manualAlerts": "Manual alerts",
+  },
+  fr: { "menu.Resumo": "Résumé", "menu.Rendimentos": "Revenus", "menu.Poupança": "Épargne", "menu.Despesas": "Dépenses", "menu.Dívidas": "Dettes", "menu.Objetivos": "Objectifs", "menu.Calendário": "Calendrier", "menu.Pagamentos": "Paiements", "menu.Simulador": "Simulateur", "menu.Alertas": "Alertes", "menu.Relatórios": "Rapports", "menu.Definições": "Paramètres", "settings.languageHelp": "Change la langue visuelle de l'application." },
+  es: { "menu.Resumo": "Resumen", "menu.Rendimentos": "Ingresos", "menu.Poupança": "Ahorro", "menu.Despesas": "Gastos", "menu.Dívidas": "Deudas", "menu.Objetivos": "Objetivos", "menu.Calendário": "Calendario", "menu.Pagamentos": "Pagos", "menu.Simulador": "Simulador", "menu.Alertas": "Alertas", "menu.Relatórios": "Informes", "menu.Definições": "Configuración", "settings.languageHelp": "Cambia el idioma visual de la aplicación." },
+  ar: { "menu.Resumo": "الملخص", "menu.Rendimentos": "الدخل", "menu.Poupança": "الادخار", "menu.Despesas": "المصاريف", "menu.Dívidas": "الديون", "menu.Objetivos": "الأهداف", "menu.Calendário": "التقويم", "menu.Pagamentos": "المدفوعات", "menu.Simulador": "المحاكي", "menu.Alertas": "التنبيهات", "menu.Relatórios": "التقارير", "menu.Definições": "الإعدادات", "settings.languageHelp": "يغير لغة عرض التطبيق." },
+}
+
+function traduzirTexto(idioma, chave) {
+  return TRADUCOES[idioma]?.[chave] || TRADUCOES.pt[chave] || chave
+}
+
 const NOMES_MESES = [
   "Janeiro",
   "Fevereiro",
@@ -263,6 +292,9 @@ export default function App() {
     lerLocalStorage("configuracoesUsuario", CONFIGURACOES_INICIAIS)
   )
   const [mensagemDefinicoes, setMensagemDefinicoes] = React.useState("")
+
+  const idiomaAtivo = configuracoesUsuario.idiomaPadrao || "pt"
+  const t = React.useCallback((chave) => traduzirTexto(idiomaAtivo, chave), [idiomaAtivo])
 
   React.useEffect(() => {
     guardarLocalStorage("objetivosUsuario", objetivosUsuario)
@@ -1411,30 +1443,30 @@ export default function App() {
 
     return (
       <section className="grid grid-cols-[1.25fr_1fr_1fr_1fr_1fr_1fr] gap-3">
-        <HealthCard />
+        <HealthCard t={t} />
         <KpiCard
           icon="💼"
-          title="Salário Líquido"
+          title={t("kpi.salary")}
           value={formatarEuro(totalRecebido)}
-          subtitle="Total recebido no mês"
+          subtitle={t("kpi.salary.sub")}
           accent="blue"
           showBar
           barPercent={totalRecebido > 0 ? 100 : 0}
         />
         <KpiCard
           icon="🧾"
-          title="Total Despesas"
+          title={t("kpi.expenses")}
           value={formatarEuro(totalDespesasRealizado)}
-          subtitle={`${formatarPercentagem(percentagemDespesasSalario)} do salário`}
+          subtitle={`${formatarPercentagem(percentagemDespesasSalario)} ${t("of.salary")}`}
           accent="red"
           showBar
           barPercent={limitarPercentagem(percentagemDespesasSalario)}
         />
         <KpiCard
           icon="💸"
-          title="Disponível p/ Dívidas"
+          title={t("kpi.availableDebts")}
           value={formatarEuro(disponivelParaDividas)}
-          subtitle={`${formatarPercentagem(percentagemDisponivelSalario)} do salário`}
+          subtitle={`${formatarPercentagem(percentagemDisponivelSalario)} ${t("of.salary")}`}
           accent="green"
           green
           showBar
@@ -1442,18 +1474,18 @@ export default function App() {
         />
         <KpiCard
           icon="🏦"
-          title="Total Dívidas"
+          title={t("kpi.totalDebts")}
           value={formatarEuro(totalDividas)}
-          subtitle={`Pagamento ideal: ${formatarEuro(totalPagamentoIdeal)}`}
+          subtitle={`${t("kpi.idealPayment")}: ${formatarEuro(totalPagamentoIdeal)}`}
           accent="purple"
           showBar
           barPercent={limitarPercentagem(percentagemPagamentoIdeal)}
         />
         <KpiCard
           icon="🗓️"
-          title="Dias Restantes"
+          title={t("kpi.daysLeft")}
           value={String(diasRestantesMesAtivo)}
-          subtitle={`até ${dataFimMesAtivo}`}
+          subtitle={`${t("until")} ${dataFimMesAtivo}`}
           accent="orange"
           showBar
           barPercent={limitarPercentagem(percentagemDiasRestantes)}
@@ -1465,10 +1497,10 @@ export default function App() {
   function renderGraficos() {
     return (
       <section className="grid grid-cols-[1.2fr_1fr_1fr] gap-4">
-        <ChartBox title="Previsto vs Realizado (Despesas)">
+        <ChartBox title={t("chart.expectedVsActual")}>
           <div className="flex justify-center gap-5 text-[10px] font-bold mb-1">
-            <span className="text-blue-700">■ Previsto</span>
-            <span className="text-green-600">■ Realizado</span>
+            <span className="text-blue-700">■ {t("expected")}</span>
+            <span className="text-green-600">■ {t("actual")}</span>
           </div>
           <ResponsiveContainer width="100%" height={205}>
             <BarChart data={despesasGrafico} layout="vertical" barGap={2}>
@@ -1481,7 +1513,7 @@ export default function App() {
           </ResponsiveContainer>
         </ChartBox>
 
-        <ChartBox title="Distribuição das Despesas">
+        <ChartBox title={t("chart.distributionExpenses")}>
           <div className="grid grid-cols-[1fr_120px] items-center">
             <div className="relative h-[210px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -1497,7 +1529,7 @@ export default function App() {
               <div className="absolute inset-0 flex items-center justify-center text-center pointer-events-none">
                 <div className="font-black text-blue-950">
                   {formatarEuro(totalDespesasRealizado)}
-                  <div className="text-[10px]">Total</div>
+                  <div className="text-[10px]">{t("total")}</div>
                 </div>
               </div>
             </div>
@@ -1505,7 +1537,7 @@ export default function App() {
           </div>
         </ChartBox>
 
-        <ChartBox title="Distribuição da Renda">
+        <ChartBox title={t("chart.distributionIncome")}>
           <div className="grid grid-cols-[1fr_120px] items-center">
             <div className="relative h-[210px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -1533,7 +1565,7 @@ export default function App() {
     return (
       <div>
         <TableCard
-          title="Poupança / Reserva"
+          title={t("table.savings")}
           color="bg-teal-700"
           action={
             <button
@@ -1548,16 +1580,16 @@ export default function App() {
               }}
               className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
             >
-              {mostrarFormularioPoupanca || poupancaEditando ? "Fechar" : "+ Adicionar"}
+              {mostrarFormularioPoupanca || poupancaEditando ? t("close") : t("add")}
             </button>
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
-              <th className="p-1.5 text-left">Tipo</th>
-              <th className="p-1.5">Previsto</th>
-              <th className="p-1.5">Guardado</th>
-              <th className="p-1.5">Ação</th>
+              <th className="p-1.5 text-left">{t("type")}</th>
+              <th className="p-1.5">{t("expected")}</th>
+              <th className="p-1.5">{t("saved")}</th>
+              <th className="p-1.5">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
@@ -1568,8 +1600,8 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.guardado)}</td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
-                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                    <button onClick={() => iniciarEdicaoPoupanca(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarPoupanca(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -1580,7 +1612,7 @@ export default function App() {
               </tr>
             )}
             <tr className="sticky bottom-0 z-20 bg-teal-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalPoupancaPrevisto)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalPoupancaGuardado)}</td>
               <td className="p-1.5"></td>
@@ -1602,7 +1634,7 @@ export default function App() {
     return (
       <div>
         <TableCard
-          title="Rendimentos"
+          title={t("table.income")}
           color="bg-emerald-700"
           action={
             <button
@@ -1617,16 +1649,16 @@ export default function App() {
               }}
               className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
             >
-              {mostrarFormularioRendimento || rendimentoEditando ? "Fechar" : "+ Adicionar"}
+              {mostrarFormularioRendimento || rendimentoEditando ? t("close") : t("add")}
             </button>
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
-              <th className="p-1.5 text-left">Fonte</th>
-              <th className="p-1.5">Previsto</th>
-              <th className="p-1.5">Recebido</th>
-              <th className="p-1.5">Ação</th>
+              <th className="p-1.5 text-left">{t("source")}</th>
+              <th className="p-1.5">{t("expected")}</th>
+              <th className="p-1.5">{t("received")}</th>
+              <th className="p-1.5">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
@@ -1637,8 +1669,8 @@ export default function App() {
                 <td className="p-1.5 text-center">{formatarEuro(item.recebido)}</td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
-                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                    <button onClick={() => iniciarEdicaoRendimento(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarRendimento(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -1649,7 +1681,7 @@ export default function App() {
               </tr>
             )}
             <tr className="sticky bottom-0 z-20 bg-emerald-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalOrcamentado)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalRecebido)}</td>
               <td className="p-1.5"></td>
@@ -1667,7 +1699,7 @@ export default function App() {
     return (
       <div>
         <TableCard
-          title="Despesas Mensais"
+          title={t("table.expenses")}
           color="bg-blue-700"
           action={
             <button
@@ -1682,17 +1714,17 @@ export default function App() {
               }}
               className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
             >
-              {mostrarFormularioDespesa || despesaEditando ? "Fechar" : "+ Adicionar"}
+              {mostrarFormularioDespesa || despesaEditando ? t("close") : t("add")}
             </button>
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
-              <th className="p-1.5 text-left">Categoria</th>
-              <th className="p-1.5">Previsto</th>
-              <th className="p-1.5">Realizado</th>
+              <th className="p-1.5 text-left">{t("category")}</th>
+              <th className="p-1.5">{t("expected")}</th>
+              <th className="p-1.5">{t("actual")}</th>
               <th className="p-1.5">%</th>
-              <th className="p-1.5">Ação</th>
+              <th className="p-1.5">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
@@ -1706,8 +1738,8 @@ export default function App() {
                 </td>
                 <td className="p-1.5 text-center">
                   <div className="flex justify-center gap-1">
-                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
-                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                    <button onClick={() => iniciarEdicaoDespesa(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                    <button onClick={() => apagarDespesa(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                   </div>
                 </td>
               </tr>
@@ -1718,7 +1750,7 @@ export default function App() {
               </tr>
             )}
             <tr className="sticky bottom-0 z-20 bg-blue-50 font-black shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5">TOTAL</td>
+              <td className="p-1.5">{t("total.income")}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasOrcamentado)}</td>
               <td className="p-1.5 text-center">{formatarEuro(totalDespesasRealizado)}</td>
               <td className="p-1.5 text-center">{formatarPercentagem(percentagemDespesasSalario)}</td>
@@ -1737,7 +1769,7 @@ export default function App() {
     return (
       <div>
         <TableCard
-          title="Dívidas"
+          title={t("table.debts")}
           color="bg-purple-700"
           action={
             <button
@@ -1752,20 +1784,20 @@ export default function App() {
               }}
               className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black text-white hover:bg-white/30"
             >
-              {mostrarFormularioDivida || dividaEditando ? "Fechar" : "+ Adicionar"}
+              {mostrarFormularioDivida || dividaEditando ? t("close") : t("add")}
             </button>
           }
         >
           <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
             <tr>
-              <th className="p-1 text-left">Credor</th>
-              <th className="p-1">Saldo</th>
-              <th className="p-1">Prest.</th>
-              <th className="p-1">Juros</th>
-              <th className="p-1">Tipo</th>
-              <th className="p-1">Prior.</th>
-              <th className="p-1">Estado</th>
-              <th className="p-1">Ação</th>
+              <th className="p-1 text-left">{t("creditor")}</th>
+              <th className="p-1">{t("balance")}</th>
+              <th className="p-1">{t("installment")}</th>
+              <th className="p-1">{t("interest")}</th>
+              <th className="p-1">{t("type")}</th>
+              <th className="p-1">{t("priority")}</th>
+              <th className="p-1">{t("status")}</th>
+              <th className="p-1">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
@@ -1780,13 +1812,13 @@ export default function App() {
                   <td className="p-1 text-center">{formatarTipoJuros(item.tipoJuros)}</td>
                   <td className="p-1 text-center text-red-500 font-bold">{item.prioridade}</td>
                   <td className="p-1 text-center">
-                    {pagamentoMes ? <span className="rounded bg-green-100 px-2 py-1 text-green-700 font-black">Pago</span> : <span className="rounded bg-orange-100 px-2 py-1 text-orange-700 font-black">Pendente</span>}
+                    {pagamentoMes ? <span className="rounded bg-green-100 px-2 py-1 text-green-700 font-black">{t("paid")}</span> : <span className="rounded bg-orange-100 px-2 py-1 text-orange-700 font-black">{t("pending")}</span>}
                   </td>
                   <td className="p-1 text-center">
                     <div className="flex flex-col justify-center gap-1">
-                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold">Pagar</button>
-                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">Editar</button>
-                      <button onClick={() => apagarDivida(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Apagar</button>
+                      <button onClick={() => iniciarPagamentoDivida(item)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold">{t("pay")}</button>
+                      <button onClick={() => iniciarEdicaoDivida(item)} className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("edit")}</button>
+                      <button onClick={() => apagarDivida(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">{t("delete")}</button>
                     </div>
                   </td>
                 </tr>
@@ -1798,7 +1830,7 @@ export default function App() {
               </tr>
             )}
             <tr className="sticky bottom-0 z-20 bg-purple-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-              <td className="p-1.5">TOTAL DAS DÍVIDAS</td>
+              <td className="p-1.5">{t("total.debts")}</td>
               <td className="p-1.5 text-center" colSpan="7">{formatarEuro(totalDividas)}</td>
             </tr>
           </tbody>
@@ -1813,13 +1845,13 @@ export default function App() {
 
   function renderPagamentoIdeal() {
     return (
-      <TableCard title="Pagamento Ideal das Dívidas" color="bg-green-700">
+      <TableCard title={t("table.idealDebts")} color="bg-green-700">
         <thead className="sticky top-0 z-20 bg-slate-50 text-slate-500 shadow-sm">
           <tr>
-            <th className="p-1 text-left">Credor</th>
-            <th className="p-1">Pagamento</th>
+            <th className="p-1 text-left">{t("creditor")}</th>
+            <th className="p-1">{t("payment")}</th>
             <th className="p-1">% Disp.</th>
-            <th className="p-1">Tempo</th>
+            <th className="p-1">{t("time")}</th>
           </tr>
         </thead>
         <tbody>
@@ -1828,7 +1860,7 @@ export default function App() {
               <td className="p-1 font-semibold">{item.credor}</td>
               <td className="p-1 text-center">{formatarEuro(item.pagamento)}</td>
               <td className="p-1 text-center">{formatarPercentagem(item.percentagemDisponivel)}</td>
-              <td className="p-1 text-center">{item.tempoMeses} meses</td>
+              <td className="p-1 text-center">{item.tempoMeses} {t("months")}</td>
             </tr>
           ))}
           {pagamentoIdealDividas.length < 4 && (
@@ -1837,13 +1869,13 @@ export default function App() {
             </tr>
           )}
           <tr className="sticky bottom-[26px] z-20 bg-green-100 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-            <td className="p-1.5">TOTAL DISTRIBUÍDO</td>
+            <td className="p-1.5">{t("distributed.total")}</td>
             <td className="p-1.5 text-center">{formatarEuro(totalPagamentoIdeal)}</td>
             <td className="p-1.5 text-center">100%</td>
             <td className="p-1.5"></td>
           </tr>
           <tr className="sticky bottom-0 z-30 bg-green-50 font-black text-[10px] shadow-[0_-1px_0_rgba(15,23,42,0.08)]">
-            <td className="p-1.5">SOBRA / FOLGA</td>
+            <td className="p-1.5">{t("remaining")}</td>
             <td className="p-1.5 text-center">{formatarEuro(sobraPagamentoIdeal)}</td>
             <td className="p-1.5"></td>
             <td className="p-1.5"></td>
@@ -1855,7 +1887,7 @@ export default function App() {
 
   function renderProximosPagamentos(mostrarAcoes = false) {
     return (
-      <Panel title="Próximos Pagamentos" className="h-full min-h-[320px]" bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain">
+      <Panel title={t("upcoming.payments")} className="h-full min-h-[320px]" bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain">
         {pagamentosFinanceiros.map((pagamento) => {
           const badgeClass = pagamento.estado === "pago"
             ? "bg-green-100 text-green-700"
@@ -1916,13 +1948,13 @@ export default function App() {
 
     return (
       <Panel
-        title="Alertas e Conselhos"
+        title={t("alerts.title")}
         className={mostrarAcoes ? "min-h-[420px]" : "h-full min-h-[205px]"}
         bodyClassName="min-h-0 overflow-y-auto overflow-x-hidden pr-1 overscroll-contain"
       >
         {alertasFinanceiros.length === 0 && (
           <div className="bg-slate-50 text-slate-600 rounded-xl p-3 text-xs mb-3">
-            Ainda não existem alertas para este mês.
+            {t("alerts.none")}
           </div>
         )}
 
@@ -1958,7 +1990,7 @@ export default function App() {
 
               {mostrarAcoes && origem === "automatico" && (
                 <div className="mt-2 text-[9px] font-black opacity-70">
-                  Automático
+                  {t("automatic")}
                 </div>
               )}
             </div>
@@ -2053,8 +2085,8 @@ export default function App() {
 
     if (secaoAtiva === "Relatórios") {
       return (
-        <PlaceholderSection icon="📊" title="Relatórios">
-          <p>Em seguida vamos adicionar resumo mensal, comparação entre meses e exportação.</p>
+        <PlaceholderSection icon="📊" title={t("reports.title")}>
+          <p>{t("reports.text")}</p>
         </PlaceholderSection>
       )
     }
@@ -2075,6 +2107,7 @@ export default function App() {
           exportarBackup={exportarBackupLocal}
           importarBackup={importarBackupLocal}
           limparDadosLocais={limparDadosLocais}
+          t={t}
           resumo={{
             totalRecebido,
             totalDespesasRealizado,
@@ -2128,14 +2161,15 @@ export default function App() {
         setSecaoAtiva={setSecaoAtiva}
         moedaAtiva={moedaAtiva}
         setMoedaAtiva={setMoedaAtiva}
+        t={t}
       />
 
       <div className="ml-[242px] p-4 grid grid-cols-1 gap-4">
         <main className="space-y-4">
           <section className="rounded-[14px] bg-white px-4 py-3 shadow-lg border border-slate-100 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-black uppercase text-slate-400">Secção ativa</p>
-              <h2 className="text-[18px] font-black text-blue-950">{secaoAtiva}</h2>
+              <p className="text-[10px] font-black uppercase text-slate-400">{t("active.section")}</p>
+              <h2 className="text-[18px] font-black text-blue-950">{t(`menu.${secaoAtiva}`)}</h2>
             </div>
             <div className="rounded-full bg-blue-50 px-3 py-1 text-[11px] font-black text-blue-700">
               {formatarMesAtivo(mesAtivo)}
@@ -2306,11 +2340,11 @@ function DebtEvolutionCard({ dados, meses, formatarEuro }) {
   )
 }
 
-function HealthCard() {
+function HealthCard({ t = (chave) => chave }) {
   return (
     <div className="rounded-[14px] bg-white shadow-lg border border-slate-100 min-h-[120px] p-3 flex gap-3 items-center">
       <div>
-        <h3 className="text-[12px] uppercase font-black text-blue-950 mb-2">Índice de Saúde Financeira</h3>
+        <h3 className="text-[12px] uppercase font-black text-blue-950 mb-2">Índice de {t("financial.health")}</h3>
         <div
           className="relative w-[92px] h-[92px] rounded-full flex items-center justify-center"
           style={{ background: "conic-gradient(#0d9488 0 20%, #22c55e 20% 85%, #e5eef8 85% 100%)" }}
@@ -2324,7 +2358,7 @@ function HealthCard() {
 
       <div className="pt-6">
         <div className="text-green-600 text-xl font-black">↗</div>
-        <p className="font-black text-[15px]">Excelente</p>
+        <p className="font-black text-[15px]">{t("excellent")}</p>
         <p className="text-[10px] font-bold text-slate-700 mt-2 leading-snug">
           A sua situação financeira está muito saudável!
         </p>
@@ -3388,6 +3422,7 @@ function DefinicoesPanel({
   importarBackup,
   limparDadosLocais,
   resumo,
+  t = (chave) => chave,
 }) {
   const inputClass = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold outline-none focus:border-blue-400"
   const labelClass = "mb-1 block text-[11px] font-black uppercase text-slate-500"
@@ -3399,8 +3434,8 @@ function DefinicoesPanel({
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl">⚙️</div>
             <div>
-              <p className="text-[10px] font-black uppercase text-slate-400">Configuração</p>
-              <h3 className="text-xl font-black text-blue-950">Definições Gerais</h3>
+              <p className="text-[10px] font-black uppercase text-slate-400">{t("settings.config")}</p>
+              <h3 className="text-xl font-black text-blue-950">{t("settings.general")}</h3>
             </div>
           </div>
 
@@ -3412,7 +3447,7 @@ function DefinicoesPanel({
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className={labelClass}>Moeda padrão</label>
+              <label className={labelClass}>{t("settings.currencyDefault")}</label>
               <select
                 className={inputClass}
                 value={configuracoes.moedaPadrao || "EUR"}
@@ -3423,12 +3458,12 @@ function DefinicoesPanel({
                 ))}
               </select>
               <p className="mt-2 text-[11px] font-semibold text-slate-500">
-                Apenas muda o formato visual. Não faz conversão cambial.
+                {t("settings.visualOnly")}
               </p>
             </div>
 
             <div>
-              <label className={labelClass}>Idioma padrão</label>
+              <label className={labelClass}>{t("settings.languageDefault")}</label>
               <select
                 className={inputClass}
                 value={configuracoes.idiomaPadrao || "pt"}
@@ -3439,12 +3474,12 @@ function DefinicoesPanel({
                 ))}
               </select>
               <p className="mt-2 text-[11px] font-semibold text-slate-500">
-                Guarda a preferência de idioma. A tradução completa será ativada por fases.
+                {t("settings.languageHelp")}
               </p>
             </div>
 
             <div>
-              <label className={labelClass}>Mês ativo</label>
+              <label className={labelClass}>{t("settings.monthActive")}</label>
               <select
                 className={inputClass}
                 value={mesAtivo}
@@ -3459,49 +3494,49 @@ function DefinicoesPanel({
                 ))}
               </select>
               <p className="mt-2 text-[11px] font-semibold text-slate-500">
-                Atual: {formatarMesAtivo(mesAtivo)}
+                {t("settings.current")}: {formatarMesAtivo(mesAtivo)}
               </p>
             </div>
           </div>
         </div>
 
         <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-          <h3 className="mb-4 text-lg font-black text-blue-950">Regras Financeiras</h3>
+          <h3 className="mb-4 text-lg font-black text-blue-950">{t("settings.rules")}</h3>
           <div className="grid grid-cols-4 gap-3">
-            <NumberSetting label="Limite despesas (%)" value={configuracoes.limiteDespesas} onChange={(valor) => onAtualizar("limiteDespesas", Number(valor))} />
-            <NumberSetting label="Meta poupança (%)" value={configuracoes.metaPoupanca} onChange={(valor) => onAtualizar("metaPoupanca", Number(valor))} />
-            <NumberSetting label="Limite dívidas (%)" value={configuracoes.limiteDividas} onChange={(valor) => onAtualizar("limiteDividas", Number(valor))} />
-            <NumberSetting label="Fundo emergência (meses)" value={configuracoes.fundoEmergenciaMeses} onChange={(valor) => onAtualizar("fundoEmergenciaMeses", Number(valor))} />
+            <NumberSetting label={t("settings.expenseLimit")} value={configuracoes.limiteDespesas} onChange={(valor) => onAtualizar("limiteDespesas", Number(valor))} />
+            <NumberSetting label={t("settings.savingsGoal")} value={configuracoes.metaPoupanca} onChange={(valor) => onAtualizar("metaPoupanca", Number(valor))} />
+            <NumberSetting label={t("settings.debtLimit")} value={configuracoes.limiteDividas} onChange={(valor) => onAtualizar("limiteDividas", Number(valor))} />
+            <NumberSetting label={t("settings.emergencyFund")} value={configuracoes.fundoEmergenciaMeses} onChange={(valor) => onAtualizar("fundoEmergenciaMeses", Number(valor))} />
           </div>
           <p className="mt-4 text-xs font-semibold text-slate-500">
-            Estas regras alimentam os alertas automáticos e serão usadas para calcular a saúde financeira.
+            {t("settings.rulesHelp")}
           </p>
         </div>
 
         <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-          <h3 className="mb-4 text-lg font-black text-blue-950">Dados Locais</h3>
+          <h3 className="mb-4 text-lg font-black text-blue-950">{t("settings.localData")}</h3>
           <div className="grid grid-cols-3 gap-3">
             <button type="button" onClick={exportarBackup} className="rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white hover:bg-blue-700">
-              Exportar backup
+              {t("settings.export")}
             </button>
 
             <label className="cursor-pointer rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-black text-white hover:bg-emerald-700">
-              Importar backup
+              {t("settings.import")}
               <input type="file" accept="application/json" onChange={importarBackup} className="hidden" />
             </label>
 
             <button type="button" onClick={limparDadosLocais} className="rounded-xl bg-red-600 px-4 py-3 text-sm font-black text-white hover:bg-red-700">
-              Limpar dados locais
+              {t("settings.clear")}
             </button>
           </div>
           <p className="mt-4 text-xs font-semibold text-slate-500">
-            Estes botões atuam apenas nos dados guardados neste navegador, como poupanças, objetivos, pagamentos, alertas e definições.
+            {t("settings.localHelp")}
           </p>
         </div>
       </div>
 
       <div className="rounded-[24px] bg-white p-5 shadow-lg border border-slate-100">
-        <h3 className="mb-4 text-lg font-black text-blue-950">Resumo Local</h3>
+        <h3 className="mb-4 text-lg font-black text-blue-950">{t("settings.localSummary")}</h3>
         <div className="mb-5 rounded-2xl bg-blue-50 p-4 text-sm font-bold text-blue-950">
           <div className="mb-2 flex justify-between">
             <span>Moeda</span>
@@ -3513,17 +3548,17 @@ function DefinicoesPanel({
           </div>
         </div>
         <div className="space-y-3 text-sm font-bold">
-          <ResumoLinha label="Total recebido" value={formatarEuro(resumo.totalRecebido)} />
-          <ResumoLinha label="Total despesas" value={formatarEuro(resumo.totalDespesasRealizado)} />
-          <ResumoLinha label="Poupança guardada" value={formatarEuro(resumo.totalPoupancaGuardado)} />
-          <ResumoLinha label="Total dívidas" value={formatarEuro(resumo.totalDividas)} />
+          <ResumoLinha label={t("settings.totalReceived")} value={formatarEuro(resumo.totalRecebido)} />
+          <ResumoLinha label={t("settings.totalExpenses")} value={formatarEuro(resumo.totalDespesasRealizado)} />
+          <ResumoLinha label={t("settings.savingsSaved")} value={formatarEuro(resumo.totalPoupancaGuardado)} />
+          <ResumoLinha label={t("kpi.totalDebts")} value={formatarEuro(resumo.totalDividas)} />
         </div>
 
         <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm font-bold text-slate-700">
-          <div className="mb-2 flex justify-between"><span>Poupanças</span><strong>{resumo.poupancasCount}</strong></div>
-          <div className="mb-2 flex justify-between"><span>Objetivos</span><strong>{resumo.objetivosCount}</strong></div>
-          <div className="mb-2 flex justify-between"><span>Pagamentos</span><strong>{resumo.pagamentosCount}</strong></div>
-          <div className="flex justify-between"><span>Alertas manuais</span><strong>{resumo.alertasCount}</strong></div>
+          <div className="mb-2 flex justify-between"><span>{t("menu.Poupança")}</span><strong>{resumo.poupancasCount}</strong></div>
+          <div className="mb-2 flex justify-between"><span>{t("menu.Objetivos")}</span><strong>{resumo.objetivosCount}</strong></div>
+          <div className="mb-2 flex justify-between"><span>{t("menu.Pagamentos")}</span><strong>{resumo.pagamentosCount}</strong></div>
+          <div className="flex justify-between"><span>{t("settings.manualAlerts")}</span><strong>{resumo.alertasCount}</strong></div>
         </div>
       </div>
     </section>
@@ -3553,7 +3588,7 @@ function ResumoLinha({ label, value }) {
   )
 }
 
-function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva, setMoedaAtiva }) {
+function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva, setMoedaAtiva, t = (chave) => chave }) {
   const menuItems = [
     ["🏠", "Resumo"],
     ["⚖️", "Rendimentos"],
@@ -3586,19 +3621,19 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </div>
 
           <h1 className="text-[25px] font-black leading-[1.05] tracking-tight">
-            Planeamento
+            {t("app.title1")}
             <br />
-            Financeiro
+            {t("app.title2")}
           </h1>
 
           <p className="mt-2 text-[12px] font-semibold text-white/90">
-            Controlo Financeiro Familiar
+            {t("app.subtitle")}
           </p>
         </div>
 
         <div className="mx-3 mb-3 rounded-[12px] border border-cyan-400/40 bg-[#062a57] shadow-inner p-2">
           <label className="mb-1 block text-center text-[9px] font-black uppercase text-white/70">
-            Mês ativo
+            {t("month.active")}
           </label>
 
           <select
@@ -3618,7 +3653,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </select>
 
           <div className="mt-2 rounded-lg bg-cyan-400/10 px-2 py-1 text-center text-[10px] font-bold text-cyan-100">
-            A visualizar: {formatarMesAtivo(mesAtivo)}
+            {t("viewing")}: {formatarMesAtivo(mesAtivo)}
           </div>
         </div>
 
@@ -3634,14 +3669,14 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
                 }`}
             >
               <span className="w-4 text-center text-[15px]">{icon}</span>
-              <span>{label}</span>
+              <span>{t(`menu.${label}`)}</span>
             </button>
           ))}
         </nav>
 
         <div className="mx-3 mt-4 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
           <div className="mb-2 text-center text-[9px] font-black uppercase text-white/80">
-            Moeda
+            {t("currency")}
           </div>
 
           <select
@@ -3657,17 +3692,17 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </select>
 
           <div className="mt-2 rounded-lg bg-cyan-400/10 px-2 py-1 text-center text-[9px] font-bold text-cyan-100">
-            Sem conversão cambial. Apenas formato visual.
+            {t("no.conversion")}
           </div>
 
           <div className="mt-3 text-center">
-            <p className="text-[8px] font-black uppercase text-white/70">Atualizado em</p>
+            <p className="text-[8px] font-black uppercase text-white/70">{t("updated.at")}</p>
             <p className="text-[11px] font-black">{new Date().toLocaleString("pt-PT")}</p>
           </div>
         </div>
 
         <div className="mx-3 mt-3 rounded-[13px] border border-cyan-400/35 bg-[#061b3f]/80 p-3 shadow-inner">
-          <h3 className="mb-2 text-center text-[12px] font-black uppercase">Saúde Financeira</h3>
+          <h3 className="mb-2 text-center text-[12px] font-black uppercase">{t("financial.health")}</h3>
 
           <div
             className="mx-auto flex h-[92px] w-[92px] items-center justify-center rounded-full"
@@ -3683,7 +3718,7 @@ function Sidebar({ mesAtivo, setMesAtivo, secaoAtiva, setSecaoAtiva, moedaAtiva,
           </div>
 
           <div className="mx-auto mt-2 w-[112px] rounded-full bg-gradient-to-r from-[#16a34a] to-[#059669] py-1 text-center text-[11px] font-black shadow-lg">
-            Excelente
+            {t("excellent")}
           </div>
 
           <div className="mt-3 space-y-[6px]">
